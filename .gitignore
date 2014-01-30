@@ -1,4 +1,13 @@
-.DS_Store
-bin
+# Mac system files
+.DS_*
+
+# Built files
+bin/
+gen/
+
+# Local configuration files
+.settings/
+.project
 project.properties
-.settings
+proguard-project.txt
+HxMBT.jar
