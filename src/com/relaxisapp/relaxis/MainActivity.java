@@ -3,9 +3,9 @@ package com.relaxisapp.relaxis;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
-
 import zephyr.android.HxMBT.BTClient;
 import zephyr.android.HxMBT.ZephyrProtocol;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -15,7 +15,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -24,7 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
 
 	/** Called when the activity is first created. */
 	BluetoothAdapter adapter = null;
@@ -66,6 +65,7 @@ public class MainActivity extends FragmentActivity {
 		Button btnConnect = (Button) findViewById(R.id.ButtonConnect);
 		if (btnConnect != null) {
 			btnConnect.setOnClickListener(new OnClickListener() {
+				@Override
 				public void onClick(View v) {
 
 					// Getting the Bluetooth adapter
@@ -79,9 +79,9 @@ public class MainActivity extends FragmentActivity {
 						tvTest.append("\nBluetooth NOT supported. Aborting.");
 						return;
 					}
-					
-					//TODO ask user for explicit permission
-					//Enable bluetooth
+
+					// TODO ask user for explicit permission
+					// Enable bluetooth
 					if (!adapter.isEnabled()) {
 						adapter.enable();
 					}
@@ -115,43 +115,41 @@ public class MainActivity extends FragmentActivity {
 							}
 						}
 					}
-				
-					 //BhMacID = btDevice.getAddress();
-					
-					 BluetoothDevice Device = adapter.getRemoteDevice(BhMacID);
-					 String DeviceName = Device.getName();
-//					 _bt = new BTClient(adapter, BhMacID);
-//					 _NConnListener = new NewConnectedListener(Newhandler, Newhandler);
-//					 _bt.addConnectedEventListener(_NConnListener);
-//					
-//					 TextView tv1 = (EditText)
-//					 findViewById(R.id.labelHeartRate);
-//					 tv1.setText("000");
-//					
-//					 tv1 = (EditText) findViewById(R.id.labelInstantSpeed);
-//					 tv1.setText("0.0");
-//					 // tv1 = (EditText)findViewById(R.id.labelSkinTemp);
-//					 // tv1.setText("0.0");
-//					
-//					 // tv1 = (EditText)findViewById(R.id.labelPosture);
-//					 // tv1.setText("000");
-//					 // tv1 = (EditText)findViewById(R.id.labelPeakAcc);
-//					 // tv1.setText("0.0");
-//					 if (_bt.IsConnected()) {
-//					 _bt.start();
-//					 TextView tv = (TextView)
-//					 findViewById(R.id.labelStatusMsg);
-//					 String ErrorText = "Connected to HxM " + DeviceName;
-//					 tv.setText(ErrorText);
-//					
-//					 // Reset all the values to 0s
-//					
-//					 } else {
-//					 TextView tv = (TextView)
-//					 findViewById(R.id.labelStatusMsg);
-//					 String ErrorText = "Unable to Connect !";
-//					 tv.setText(ErrorText);
-//					 }
+
+					// BhMacID = btDevice.getAddress();
+
+					BluetoothDevice Device = adapter.getRemoteDevice(BhMacID);
+					String DeviceName = Device.getName();
+					_bt = new BTClient(adapter, BhMacID);
+					_NConnListener = new NewConnectedListener(Newhandler,
+							Newhandler);
+					_bt.addConnectedEventListener(_NConnListener);
+
+					TextView tv1 = (EditText) findViewById(R.id.labelHeartRate);
+					tv1.setText("000");
+
+					tv1 = (EditText) findViewById(R.id.labelInstantSpeed);
+					tv1.setText("0.0");
+					// tv1 = (EditText)findViewById(R.id.labelSkinTemp);
+					// tv1.setText("0.0");
+
+					// tv1 = (EditText)findViewById(R.id.labelPosture);
+					// tv1.setText("000");
+					// tv1 = (EditText)findViewById(R.id.labelPeakAcc);
+					// tv1.setText("0.0");
+					if (_bt.IsConnected()) {
+						_bt.start();
+						TextView tv = (TextView) findViewById(R.id.labelStatusMsg);
+						String ErrorText = "Connected to HxM " + DeviceName;
+						tv.setText(ErrorText);
+
+						// Reset all the values to 0s
+
+					} else {
+						TextView tv = (TextView) findViewById(R.id.labelStatusMsg);
+						String ErrorText = "Unable to Connect !";
+						tv.setText(ErrorText);
+					}
 				}
 			});
 		}
@@ -245,6 +243,7 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	final Handler Newhandler = new Handler() {
+		@Override
 		public void handleMessage(Message msg) {
 			TextView tv;
 			switch (msg.what) {
