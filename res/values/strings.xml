@@ -4,6 +4,7 @@
     <string name="app_id">1414231085481831</string>
     <string name="app_name">Relaxis</string>
     <string name="action_settings">Settings</string>
+    <string name="action_bluetooth">Connect</string>
     <string name="email_login">Sign up with email</string>
     <string name="acc_register">I have an account</string>
     <string name="heart_rate">Heart rate</string>
