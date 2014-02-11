@@ -15,6 +15,7 @@ public class NewConnectedListener extends ConnectListenerImpl
 	
 	private final int HEART_RATE = 0x100;
 	private final int INSTANT_SPEED = 0x101;
+	private final int RR_INTERVAL = 0x102;
 	private HRSpeedDistPacketInfo HRSpeedDistPacket = new HRSpeedDistPacketInfo();
 	public NewConnectedListener(Handler handler,Handler _NewHandler) {
 		super(handler, null);
@@ -51,6 +52,23 @@ public class NewConnectedListener extends ConnectListenerImpl
 					
 					byte [] DataArray = msg.getBytes();
 					
+//					for (int i = 0; i < DataArray.length; i++) {
+//						System.out.println(i + " - " + DataArray[i]);
+//					}
+
+					int mostRecentTs = CustomUtilities.TwoBytesToUnsignedInt(DataArray[11], DataArray[12]);
+					int secondRecentTs = CustomUtilities.TwoBytesToUnsignedInt(DataArray[13], DataArray[14]);
+					
+					//TODO fix the roll over after 65535
+					int rrInterval = mostRecentTs - secondRecentTs;
+					
+					System.out.println(CustomUtilities.ByteToUnsignedInt(DataArray[9])); //HR
+					System.out.println(CustomUtilities.ByteToUnsignedInt(DataArray[10])); //Heart beat n
+					System.out.println("*"+mostRecentTs);//most recent TS
+					System.out.println("*"+secondRecentTs);
+					
+					System.out.println("!"+(rrInterval));
+					
 					//***************Displaying the Heart Rate********************************
 					int HRate =  HRSpeedDistPacket.GetHeartRate(DataArray);
 					Message text1 = _aNewHandler.obtainMessage(HEART_RATE);
@@ -69,6 +87,12 @@ public class NewConnectedListener extends ConnectListenerImpl
 					_aNewHandler.sendMessage(text1);
 					System.out.println("Instant Speed is "+ InstantSpeed);
 					
+					//*********** Add R-R interval to the message ****************
+					text1 = _aNewHandler.obtainMessage(RR_INTERVAL);
+					b1.putString("RRInterval", String.valueOf(rrInterval));
+					text1.setData(b1);
+					_aNewHandler.sendMessage(text1);
+					System.out.println("R-R interval is "+ rrInterval);
 				}
 			}
 		});

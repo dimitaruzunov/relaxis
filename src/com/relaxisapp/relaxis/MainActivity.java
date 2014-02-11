@@ -34,49 +34,16 @@ public class MainActivity extends Activity {
 	NewConnectedListener _NConnListener;
 	private final int HEART_RATE = 0x100;
 	private final int INSTANT_SPEED = 0x101;
+	private final int RR_INTERVAL = 0x102;
+	
+	TextView tvTest = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-	
-	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        boolean handled;
-
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_bluetooth:
-            	onClickMenuBluetooth(item);
-                handled = true;
-                break;
-            default:
-                handled = super.onOptionsItemSelected(item);
-        }
-        return handled;
-    }
-	
-	public void  onClickMenuBluetooth(MenuItem item) {
-        // TODO Code for bluetooth connection goes here
-		// TODO Zdravko, delete the following code, it's just for testing purposes
-		Toast toast = Toast.makeText(this, "Woohoo!", Toast.LENGTH_LONG);
-		toast.show();
-    }
-
-	public void clickMe(View view) {
-
-		final TextView tvTest = (TextView) findViewById(R.id.tv_heartRate);
+		
+		tvTest = (TextView) findViewById(R.id.tv_heartRate);
 
 		/*
 		 * Sending a message to android that we are going to initiate a pairing
@@ -103,88 +70,7 @@ public class MainActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 
-					// Getting the Bluetooth adapter
-					BluetoothAdapter adapter = BluetoothAdapter
-							.getDefaultAdapter();
-					tvTest.append("\nAdapter: " + adapter);
-
-					// Check for Bluetooth support in the first place
-					// Emulator doesn't support Bluetooth and will return null
-					if (adapter == null) {
-						tvTest.append("\nBluetooth NOT supported. Aborting.");
-						return;
-					}
-
-					// TODO ask user for explicit permission
-					// Enable bluetooth
-					if (!adapter.isEnabled()) {
-						adapter.enable();
-					}
-
-					// Starting the device discovery
-					tvTest.append("\nStarting discovery...");
-					adapter.startDiscovery();
-					tvTest.append("\nDone with discovery...");
-
-					// Listing paired devices
-					tvTest.append("\nDevices Pared:");
-					Set<BluetoothDevice> devices = adapter.getBondedDevices();
-					for (BluetoothDevice device : devices) {
-						tvTest.append("\nFound device: " + device);
-					}
-
-					// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-					// TEST CODE HERE
-
-					String BhMacID = "00:07:80:5B:02:95";
-					adapter = BluetoothAdapter.getDefaultAdapter();
-
-					Set<BluetoothDevice> pairedDevices = adapter
-							.getBondedDevices();
-					if (pairedDevices.size() > 0) {
-						for (BluetoothDevice device : pairedDevices) {
-							if (device.getName().startsWith("HXM")) {
-								BluetoothDevice btDevice = device;
-								BhMacID = btDevice.getAddress();
-								break;
-							}
-						}
-					}
-
-					// BhMacID = btDevice.getAddress();
-
-					BluetoothDevice Device = adapter.getRemoteDevice(BhMacID);
-					String DeviceName = Device.getName();
-					_bt = new BTClient(adapter, BhMacID);
-					_NConnListener = new NewConnectedListener(Newhandler,
-							Newhandler);
-					_bt.addConnectedEventListener(_NConnListener);
-
-					TextView tv1 = (EditText) findViewById(R.id.labelHeartRate);
-					tv1.setText("000");
-
-					tv1 = (EditText) findViewById(R.id.labelInstantSpeed);
-					tv1.setText("0.0");
-					// tv1 = (EditText)findViewById(R.id.labelSkinTemp);
-					// tv1.setText("0.0");
-
-					// tv1 = (EditText)findViewById(R.id.labelPosture);
-					// tv1.setText("000");
-					// tv1 = (EditText)findViewById(R.id.labelPeakAcc);
-					// tv1.setText("0.0");
-					if (_bt.IsConnected()) {
-						_bt.start();
-						TextView tv = (TextView) findViewById(R.id.labelStatusMsg);
-						String ErrorText = "Connected to HxM " + DeviceName;
-						tv.setText(ErrorText);
-
-						// Reset all the values to 0s
-
-					} else {
-						TextView tv = (TextView) findViewById(R.id.labelStatusMsg);
-						String ErrorText = "Unable to Connect !";
-						tv.setText(ErrorText);
-					}
+					
 				}
 			});
 		}
@@ -218,8 +104,126 @@ public class MainActivity extends Activity {
 
 		// END TEST CODE
 
-		tvTest.setText("clicked");
+		tvTest.setText("App started.");
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        boolean handled;
+
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_bluetooth:
+            	onClickMenuBluetooth(item);
+                handled = true;
+                break;
+            default:
+                handled = super.onOptionsItemSelected(item);
+        }
+        return handled;
+    }
+	
+	public void  onClickMenuBluetooth(MenuItem item) {
+		// Getting the Bluetooth adapter
+		BluetoothAdapter adapter = BluetoothAdapter
+				.getDefaultAdapter();
+		tvTest.append("\nAdapter: " + adapter);
+
+		// Check for Bluetooth support in the first place
+		// Emulator doesn't support Bluetooth and will return null
+		if (adapter == null) {
+			tvTest.append("\nBluetooth NOT supported. Aborting.");
+			return;
+		}
+
+		// TODO ask user for explicit permission
+		// Enable bluetooth
+		if (!adapter.isEnabled()) {
+			adapter.enable();
+		}
+		
+		// TODO try to write this better
+		while (!adapter.isEnabled()) {}
+
+		// Starting the device discovery
+		tvTest.append("\nStarting discovery...");
+		adapter.startDiscovery();
+		tvTest.append("\nDone with discovery...");
+
+		// Listing paired devices
+		tvTest.append("\nDevices Pared:");
+		Set<BluetoothDevice> devices = adapter.getBondedDevices();
+		for (BluetoothDevice device : devices) {
+			tvTest.append("\nFound device: " + device);
+		}
+
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// TEST CODE HERE
+
+		String BhMacID = "00:07:80:5B:02:95";
+		adapter = BluetoothAdapter.getDefaultAdapter();
+
+		Set<BluetoothDevice> pairedDevices = adapter
+				.getBondedDevices();
+		if (pairedDevices.size() > 0) {
+			for (BluetoothDevice device : pairedDevices) {
+				if (device.getName().startsWith("HXM")) {
+					BluetoothDevice btDevice = device;
+					BhMacID = btDevice.getAddress();
+					break;
+				}
+			}
+		}
+
+		// BhMacID = btDevice.getAddress();
+
+		BluetoothDevice Device = adapter.getRemoteDevice(BhMacID);
+		String DeviceName = Device.getName();
+		_bt = new BTClient(adapter, BhMacID);
+		_NConnListener = new NewConnectedListener(Newhandler,
+				Newhandler);
+		_bt.addConnectedEventListener(_NConnListener);
+
+		TextView tv1 = (EditText) findViewById(R.id.labelHeartRate);
+		tv1.setText("000");
+
+		tv1 = (EditText) findViewById(R.id.labelInstantSpeed);
+		tv1.setText("0.0");
+		// tv1 = (EditText)findViewById(R.id.labelSkinTemp);
+		// tv1.setText("0.0");
+
+		// tv1 = (EditText)findViewById(R.id.labelPosture);
+		// tv1.setText("000");
+		// tv1 = (EditText)findViewById(R.id.labelPeakAcc);
+		// tv1.setText("0.0");
+		if (_bt.IsConnected()) {
+			_bt.start();
+			TextView tv = (TextView) findViewById(R.id.labelStatusMsg);
+			String ErrorText = "Connected to HxM " + DeviceName;
+			tv.setText(ErrorText);
+
+			// Reset all the values to 0s
+
+		} else {
+			TextView tv = (TextView) findViewById(R.id.labelStatusMsg);
+			String ErrorText = "Unable to Connect !";
+			tv.setText(ErrorText);
+		}
+		
+		
+		Toast toast = Toast.makeText(this, "Woohoo!", Toast.LENGTH_LONG);
+		toast.show();
+    }
 
 	private class BTBondReceiver extends BroadcastReceiver {
 		@Override
@@ -289,6 +293,15 @@ public class MainActivity extends Activity {
 				tv = (EditText) findViewById(R.id.labelInstantSpeed);
 				if (tv != null)
 					tv.setText(InstantSpeedtext);
+
+				break;
+
+			case RR_INTERVAL:
+				String RRInterval = msg.getData().getString(
+						"RRInterval");
+				tv = (EditText) findViewById(R.id.labelRRInterval);
+				if (tv != null)
+					tv.setText(RRInterval);
 
 				break;
 

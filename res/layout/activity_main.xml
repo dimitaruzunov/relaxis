@@ -15,13 +15,6 @@
         android:text="@string/heart_rate" />
 
     <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button"
-        android:onClick="clickMe" />
-
-    <Button
         android:id="@+id/ButtonConnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,6 +35,13 @@
     
     <EditText
         android:id="@+id/labelInstantSpeed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10" >
+    </EditText>
+    
+    <EditText
+        android:id="@+id/labelRRInterval"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" >
