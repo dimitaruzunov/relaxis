@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
 	private final int HEART_RATE = 0x100;
 	private final int INSTANT_SPEED = 0x101;
 	private final int RR_INTERVAL = 0x102;
+	private final int INSTANT_HR = 0x103;
 	
 	TextView tvTest = null;
 
@@ -302,6 +303,15 @@ public class MainActivity extends Activity {
 				tv = (EditText) findViewById(R.id.labelRRInterval);
 				if (tv != null)
 					tv.setText(RRInterval);
+
+				break;
+
+			case INSTANT_HR:
+				String InstantHR = msg.getData().getString(
+						"InstantHR");
+				tv = (EditText) findViewById(R.id.labelInstantHR);
+				if (tv != null)
+					tv.setText(InstantHR);
 
 				break;
 
