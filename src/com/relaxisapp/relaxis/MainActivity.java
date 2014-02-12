@@ -65,16 +65,6 @@ public class MainActivity extends Activity {
 		this.getApplicationContext().registerReceiver(new BTBondReceiver(),
 				filter2);
 
-		Button btnConnect = (Button) findViewById(R.id.ButtonConnect);
-		if (btnConnect != null) {
-			btnConnect.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-
-					
-				}
-			});
-		}
 		/* Obtaining the handle to act on the DISCONNECT button */
 		Button btnDisconnect = (Button) findViewById(R.id.ButtonDisconnect);
 		if (btnDisconnect != null) {
@@ -103,7 +93,7 @@ public class MainActivity extends Activity {
 			});
 		}
 
-		// END TEST CODE
+
 
 		tvTest.setText("App started.");
 	}
@@ -134,7 +124,7 @@ public class MainActivity extends Activity {
         return handled;
     }
 	
-	public void  onClickMenuBluetooth(MenuItem item) {
+	public void onClickMenuBluetooth(MenuItem item) {
 		// Getting the Bluetooth adapter
 		BluetoothAdapter adapter = BluetoothAdapter
 				.getDefaultAdapter();
