@@ -110,13 +110,12 @@ public class MainActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        boolean handled;
+        Boolean handled = true;
 
         int id = item.getItemId();
         switch (id) {
             case R.id.action_bluetooth:
             	onClickMenuBluetooth(item);
-                handled = true;
                 break;
             default:
                 handled = super.onOptionsItemSelected(item);
