@@ -19,12 +19,6 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="@string/heart_rate" />
-
-	    <Button
-	        android:id="@+id/ButtonDisconnect"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/buttonDisconnect" />
 	
 	    <EditText
 	        android:id="@+id/labelHeartRate"
