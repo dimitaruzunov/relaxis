@@ -96,8 +96,7 @@ public class MainActivity extends Activity {
             case R.id.action_bluetooth:
             	if (!connected) {
             		onClickMenuBluetoothConnect(item);
-            	}
-            	else {
+            	} else {
             		onClickMenuBluetoothDisconnect(item);
             	}
                 break;
@@ -172,6 +171,9 @@ public class MainActivity extends Activity {
 	
 	void onClickMenuBluetoothDisconnect(MenuItem item) {
 		connected = false;
+		item.setIcon(R.drawable.ic_action_bluetooth);
+		item.setTitle(R.string.action_bluetooth_connect);
+		
 		tv.setText("Disconnected from HxM!");
 		
 		/*
