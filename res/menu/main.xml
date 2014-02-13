@@ -2,7 +2,7 @@
     
     <item android:id="@+id/action_bluetooth"
         android:icon="@drawable/ic_action_bluetooth"
-        android:title="@string/action_bluetooth"
+        android:title="@string/action_bluetooth_connect"
         android:showAsAction="always" />
 
 </menu>

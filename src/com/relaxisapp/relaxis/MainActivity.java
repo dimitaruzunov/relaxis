@@ -3,7 +3,6 @@ package com.relaxisapp.relaxis;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
-
 import zephyr.android.HxMBT.BTClient;
 import zephyr.android.HxMBT.ZephyrProtocol;
 import android.app.Activity;
@@ -32,20 +31,25 @@ public class MainActivity extends Activity {
 	BTClient _bt;
 	ZephyrProtocol _protocol;
 	NewConnectedListener _NConnListener;
+	
 	private final int HEART_RATE = 0x100;
 	private final int INSTANT_SPEED = 0x101;
 	private final int RR_INTERVAL = 0x102;
 	private final int INSTANT_HR = 0x103;
 
-	TextView tvTest = null;
+	private TextView tvTest;
+	private TextView tv;
+	private boolean connected = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		tvTest = (TextView) findViewById(R.id.tv_heartRate);
-
+		setupUiEvents();
+		
+		// TODO Try to put the following code out of the onCreate method
+		
 		/*
 		 * Sending a message to android that we are going to initiate a pairing
 		 * request
@@ -65,35 +69,12 @@ public class MainActivity extends Activity {
 		this.getApplicationContext().registerReceiver(new BTBondReceiver(),
 				filter2);
 
-		/* Obtaining the handle to act on the DISCONNECT button */
-		Button btnDisconnect = (Button) findViewById(R.id.ButtonDisconnect);
-		if (btnDisconnect != null) {
-			btnDisconnect.setOnClickListener(new OnClickListener() {
-				@Override
-				/* Functionality to act if the button DISCONNECT is touched */
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					/* Reset the global variables */
-					TextView tv = (TextView) findViewById(R.id.labelStatusMsg);
-					String ErrorText = "Disconnected from HxM!";
-					tv.setText(ErrorText);
-
-					/*
-					 * This disconnects listener from acting on received
-					 * messages
-					 */
-					_bt.removeConnectedEventListener(_NConnListener);
-					/*
-					 * Close the communication with the device & throw an
-					 * exception if failure
-					 */
-					_bt.Close();
-
-				}
-			});
-		}
-
 		tvTest.setText("App started.");
+	}
+	
+	void setupUiEvents() {
+		tvTest = (TextView) findViewById(R.id.tv_heartRate);
+		tv = (TextView) findViewById(R.id.labelStatusMsg);
 	}
 
 	@Override
@@ -108,12 +89,17 @@ public class MainActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        Boolean handled = true;
+        boolean handled = true;
 
         int id = item.getItemId();
         switch (id) {
             case R.id.action_bluetooth:
-            	onClickMenuBluetooth(item);
+            	if (!connected) {
+            		onClickMenuBluetoothConnect(item);
+            	}
+            	else {
+            		onClickMenuBluetoothDisconnect(item);
+            	}
                 break;
             default:
                 handled = super.onOptionsItemSelected(item);
@@ -121,7 +107,10 @@ public class MainActivity extends Activity {
         return handled;
     }
 	
-	public void onClickMenuBluetooth(MenuItem item) {
+	void onClickMenuBluetoothConnect(MenuItem item) {
+		item.setIcon(R.drawable.ic_action_bluetooth_searching);
+		item.setTitle(R.string.action_bluetooth_connecting);
+		
 		// Getting the Bluetooth adapter
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 		tvTest.append("\nAdapter: " + adapter);
@@ -153,32 +142,48 @@ public class MainActivity extends Activity {
 					BluetoothDevice Device = adapter.getRemoteDevice(BhMacID);
 					String DeviceName = Device.getName();
 					_bt = new BTClient(adapter, BhMacID);
-					_NConnListener = new NewConnectedListener(Newhandler,
-							Newhandler);
+					_NConnListener = new NewConnectedListener(Newhandler, Newhandler);
 					_bt.addConnectedEventListener(_NConnListener);
 
 					if (_bt.IsConnected()) {
+						connected = true;
+						item.setIcon(R.drawable.ic_action_bluetooth_connected);
+						item.setTitle(R.string.action_bluetooth_disconnect);
+						
 						_bt.start();
-						TextView tv = (TextView) findViewById(R.id.labelStatusMsg);
-						String ErrorText = "Connected to HxM " + DeviceName;
-						tv.setText(ErrorText);
+						tv.setText("Connected to HxM " + DeviceName);
 
-						// Reset all the values to 0s
-
+						// TODO Reset all the values to 0s
 					} else {
-						TextView tv = (TextView) findViewById(R.id.labelStatusMsg);
-						String ErrorText = "Unable to Connect !";
-						tv.setText(ErrorText);
+						item.setIcon(R.drawable.ic_action_bluetooth);
+						item.setTitle(R.string.action_bluetooth_connect);
+						
+						tv.setText("Unable to Connect!");
 					}
 
 					break;
 				}
 			}
-
 		}
 
 		Toast toast = Toast.makeText(this, "Woohoo!", Toast.LENGTH_LONG);
 		toast.show();
+	}
+	
+	void onClickMenuBluetoothDisconnect(MenuItem item) {
+		connected = false;
+		tv.setText("Disconnected from HxM!");
+		
+		/*
+		 * This disconnects listener from acting on received
+		 * messages
+		 */
+		_bt.removeConnectedEventListener(_NConnListener);
+		/*
+		 * Close the communication with the device & throw an
+		 * exception if failure
+		 */
+		_bt.Close();
 	}
 
 	private class BTBondReceiver extends BroadcastReceiver {
@@ -231,9 +236,11 @@ public class MainActivity extends Activity {
 	}
 
 	final Handler Newhandler = new Handler() {
+		
 		@Override
 		public void handleMessage(Message msg) {
 			TextView tv;
+			
 			switch (msg.what) {
 			case HEART_RATE:
 				String HeartRatetext = msg.getData().getString("HeartRate");
@@ -244,12 +251,10 @@ public class MainActivity extends Activity {
 				break;
 
 			case INSTANT_SPEED:
-				String InstantSpeedtext = msg.getData().getString(
-						"InstantSpeed");
+				String InstantSpeedtext = msg.getData().getString("InstantSpeed");
 				tv = (EditText) findViewById(R.id.labelInstantSpeed);
 				if (tv != null)
 					tv.setText(InstantSpeedtext);
-
 				break;
 
 			case RR_INTERVAL:
@@ -257,7 +262,6 @@ public class MainActivity extends Activity {
 				tv = (EditText) findViewById(R.id.labelRRInterval);
 				if (tv != null)
 					tv.setText(RRInterval);
-
 				break;
 
 			case INSTANT_HR:
@@ -265,9 +269,7 @@ public class MainActivity extends Activity {
 				tv = (EditText) findViewById(R.id.labelInstantHR);
 				if (tv != null)
 					tv.setText(InstantHR);
-
 				break;
-
 			}
 		}
 
