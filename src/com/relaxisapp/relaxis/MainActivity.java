@@ -3,6 +3,7 @@ package com.relaxisapp.relaxis;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
+
 import zephyr.android.HxMBT.BTClient;
 import zephyr.android.HxMBT.ZephyrProtocol;
 import android.app.Activity;
@@ -18,6 +19,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +42,9 @@ public class MainActivity extends Activity {
 	private TextView instantSpeedTextView;
 	private TextView rRIntervalTextView;
 	private TextView instantHeartRateTextView;
+	private Button app1Button;
+	private Button app2Button;
+	private Button app3Button;
 	private boolean connected = false;
 
 	@Override
@@ -77,6 +83,45 @@ public class MainActivity extends Activity {
 		instantSpeedTextView = (TextView) findViewById(R.id.instantSpeedTextView);
 		rRIntervalTextView = (TextView) findViewById(R.id.rRIntervalTextView);
 		instantHeartRateTextView = (TextView) findViewById(R.id.instantHeartRateTextView);
+		
+		app1Button = (Button) findViewById(R.id.app1Button);
+		app1Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleApp1ButtonClick((Button) view);
+            }
+        });
+		
+		app2Button = (Button) findViewById(R.id.app2Button);
+		app2Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleApp2ButtonClick((Button) view);
+            }
+        });
+		
+		app3Button = (Button) findViewById(R.id.app3Button);
+		app3Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleApp3ButtonClick((Button) view);
+            }
+        });
+	}
+	
+	void handleApp1ButtonClick(Button button) {
+		Intent intent = new Intent(this, App1Activity.class);
+        startActivity(intent);
+	}
+	
+	void handleApp2ButtonClick(Button button) {
+		// Intent intent = new Intent(this, App2Activity.class);
+        // startActivity(intent);
+	}
+	
+	void handleApp3ButtonClick(Button button) {
+		// Intent intent = new Intent(this, App3Activity.class);
+        // startActivity(intent);
 	}
 
 	@Override
