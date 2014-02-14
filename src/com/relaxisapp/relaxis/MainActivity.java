@@ -291,22 +291,22 @@ public class MainActivity extends Activity {
 			switch (msg.what) {
 			case HEART_RATE:
 				String HeartRatetext = msg.getData().getString("HeartRate");
-				heartRateTextView.append(": " + HeartRatetext);
+				heartRateTextView.setText(HeartRatetext);
 				break;
 
 			case INSTANT_SPEED:
 				String InstantSpeedtext = msg.getData().getString("InstantSpeed");
-				instantSpeedTextView.append(": " + InstantSpeedtext);
+				instantSpeedTextView.setText(InstantSpeedtext);
 				break;
 
 			case RR_INTERVAL:
 				String RRInterval = msg.getData().getString("RRInterval");
-				rRIntervalTextView.append(": " + RRInterval);
+				rRIntervalTextView.setText(RRInterval);
 				break;
 
 			case INSTANT_HR:
 				String InstantHR = msg.getData().getString("InstantHR");
-				instantHeartRateTextView.append(": " + InstantHR);
+				instantHeartRateTextView.setText(InstantHR);
 				break;
 			}
 		}
