@@ -5,7 +5,10 @@
     <string name="action_bluetooth_connect">Connect</string>
     <string name="action_bluetooth_connecting">Connecting</string>
     <string name="action_bluetooth_disconnect">Disconnect</string>
-    <string name="heart_rate">Heart rate</string>
+    <string name="heartRate">Heart Rate</string>
+    <string name="instantSpeed">Instant Speed</string>
+    <string name="rRInterval">R-R Interval</string>
+    <string name="instantHeartRate">Instant Heart Rate</string>
     <string name="statusMessage">Status message</string>
 
 </resources>

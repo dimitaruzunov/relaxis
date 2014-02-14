@@ -18,10 +18,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +35,10 @@ public class MainActivity extends Activity {
 
 	private TextView tvTest;
 	private TextView tv;
+	private TextView heartRateTextView;
+	private TextView instantSpeedTextView;
+	private TextView rRIntervalTextView;
+	private TextView instantHeartRateTextView;
 	private boolean connected = false;
 
 	@Override
@@ -54,27 +54,29 @@ public class MainActivity extends Activity {
 		 * Sending a message to android that we are going to initiate a pairing
 		 * request
 		 */
-		IntentFilter filter = new IntentFilter(
-				"android.bluetooth.device.action.PAIRING_REQUEST");
+		IntentFilter filter = new IntentFilter("android.bluetooth.device.action.PAIRING_REQUEST");
 		/*
 		 * Registering a new BTBroadcast receiver from the Main Activity context
 		 * with pairing request event
 		 */
-		this.getApplicationContext().registerReceiver(
-				new BTBroadcastReceiver(), filter);
+		this.getApplicationContext().registerReceiver(new BTBroadcastReceiver(), filter);
 		// Registering the BTBondReceiver in the application that the
 		// status of the receiver has changed to Paired
-		IntentFilter filter2 = new IntentFilter(
-				"android.bluetooth.device.action.BOND_STATE_CHANGED");
-		this.getApplicationContext().registerReceiver(new BTBondReceiver(),
-				filter2);
+		IntentFilter filter2 = new IntentFilter("android.bluetooth.device.action.BOND_STATE_CHANGED");
+		this.getApplicationContext().registerReceiver(new BTBondReceiver(), filter2);
 
 		tvTest.setText("App started.");
 	}
 	
 	void setupUiEvents() {
-		tvTest = (TextView) findViewById(R.id.tv_heartRate);
+		// Testing purposes
+		tvTest = (TextView) findViewById(R.id.testTextView);
 		tv = (TextView) findViewById(R.id.labelStatusMsg);
+		
+		heartRateTextView = (TextView) findViewById(R.id.heartRateTextView);
+		instantSpeedTextView = (TextView) findViewById(R.id.instantSpeedTextView);
+		rRIntervalTextView = (TextView) findViewById(R.id.rRIntervalTextView);
+		instantHeartRateTextView = (TextView) findViewById(R.id.instantHeartRateTextView);
 	}
 
 	@Override
@@ -241,36 +243,25 @@ public class MainActivity extends Activity {
 		
 		@Override
 		public void handleMessage(Message msg) {
-			TextView tv;
-			
 			switch (msg.what) {
 			case HEART_RATE:
 				String HeartRatetext = msg.getData().getString("HeartRate");
-				tv = (EditText) findViewById(R.id.labelHeartRate);
-				System.out.println("Heart Rate Info is " + HeartRatetext);
-				if (tv != null)
-					tv.setText(HeartRatetext);
+				heartRateTextView.append(": " + HeartRatetext);
 				break;
 
 			case INSTANT_SPEED:
 				String InstantSpeedtext = msg.getData().getString("InstantSpeed");
-				tv = (EditText) findViewById(R.id.labelInstantSpeed);
-				if (tv != null)
-					tv.setText(InstantSpeedtext);
+				instantSpeedTextView.append(": " + InstantSpeedtext);
 				break;
 
 			case RR_INTERVAL:
 				String RRInterval = msg.getData().getString("RRInterval");
-				tv = (EditText) findViewById(R.id.labelRRInterval);
-				if (tv != null)
-					tv.setText(RRInterval);
+				rRIntervalTextView.append(": " + RRInterval);
 				break;
 
 			case INSTANT_HR:
 				String InstantHR = msg.getData().getString("InstantHR");
-				tv = (EditText) findViewById(R.id.labelInstantHR);
-				if (tv != null)
-					tv.setText(InstantHR);
+				instantHeartRateTextView.append(": " + InstantHR);
 				break;
 			}
 		}

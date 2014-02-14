@@ -15,38 +15,38 @@
 	    android:orientation="vertical" >
 	    
 	    <TextView
-	        android:id="@+id/tv_heartRate"
+	        android:id="@+id/testTextView"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="@string/heart_rate" />
-	
-	    <EditText
-	        android:id="@+id/labelHeartRate"
+	        android:text="@string/heartRate" />
+
+	    <TextView
+	        android:id="@+id/heartRateTextView"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:ems="10" >
-	    </EditText>
-	    
-	    <EditText
-	        android:id="@+id/labelInstantSpeed"
+	        android:text="@string/heartRate"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	    <TextView
+	        android:id="@+id/instantSpeedTextView"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:ems="10" >
-	    </EditText>
-	    
-	    <EditText
-	        android:id="@+id/labelRRInterval"
-	        android:layout_width="match_parent"
+	        android:text="@string/instantSpeed"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	    <TextView
+	        android:id="@+id/rRIntervalTextView"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:ems="10" >
-	    </EditText>
-	    
-	    <EditText
-	        android:id="@+id/labelInstantHR"
-	        android:layout_width="match_parent"
+	        android:text="@string/rRInterval"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	    <TextView
+	        android:id="@+id/instantHeartRateTextView"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:ems="10" >
-	    </EditText>
+	        android:text="@string/instantHeartRate"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
 	
 	    <TextView
 	        android:id="@+id/labelStatusMsg"
