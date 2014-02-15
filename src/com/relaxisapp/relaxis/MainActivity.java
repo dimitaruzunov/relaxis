@@ -26,16 +26,6 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	BluetoothAdapter adapter = null;
-	BTClient _bt;
-	ZephyrProtocol _protocol;
-	NewConnectedListener _NConnListener;
-	
-	private final int HEART_RATE = 0x100;
-	private final int INSTANT_SPEED = 0x101;
-	private final int RR_INTERVAL = 0x102;
-	private final int INSTANT_HR = 0x103;
-
 	private TextView tvTest;
 	private TextView tv;
 	private TextView heartRateTextView;
@@ -187,16 +177,16 @@ public class MainActivity extends Activity {
 
 					BluetoothDevice Device = adapter.getRemoteDevice(BhMacID);
 					String DeviceName = Device.getName();
-					_bt = new BTClient(adapter, BhMacID);
-					_NConnListener = new NewConnectedListener(Newhandler, Newhandler);
-					_bt.addConnectedEventListener(_NConnListener);
+					BtConnection._bt = new BTClient(adapter, BhMacID);
+					BtConnection._NConnListener = new NewConnectedListener(Newhandler, Newhandler);
+					BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
 
-					if (_bt.IsConnected()) {
+					if (BtConnection._bt.IsConnected()) {
 						connected = true;
 						item.setIcon(R.drawable.ic_action_bluetooth_connected);
 						item.setTitle(R.string.action_bluetooth_disconnect);
 						
-						_bt.start();
+						BtConnection._bt.start();
 						tv.setText("Connected to HxM " + DeviceName);
 
 						// TODO Reset all the values to 0s
@@ -227,61 +217,12 @@ public class MainActivity extends Activity {
 		 * This disconnects listener from acting on received
 		 * messages
 		 */
-		_bt.removeConnectedEventListener(_NConnListener);
+		BtConnection._bt.removeConnectedEventListener(BtConnection._NConnListener);
 		/*
 		 * Close the communication with the device & throw an
 		 * exception if failure
 		 */
-		_bt.Close();
-	}
-
-	private class BTBondReceiver extends BroadcastReceiver {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Bundle b = intent.getExtras();
-			BluetoothDevice device = adapter.getRemoteDevice(b.get(
-					"android.bluetooth.device.extra.DEVICE").toString());
-			Log.d("Bond state", "BOND_STATED = " + device.getBondState());
-		}
-	}
-
-	private class BTBroadcastReceiver extends BroadcastReceiver {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.d("BTIntent", intent.getAction());
-			Bundle b = intent.getExtras();
-			Log.d("BTIntent", b.get("android.bluetooth.device.extra.DEVICE")
-					.toString());
-			Log.d("BTIntent",
-					b.get("android.bluetooth.device.extra.PAIRING_VARIANT")
-							.toString());
-			try {
-				BluetoothDevice device = adapter.getRemoteDevice(b.get(
-						"android.bluetooth.device.extra.DEVICE").toString());
-				Method m = BluetoothDevice.class.getMethod("convertPinToBytes",
-						new Class[] { String.class });
-				byte[] pin = (byte[]) m.invoke(device, "1234");
-				m = device.getClass().getMethod("setPin",
-						new Class[] { pin.getClass() });
-				Object result = m.invoke(device, pin);
-				Log.d("BTTest", result.toString());
-			} catch (SecurityException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (NoSuchMethodException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		BtConnection._bt.Close();
 	}
 
 	final Handler Newhandler = new Handler() {
@@ -289,22 +230,22 @@ public class MainActivity extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case HEART_RATE:
+			case BtConnection.HEART_RATE:
 				String HeartRatetext = msg.getData().getString("HeartRate");
 				heartRateTextView.setText(HeartRatetext);
 				break;
 
-			case INSTANT_SPEED:
+			case BtConnection.INSTANT_SPEED:
 				String InstantSpeedtext = msg.getData().getString("InstantSpeed");
 				instantSpeedTextView.setText(InstantSpeedtext);
 				break;
 
-			case RR_INTERVAL:
+			case BtConnection.RR_INTERVAL:
 				String RRInterval = msg.getData().getString("RRInterval");
 				rRIntervalTextView.setText(RRInterval);
 				break;
 
-			case INSTANT_HR:
+			case BtConnection.INSTANT_HR:
 				String InstantHR = msg.getData().getString("InstantHR");
 				instantHeartRateTextView.setText(InstantHR);
 				break;
