@@ -57,20 +57,103 @@ public class NewConnectedListener extends ConnectListenerImpl
 //						System.out.println(i + " - " + DataArray[i]);
 //					}
 
-					int mostRecentTs = CustomUtilities.TwoBytesToUnsignedInt(DataArray[11], DataArray[12]);
-					int secondRecentTs = CustomUtilities.TwoBytesToUnsignedInt(DataArray[13], DataArray[14]);
+					int [] recentTimestamps = {
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[11], DataArray[12]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[13], DataArray[14]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[15], DataArray[16]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[17], DataArray[18]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[19], DataArray[20]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[21], DataArray[22]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[23], DataArray[24]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[25], DataArray[26]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[27], DataArray[28]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[29], DataArray[30]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[31], DataArray[32]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[33], DataArray[34]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[35], DataArray[36]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[37], DataArray[38]),
+							CustomUtilities.TwoBytesToUnsignedInt(DataArray[39], DataArray[40])
+					};
 					
-					//TODO fix the roll over after 65535
-					int rrInterval = mostRecentTs - secondRecentTs;
+					//fix the roll over after 65535 ??
+					for (int i = 0; i < 14; i++) {
+						if (recentTimestamps[i] < recentTimestamps[i+1]) {
+							for (int j = i; j >= 0; j--) {
+								recentTimestamps[j] += 65535;
+							}
+						}
+					}
 					
-					int instantHR = 60000 / rrInterval;
+					int [] rrIntervals = {
+							recentTimestamps[0] - recentTimestamps[1],
+							recentTimestamps[1] - recentTimestamps[2],
+							recentTimestamps[2] - recentTimestamps[3],
+							recentTimestamps[3] - recentTimestamps[4],
+							recentTimestamps[4] - recentTimestamps[5],
+							recentTimestamps[5] - recentTimestamps[6],
+							recentTimestamps[6] - recentTimestamps[7],
+							recentTimestamps[7] - recentTimestamps[8],
+							recentTimestamps[8] - recentTimestamps[9],
+							recentTimestamps[9] - recentTimestamps[10],
+							recentTimestamps[10] - recentTimestamps[11],
+							recentTimestamps[11] - recentTimestamps[12],
+							recentTimestamps[12] - recentTimestamps[13],
+							recentTimestamps[13] - recentTimestamps[14]
+					};
+					
+					int [] rrDiffs = {
+							rrIntervals[0] - rrIntervals[1],
+							rrIntervals[1] - rrIntervals[2],
+							rrIntervals[2] - rrIntervals[3],
+							rrIntervals[3] - rrIntervals[4],
+							rrIntervals[4] - rrIntervals[5],
+							rrIntervals[5] - rrIntervals[6],
+							rrIntervals[6] - rrIntervals[7],
+							rrIntervals[7] - rrIntervals[8],
+							rrIntervals[8] - rrIntervals[9],
+							rrIntervals[9] - rrIntervals[10],
+							rrIntervals[10] - rrIntervals[11],
+							rrIntervals[11] - rrIntervals[12],
+							rrIntervals[12] - rrIntervals[13]
+					};
+					
+					// Standard Deviation
+					double mean = 0;
+					for (int i = 0; i < 6; i++) {
+						mean += rrDiffs[i];
+					}
+					mean /= 6.0d;
+					
+					double SD = 0;
+					for (int i = 0; i < 6; i++) {
+						SD += ((rrDiffs[i] - mean) * (rrDiffs[i] - mean));
+					}
+					SD /= 6.0d;
+					SD = Math.sqrt(SD);
+					
+					System.out.println("SD: " + SD);
+					
+//					// pNN50
+//					int nn50 = 0, nnCount = 12;
+//					for (int i = 0; i < 12; i++) {
+//						if (rrDiffs[i] > 50) {
+//							nn50++;
+//						}
+//					}
+//					double pNn50 = nn50 * 1.0d / nnCount;
+					
+					BtConnection.nnCount++;
+					if (rrDiffs[0] > 50) {
+						BtConnection.nn50++;
+					}
+					
+					System.out.println("pNN50: " + BtConnection.nn50*1.0/BtConnection.nnCount);
+					
+					
+					int instantHR = 60000 / rrIntervals[0];
 					
 					System.out.println(CustomUtilities.ByteToUnsignedInt(DataArray[9])); //HR
 					System.out.println(CustomUtilities.ByteToUnsignedInt(DataArray[10])); //Heart beat n
-					System.out.println("*"+mostRecentTs);//most recent TS
-					System.out.println("*"+secondRecentTs);
-					
-					System.out.println("!"+(rrInterval));
 					
 					//***************Displaying the Heart Rate********************************
 					int HRate =  HRSpeedDistPacket.GetHeartRate(DataArray);
@@ -92,10 +175,10 @@ public class NewConnectedListener extends ConnectListenerImpl
 					
 					//*********** Add R-R interval to the message ****************
 					text1 = _aNewHandler.obtainMessage(RR_INTERVAL);
-					b1.putString("RRInterval", String.valueOf(rrInterval));
+					b1.putString("RRInterval", String.valueOf(rrIntervals[0]));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
-					System.out.println("R-R interval is "+ rrInterval);
+					System.out.println("R-R interval is "+ rrIntervals[0]);
 					
 					//*********** Add Instant heart rate to the message ****************
 					text1 = _aNewHandler.obtainMessage(INSTANT_HR);
