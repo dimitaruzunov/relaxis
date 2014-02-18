@@ -13,8 +13,12 @@ public class NewConnectedListener extends ConnectListenerImpl
 	private int GP_HANDLER_ID = 0x20;
 	private int HR_SPD_DIST_PACKET =0x26;
 	
+	private final int HEART_RATE = 0x100;
+	private final int INSTANT_SPEED = 0x101;
+	private final int RR_INTERVAL = 0x102;
+	private final int INSTANT_HR = 0x103;
 	private HRSpeedDistPacketInfo HRSpeedDistPacket = new HRSpeedDistPacketInfo();
-	public NewConnectedListener(Handler handler, Handler _NewHandler) {
+	public NewConnectedListener(Handler handler,Handler _NewHandler) {
 		super(handler, null);
 		_OldHandler= handler;
 		_aNewHandler = _NewHandler;
@@ -26,7 +30,9 @@ public class NewConnectedListener extends ConnectListenerImpl
 		System.out.println(String.format("Connected to BioHarness %s.", eventArgs.getSource().getDevice().getName()));
 
 	
-				
+		
+		
+		
 		
 		//Creates a new ZephyrProtocol object and passes it the BTComms object
 		ZephyrProtocol _protocol = new ZephyrProtocol(eventArgs.getSource().getComms());
@@ -37,14 +43,20 @@ public class NewConnectedListener extends ConnectListenerImpl
 				byte CRCFailStatus;
 				byte RcvdBytes;
 				
-								
+				
+				
 				CRCFailStatus = msg.getCRCStatus();
 				RcvdBytes = msg.getNumRvcdBytes() ;
 				if (HR_SPD_DIST_PACKET==msg.getMsgID())
 				{
 					
+					
 					byte [] DataArray = msg.getBytes();
 					
+//					for (int i = 0; i < DataArray.length; i++) {
+//						System.out.println(i + " - " + DataArray[i]);
+//					}
+
 					int mostRecentTs = CustomUtilities.TwoBytesToUnsignedInt(DataArray[11], DataArray[12]);
 					int secondRecentTs = CustomUtilities.TwoBytesToUnsignedInt(DataArray[13], DataArray[14]);
 					
@@ -62,7 +74,7 @@ public class NewConnectedListener extends ConnectListenerImpl
 					
 					//***************Displaying the Heart Rate********************************
 					int HRate =  HRSpeedDistPacket.GetHeartRate(DataArray);
-					Message text1 = _aNewHandler.obtainMessage(BtConnection.HEART_RATE);
+					Message text1 = _aNewHandler.obtainMessage(HEART_RATE);
 					Bundle b1 = new Bundle();
 					b1.putString("HeartRate", String.valueOf(HRate));
 					text1.setData(b1);
@@ -72,21 +84,21 @@ public class NewConnectedListener extends ConnectListenerImpl
 					//***************Displaying the Instant Speed********************************
 					double InstantSpeed = HRSpeedDistPacket.GetInstantSpeed(DataArray);
 					
-					text1 = _aNewHandler.obtainMessage(BtConnection.INSTANT_SPEED);
+					text1 = _aNewHandler.obtainMessage(INSTANT_SPEED);
 					b1.putString("InstantSpeed", String.valueOf(InstantSpeed));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
 					System.out.println("Instant Speed is "+ InstantSpeed);
 					
 					//*********** Add R-R interval to the message ****************
-					text1 = _aNewHandler.obtainMessage(BtConnection.RR_INTERVAL);
+					text1 = _aNewHandler.obtainMessage(RR_INTERVAL);
 					b1.putString("RRInterval", String.valueOf(rrInterval));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
 					System.out.println("R-R interval is "+ rrInterval);
 					
 					//*********** Add Instant heart rate to the message ****************
-					text1 = _aNewHandler.obtainMessage(BtConnection.INSTANT_HR);
+					text1 = _aNewHandler.obtainMessage(INSTANT_HR);
 					b1.putString("InstantHR", String.valueOf(instantHR));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
