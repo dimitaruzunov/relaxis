@@ -148,36 +148,36 @@ public class MainActivity extends Activity {
 		item.setTitle(R.string.action_bluetooth_connecting);
 		
 		// Getting the Bluetooth adapter
-		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-		tvTest.append("\nAdapter: " + adapter);
+		BtConnection.adapter = BluetoothAdapter.getDefaultAdapter();
+		tvTest.append("\nAdapter: " + BtConnection.adapter);
 
 		// Check for Bluetooth support in the first place
 		// Emulator doesn't support Bluetooth and will return null
-		if (adapter == null) {
+		if (BtConnection.adapter == null) {
 			tvTest.append("\nBluetooth NOT supported. Aborting.");
 			return;
 		}
 
 		// TODO ask user for explicit permission
 		// Enable bluetooth
-		if (!adapter.isEnabled()) {
-			adapter.enable();
+		if (!BtConnection.adapter.isEnabled()) {
+			BtConnection.adapter.enable();
 		}
 
 		// TODO try to write this better
-		while (!adapter.isEnabled()) { //wait until the bluetooth is on
+		while (!BtConnection.adapter.isEnabled()) { //wait until the bluetooth is on
 		}
 
-		Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
+		Set<BluetoothDevice> pairedDevices = BtConnection.adapter.getBondedDevices();
 		if (pairedDevices.size() > 0) {
 			for (BluetoothDevice device : pairedDevices) {
 				if (device.getName().startsWith("HXM")) {
 					BluetoothDevice btDevice = device;
 					String BhMacID = btDevice.getAddress();
 
-					BluetoothDevice Device = adapter.getRemoteDevice(BhMacID);
+					BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BhMacID);
 					String DeviceName = Device.getName();
-					BtConnection._bt = new BTClient(adapter, BhMacID);
+					BtConnection._bt = new BTClient(BtConnection.adapter, BhMacID);
 					BtConnection._NConnListener = new NewConnectedListener(Newhandler, Newhandler);
 					BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
 
