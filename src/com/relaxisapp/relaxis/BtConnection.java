@@ -12,6 +12,7 @@ public class BtConnection {
 	static BTClient _bt;
 	static ZephyrProtocol _protocol;
 	static NewConnectedListener _NConnListener;
+	static NewConnectedListener instantHRListener;
 	
 	static final int HEART_RATE = 0x100;
 	static final int INSTANT_SPEED = 0x101;
@@ -21,10 +22,5 @@ public class BtConnection {
 	static int nn50 = 0;
 	static int nnCount = 0;
 	
-	static GraphViewSeries InstantHRSeries = new GraphViewSeries(new GraphViewData[] {
-		      new GraphViewData(1, 2.0d)
-		      , new GraphViewData(2, 1.5d)
-		      , new GraphViewData(3, 2.5d)
-		      , new GraphViewData(4, 1.0d)
-		});
+	static GraphViewSeries instantHRSeries = new GraphViewSeries(new GraphViewData[] {});
 }
