@@ -13,10 +13,6 @@ public class NewConnectedListener extends ConnectListenerImpl
 	private int GP_HANDLER_ID = 0x20;
 	private int HR_SPD_DIST_PACKET =0x26;
 	
-	private final int HEART_RATE = 0x100;
-	private final int INSTANT_SPEED = 0x101;
-	private final int RR_INTERVAL = 0x102;
-	private final int INSTANT_HR = 0x103;
 	private HRSpeedDistPacketInfo HRSpeedDistPacket = new HRSpeedDistPacketInfo();
 	public NewConnectedListener(Handler handler,Handler _NewHandler) {
 		super(handler, null);
@@ -140,7 +136,7 @@ public class NewConnectedListener extends ConnectListenerImpl
 					
 					System.out.println("Mean SD: " + BtConnection.SDSum/BtConnection.SDCount);
 					
-					// pNN50
+					// HRV = mean of nn50 and nn20
 					int nn50 = 0, nn20 = 0, nnCount = 12;
 					for (int i = 0; i < 12; i++) {
 						if (rrDiffs[i] > 20) {
@@ -154,12 +150,13 @@ public class NewConnectedListener extends ConnectListenerImpl
 					System.out.println("HRV: " + hrv);
 					
 					
+					// pNN50 
 					BtConnection.nnCount++;
 					if (rrDiffs[0] > 50) {
 						BtConnection.nn50++;
 					}
+					double pNN50 = BtConnection.nn50*1.0/BtConnection.nnCount;
 					
-					System.out.println("pNN50: " + BtConnection.nn50*1.0/BtConnection.nnCount);
 					
 					
 					int instantHR = 60000 / rrIntervals[0];
@@ -169,7 +166,7 @@ public class NewConnectedListener extends ConnectListenerImpl
 					
 					//***************Displaying the Heart Rate********************************
 					int HRate =  HRSpeedDistPacket.GetHeartRate(DataArray);
-					Message text1 = _aNewHandler.obtainMessage(HEART_RATE);
+					Message text1 = _aNewHandler.obtainMessage(BtConnection.HEART_RATE);
 					Bundle b1 = new Bundle();
 					b1.putString("HeartRate", String.valueOf(HRate));
 					text1.setData(b1);
@@ -179,25 +176,32 @@ public class NewConnectedListener extends ConnectListenerImpl
 					//***************Displaying the Instant Speed********************************
 					double InstantSpeed = HRSpeedDistPacket.GetInstantSpeed(DataArray);
 					
-					text1 = _aNewHandler.obtainMessage(INSTANT_SPEED);
+					text1 = _aNewHandler.obtainMessage(BtConnection.INSTANT_SPEED);
 					b1.putString("InstantSpeed", String.valueOf(InstantSpeed));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
 					System.out.println("Instant Speed is "+ InstantSpeed);
 					
 					//*********** Add R-R interval to the message ****************
-					text1 = _aNewHandler.obtainMessage(RR_INTERVAL);
+					text1 = _aNewHandler.obtainMessage(BtConnection.RR_INTERVAL);
 					b1.putString("RRInterval", String.valueOf(rrIntervals[0]));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
 					System.out.println("R-R interval is "+ rrIntervals[0]);
 					
 					//*********** Add Instant heart rate to the message ****************
-					text1 = _aNewHandler.obtainMessage(INSTANT_HR);
+					text1 = _aNewHandler.obtainMessage(BtConnection.INSTANT_HR);
 					b1.putString("InstantHR", String.valueOf(instantHR));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
 					System.out.println("Instant HR is "+ instantHR);
+					
+					//*********** Add pNN50 to the message ****************
+					text1 = _aNewHandler.obtainMessage(BtConnection.PNN50);
+					b1.putString("pNN50", String.valueOf(pNN50));
+					text1.setData(b1);
+					_aNewHandler.sendMessage(text1);
+					System.out.println("pNN50 is " + pNN50);
 				}
 			}
 		});

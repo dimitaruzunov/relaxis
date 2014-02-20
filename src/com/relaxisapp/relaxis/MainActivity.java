@@ -105,8 +105,8 @@ public class MainActivity extends Activity {
 	}
 	
 	void handleApp2ButtonClick(Button button) {
-		// Intent intent = new Intent(this, App2Activity.class);
-        // startActivity(intent);
+		 Intent intent = new Intent(this, StressEstimationActivity.class);
+         startActivity(intent);
 	}
 	
 	void handleApp3ButtonClick(Button button) {
