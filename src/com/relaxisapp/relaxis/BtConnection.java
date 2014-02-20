@@ -6,6 +6,7 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 import zephyr.android.HxMBT.BTClient;
 import zephyr.android.HxMBT.ZephyrProtocol;
 import android.bluetooth.BluetoothAdapter;
+import android.graphics.Color;
 
 public class BtConnection {
 	static BluetoothAdapter adapter = null;
@@ -13,6 +14,7 @@ public class BtConnection {
 	static ZephyrProtocol _protocol;
 	static NewConnectedListener _NConnListener;
 	static NewConnectedListener instantHRListener;
+	static String BhMacID;
 	
 	static final int HEART_RATE = 0x100;
 	static final int INSTANT_SPEED = 0x101;
@@ -26,4 +28,5 @@ public class BtConnection {
 	static double SDCount = 0;
 	
 	static GraphViewSeries instantHRSeries = new GraphViewSeries(new GraphViewData[] {});
+	static GraphViewSeries idealBreathingCycle = new GraphViewSeries(new GraphViewData[] {});
 }

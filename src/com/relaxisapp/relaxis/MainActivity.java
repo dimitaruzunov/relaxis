@@ -173,11 +173,11 @@ public class MainActivity extends Activity {
 			for (BluetoothDevice device : pairedDevices) {
 				if (device.getName().startsWith("HXM")) {
 					BluetoothDevice btDevice = device;
-					String BhMacID = btDevice.getAddress();
+					BtConnection.BhMacID = btDevice.getAddress();
 
-					BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BhMacID);
+					BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BtConnection.BhMacID);
 					String DeviceName = Device.getName();
-					BtConnection._bt = new BTClient(BtConnection.adapter, BhMacID);
+					BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
 					BtConnection._NConnListener = new NewConnectedListener(Newhandler, Newhandler);
 					BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
 
