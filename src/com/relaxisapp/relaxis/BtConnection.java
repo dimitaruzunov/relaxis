@@ -22,5 +22,8 @@ public class BtConnection {
 	static int nn50 = 0;
 	static int nnCount = 0;
 	
+	static double SDSum = 0;
+	static double SDCount = 0;
+	
 	static GraphViewSeries instantHRSeries = new GraphViewSeries(new GraphViewData[] {});
 }

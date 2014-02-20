@@ -133,14 +133,26 @@ public class NewConnectedListener extends ConnectListenerImpl
 					
 					System.out.println("SD: " + SD);
 					
-//					// pNN50
-//					int nn50 = 0, nnCount = 12;
-//					for (int i = 0; i < 12; i++) {
-//						if (rrDiffs[i] > 50) {
-//							nn50++;
-//						}
-//					}
-//					double pNn50 = nn50 * 1.0d / nnCount;
+					// SD of the last two differences
+					BtConnection.SDCount++;
+					mean = (rrDiffs[0] + rrDiffs[1]) / 2.0;
+					BtConnection.SDSum += Math.sqrt(((rrDiffs[0]-mean)*(rrDiffs[0]-mean) + (rrDiffs[1]-mean)*(rrDiffs[1]-mean))/2.0);
+					
+					System.out.println("Mean SD: " + BtConnection.SDSum/BtConnection.SDCount);
+					
+					// pNN50
+					int nn50 = 0, nn20 = 0, nnCount = 12;
+					for (int i = 0; i < 12; i++) {
+						if (rrDiffs[i] > 20) {
+							nn20++;
+						}
+						if (rrDiffs[i] > 50) {
+							nn50++;
+						}
+					}
+					double hrv = (nn50+nn20) * 1.0d / (2 * nnCount);
+					System.out.println("HRV: " + hrv);
+					
 					
 					BtConnection.nnCount++;
 					if (rrDiffs[0] > 50) {
