@@ -43,75 +43,79 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		setupUiEvents();
-		
+
 		// TODO Try to put the following code out of the onCreate method
-		
+
 		/*
 		 * Sending a message to android that we are going to initiate a pairing
 		 * request
 		 */
-		IntentFilter filter = new IntentFilter("android.bluetooth.device.action.PAIRING_REQUEST");
+		IntentFilter filter = new IntentFilter(
+				"android.bluetooth.device.action.PAIRING_REQUEST");
 		/*
 		 * Registering a new BTBroadcast receiver from the Main Activity context
 		 * with pairing request event
 		 */
-		this.getApplicationContext().registerReceiver(new BTBroadcastReceiver(), filter);
+		this.getApplicationContext().registerReceiver(
+				new BTBroadcastReceiver(), filter);
 		// Registering the BTBondReceiver in the application that the
 		// status of the receiver has changed to Paired
-		IntentFilter filter2 = new IntentFilter("android.bluetooth.device.action.BOND_STATE_CHANGED");
-		this.getApplicationContext().registerReceiver(new BTBondReceiver(), filter2);
+		IntentFilter filter2 = new IntentFilter(
+				"android.bluetooth.device.action.BOND_STATE_CHANGED");
+		this.getApplicationContext().registerReceiver(new BTBondReceiver(),
+				filter2);
 
 		tvTest.setText("App started.");
 	}
-	
+
 	void setupUiEvents() {
 		// Testing purposes
 		tvTest = (TextView) findViewById(R.id.testTextView);
 		tv = (TextView) findViewById(R.id.labelStatusMsg);
-		
+
 		heartRateTextView = (TextView) findViewById(R.id.heartRateTextView);
 		instantSpeedTextView = (TextView) findViewById(R.id.instantSpeedTextView);
 		rRIntervalTextView = (TextView) findViewById(R.id.rRIntervalTextView);
 		instantHeartRateTextView = (TextView) findViewById(R.id.instantHeartRateTextView);
-		
+
 		app1Button = (Button) findViewById(R.id.app1Button);
 		app1Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleApp1ButtonClick((Button) view);
-            }
-        });
-		
+			@Override
+			public void onClick(View view) {
+				handleApp1ButtonClick((Button) view);
+			}
+		});
+
 		app2Button = (Button) findViewById(R.id.app2Button);
 		app2Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleApp2ButtonClick((Button) view);
-            }
-        });
-		
+			@Override
+			public void onClick(View view) {
+				handleApp2ButtonClick((Button) view);
+			}
+		});
+
 		app3Button = (Button) findViewById(R.id.app3Button);
 		app3Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleApp3ButtonClick((Button) view);
-            }
-        });
+			@Override
+			public void onClick(View view) {
+				handleApp3ButtonClick((Button) view);
+			}
+		});
 	}
-	
+
 	void handleApp1ButtonClick(Button button) {
 		Intent intent = new Intent(this, App1Activity.class);
-        startActivity(intent);
+		startActivity(intent);
 	}
-	
+
 	void handleApp2ButtonClick(Button button) {
-		 Intent intent = new Intent(this, StressEstimationActivity.class);
-         startActivity(intent);
+		Intent intent = new Intent(this, StressEstimationActivity.class);
+		startActivity(intent);
 	}
-	
+
 	void handleApp3ButtonClick(Button button) {
 		// Intent intent = new Intent(this, App3Activity.class);
-        // startActivity(intent);
+		// startActivity(intent);
 	}
 
 	@Override
@@ -122,31 +126,31 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        boolean handled = true;
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		boolean handled = true;
 
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_bluetooth:
-            	if (!connected) {
-            		onClickMenuBluetoothConnect(item);
-            	} else {
-            		onClickMenuBluetoothDisconnect(item);
-            	}
-                break;
-            default:
-                handled = super.onOptionsItemSelected(item);
-        }
-        return handled;
-    }
-	
+		int id = item.getItemId();
+		switch (id) {
+		case R.id.action_bluetooth:
+			if (!connected) {
+				onClickMenuBluetoothConnect(item);
+			} else {
+				onClickMenuBluetoothDisconnect(item);
+			}
+			break;
+		default:
+			handled = super.onOptionsItemSelected(item);
+		}
+		return handled;
+	}
+
 	void onClickMenuBluetoothConnect(MenuItem item) {
 		item.setIcon(R.drawable.ic_action_bluetooth_searching);
 		item.setTitle(R.string.action_bluetooth_connecting);
-		
+
 		// Getting the Bluetooth adapter
 		BtConnection.adapter = BluetoothAdapter.getDefaultAdapter();
 		tvTest.append("\nAdapter: " + BtConnection.adapter);
@@ -165,27 +169,33 @@ public class MainActivity extends Activity {
 		}
 
 		// TODO try to write this better
-		while (!BtConnection.adapter.isEnabled()) { //wait until the bluetooth is on
+		while (!BtConnection.adapter.isEnabled()) { // wait until the bluetooth
+													// is on
 		}
 
-		Set<BluetoothDevice> pairedDevices = BtConnection.adapter.getBondedDevices();
+		Set<BluetoothDevice> pairedDevices = BtConnection.adapter
+				.getBondedDevices();
 		if (pairedDevices.size() > 0) {
 			for (BluetoothDevice device : pairedDevices) {
 				if (device.getName().startsWith("HXM")) {
 					BluetoothDevice btDevice = device;
 					BtConnection.BhMacID = btDevice.getAddress();
 
-					BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BtConnection.BhMacID);
+					BluetoothDevice Device = BtConnection.adapter
+							.getRemoteDevice(BtConnection.BhMacID);
 					String DeviceName = Device.getName();
-					BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
-					BtConnection._NConnListener = new NewConnectedListener(Newhandler, Newhandler);
-					BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
+					BtConnection._bt = new BTClient(BtConnection.adapter,
+							BtConnection.BhMacID);
+					BtConnection._NConnListener = new NewConnectedListener(
+							Newhandler, Newhandler);
+					BtConnection._bt
+							.addConnectedEventListener(BtConnection._NConnListener);
 
 					if (BtConnection._bt.IsConnected()) {
 						connected = true;
 						item.setIcon(R.drawable.ic_action_bluetooth_connected);
 						item.setTitle(R.string.action_bluetooth_disconnect);
-						
+
 						BtConnection._bt.start();
 						tv.setText("Connected to HxM " + DeviceName);
 
@@ -193,7 +203,7 @@ public class MainActivity extends Activity {
 					} else {
 						item.setIcon(R.drawable.ic_action_bluetooth);
 						item.setTitle(R.string.action_bluetooth_connect);
-						
+
 						tv.setText("Unable to Connect!");
 					}
 
@@ -205,28 +215,28 @@ public class MainActivity extends Activity {
 		Toast toast = Toast.makeText(this, "Woohoo!", Toast.LENGTH_LONG);
 		toast.show();
 	}
-	
+
 	void onClickMenuBluetoothDisconnect(MenuItem item) {
 		connected = false;
 		item.setIcon(R.drawable.ic_action_bluetooth);
 		item.setTitle(R.string.action_bluetooth_connect);
-		
+
 		tv.setText("Disconnected from HxM!");
-		
+
 		/*
-		 * This disconnects listener from acting on received
-		 * messages
+		 * This disconnects listener from acting on received messages
 		 */
-		BtConnection._bt.removeConnectedEventListener(BtConnection._NConnListener);
+		BtConnection._bt
+				.removeConnectedEventListener(BtConnection._NConnListener);
 		/*
-		 * Close the communication with the device & throw an
-		 * exception if failure
+		 * Close the communication with the device & throw an exception if
+		 * failure
 		 */
 		BtConnection._bt.Close();
 	}
 
 	final Handler Newhandler = new Handler() {
-		
+
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -236,7 +246,8 @@ public class MainActivity extends Activity {
 				break;
 
 			case BtConnection.INSTANT_SPEED:
-				String InstantSpeedtext = msg.getData().getString("InstantSpeed");
+				String InstantSpeedtext = msg.getData().getString(
+						"InstantSpeed");
 				instantSpeedTextView.setText(InstantSpeedtext);
 				break;
 

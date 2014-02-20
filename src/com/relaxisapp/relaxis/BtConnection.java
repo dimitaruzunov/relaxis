@@ -15,7 +15,7 @@ public class BtConnection {
 	static NewConnectedListener _NConnListener;
 	static NewConnectedListener instantHRListener;
 	static String BhMacID;
-	
+
 	static final int HEART_RATE = 0x100;
 	static final int INSTANT_SPEED = 0x101;
 	static final int RR_INTERVAL = 0x102;
@@ -24,10 +24,12 @@ public class BtConnection {
 
 	static int nn50 = 0;
 	static int nnCount = 0;
-	
+
 	static double SDSum = 0;
 	static double SDCount = 0;
-	
-	static GraphViewSeries instantHRSeries = new GraphViewSeries(new GraphViewData[] {});
-	static GraphViewSeries idealBreathingCycle = new GraphViewSeries(new GraphViewData[] {});
+
+	static GraphViewSeries instantHRSeries = new GraphViewSeries(
+			new GraphViewData[] {});
+	static GraphViewSeries idealBreathingCycle = new GraphViewSeries(
+			new GraphViewData[] {});
 }
