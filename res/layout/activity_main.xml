@@ -19,36 +19,38 @@
             android:id="@+id/testTextView" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/heartRate"
             android:id="@+id/heartRateTextView"
-            android:layout_below="@+id/testTextView" />
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/instantSpeed"
+            android:layout_below="@+id/testTextView"
+            android:drawableLeft="@drawable/ic_heart_rate"
+            android:drawablePadding="@dimen/activity_horizontal_margin"
+            android:hint="@string/heartRate"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
             android:id="@+id/instantSpeedTextView"
-            android:layout_below="@+id/heartRateTextView" />
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/rRInterval"
+            android:layout_below="@+id/heartRateTextView"
+            android:hint="@string/instantSpeed"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
             android:id="@+id/rRIntervalTextView"
-            android:layout_below="@+id/instantSpeedTextView" />
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/instantHeartRate"
+            android:layout_below="@+id/instantSpeedTextView"
+            android:hint="@string/rRInterval"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
             android:id="@+id/instantHeartRateTextView"
-            android:layout_below="@+id/rRIntervalTextView" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rRIntervalTextView"
+            android:hint="@string/instantHeartRate"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
         
         <TextView
             android:layout_width="match_parent"
