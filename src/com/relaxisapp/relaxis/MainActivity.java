@@ -1,22 +1,17 @@
 package com.relaxisapp.relaxis;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Set;
 
 import zephyr.android.HxMBT.BTClient;
-import zephyr.android.HxMBT.ZephyrProtocol;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +37,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		setupUiEvents();
+		setupViews();
 
 		// TODO Try to put the following code out of the onCreate method
 
@@ -68,12 +63,19 @@ public class MainActivity extends Activity {
 		tvTest.setText("App started.");
 	}
 
-	void setupUiEvents() {
+	private void setupViews() {
 		// Testing purposes
 		tvTest = (TextView) findViewById(R.id.testTextView);
 		tv = (TextView) findViewById(R.id.labelStatusMsg);
 
 		heartRateTextView = (TextView) findViewById(R.id.heartRateTextView);
+		heartRateTextView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				handleHeartRateTextViewClick((TextView) view);
+			}
+		});
+		
 		instantSpeedTextView = (TextView) findViewById(R.id.instantSpeedTextView);
 		rRIntervalTextView = (TextView) findViewById(R.id.rRIntervalTextView);
 		instantHeartRateTextView = (TextView) findViewById(R.id.instantHeartRateTextView);
@@ -101,6 +103,12 @@ public class MainActivity extends Activity {
 				handleApp3ButtonClick((Button) view);
 			}
 		});
+	}
+	
+	void handleHeartRateTextViewClick(TextView textView) {
+		Toast hint = Toast.makeText(this, R.string.heartRate, Toast.LENGTH_SHORT);
+		hint.setGravity(Gravity.TOP | Gravity.LEFT, textView.getRight() + 16, textView.getBottom() + 10);
+		hint.show();
 	}
 
 	void handleApp1ButtonClick(Button button) {
