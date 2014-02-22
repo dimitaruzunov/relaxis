@@ -106,9 +106,7 @@ public class MainActivity extends Activity {
 	}
 	
 	void handleHeartRateTextViewClick(TextView textView) {
-		Toast hint = Toast.makeText(this, R.string.heartRate, Toast.LENGTH_SHORT);
-		hint.setGravity(Gravity.TOP | Gravity.LEFT, textView.getRight() + 16, textView.getBottom() + 10);
-		hint.show();
+		HintHelper.createAndPositionHint(this, R.string.heartRate, textView).show();
 	}
 
 	void handleApp1ButtonClick(Button button) {
