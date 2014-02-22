@@ -2,6 +2,7 @@ package com.relaxisapp.relaxis;
 
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import zephyr.android.HxMBT.BTClient;
 import zephyr.android.HxMBT.ZephyrProtocol;
@@ -14,6 +15,7 @@ public class BtConnection {
 	static ZephyrProtocol _protocol;
 	static NewConnectedListener _NConnListener;
 	static NewConnectedListener instantHRListener;
+	static NewConnectedListener stressLevelListener;
 	static String BhMacID;
 
 	static final int HEART_RATE = 0x100;
@@ -29,7 +31,9 @@ public class BtConnection {
 	static double SDCount = 0;
 
 	static GraphViewSeries instantHRSeries = new GraphViewSeries(
-			new GraphViewData[] {});
+			"Instant HR Curve", new GraphViewSeriesStyle(
+					Color.rgb(255, 20, 20), 1), new GraphViewData[] {});
 	static GraphViewSeries idealBreathingCycle = new GraphViewSeries(
-			new GraphViewData[] {});
+			"Instant HR Curve", new GraphViewSeriesStyle(
+					Color.rgb(20, 20, 255), 1), new GraphViewData[] {});
 }

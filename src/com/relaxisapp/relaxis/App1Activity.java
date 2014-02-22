@@ -18,6 +18,7 @@ import com.jjoe64.graphview.LineGraphView;
 public class App1Activity extends Activity {
 
 	private int count = 1;
+	private int timerCounter = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +46,25 @@ public class App1Activity extends Activity {
 		LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
 		layout.addView(graphView);
 
-		/*
-		 * Timer timer = new Timer(); timer.scheduleAtFixedRate(new TimerTask()
-		 * {
-		 * 
-		 * int idealHR;
-		 * 
-		 * @Override public void run() {
-		 * BtConnection.idealBreathingCycle.appendData(new GraphViewData(count,
-		 * 80 + Math.sin(count) * 7), true, 10); }
-		 * 
-		 * }, 1000, 1000000000);
-		 */
+		this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	Timer timer = new Timer();
+        		timer.scheduleAtFixedRate(new TimerTask() {
+
+        			double idealHR = 80 + Math.sin(timerCounter * Math.PI / 60) * 15;
+
+        			@Override
+        			public void run() {
+        				BtConnection.idealBreathingCycle.appendData(new GraphViewData(
+        						timerCounter, idealHR), true, 10);
+        				timerCounter++;
+        			}
+
+        		}, 100, 1000000000);
+            }
+        });
+		
 	}
 
 	final Handler Newhandler = new Handler() {
