@@ -19,36 +19,62 @@
             android:drawablePadding="@dimen/activity_horizontal_margin"
             android:hint="@string/heartRate"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+        <View
+            style="@style/Divider"
+            android:id="@+id/divider1"
+            android:layout_below="@+id/heartRateTextView"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
 
         <TextView
             android:id="@+id/instantSpeedTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/heartRateTextView"
+            android:layout_below="@+id/divider1"
             android:hint="@string/instantSpeed"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+        <View
+            style="@style/Divider"
+            android:id="@+id/divider2"
+            android:layout_below="@+id/instantSpeedTextView"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
 
         <TextView
             android:id="@+id/rRIntervalTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/instantSpeedTextView"
+            android:layout_below="@+id/divider2"
             android:hint="@string/rRInterval"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+        <View
+            style="@style/Divider"
+            android:id="@+id/divider3"
+            android:layout_below="@+id/rRIntervalTextView"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
 
         <TextView
             android:id="@+id/instantHeartRateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rRIntervalTextView"
+            android:drawableLeft="@drawable/ic_instant_heart_rate"
+            android:drawablePadding="@dimen/activity_horizontal_margin"
+            android:layout_below="@+id/divider3"
             android:hint="@string/instantHeartRate"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+        <View
+            style="@style/Divider"
+            android:id="@+id/divider4"
+            android:layout_below="@+id/instantHeartRateTextView"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
 
         <Button
             android:id="@+id/app1Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/instantHeartRateTextView"
+            android:layout_below="@+id/divider4"
             android:text="App1" />
 
         <Button
