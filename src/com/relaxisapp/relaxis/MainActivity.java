@@ -67,7 +67,14 @@ public class MainActivity extends Activity {
 		
 		instantSpeedTextView = (TextView) findViewById(R.id.instantSpeedTextView);
 		rRIntervalTextView = (TextView) findViewById(R.id.rRIntervalTextView);
+		
 		instantHeartRateTextView = (TextView) findViewById(R.id.instantHeartRateTextView);
+		instantHeartRateTextView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				handleInstantHeartRateTextViewClick((TextView) view);
+			}
+		});
 
 		app1Button = (Button) findViewById(R.id.app1Button);
 		app1Button.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +103,10 @@ public class MainActivity extends Activity {
 	
 	void handleHeartRateTextViewClick(TextView textView) {
 		HintHelper.createAndPositionHint(this, R.string.heartRate, textView).show();
+	}
+	
+	void handleInstantHeartRateTextViewClick(TextView textView) {
+		HintHelper.createAndPositionHint(this, R.string.instantHeartRate, textView).show();
 	}
 
 	void handleApp1ButtonClick(Button button) {
