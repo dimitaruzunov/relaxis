@@ -61,8 +61,6 @@ public class MainActivity extends Activity {
 				"android.bluetooth.device.action.BOND_STATE_CHANGED");
 		this.getApplicationContext().registerReceiver(new BTBondReceiver(),
 				filter2);
-
-		tvTest.setText("App started.");
 	}
 
 	private void setupViews() {
@@ -180,7 +178,6 @@ public class MainActivity extends Activity {
 
 		// Getting the Bluetooth adapter
 		BtConnection.adapter = BluetoothAdapter.getDefaultAdapter();
-		tvTest.append("\nAdapter: " + BtConnection.adapter);
 
 		// Check for Bluetooth support in the first place
 		// Emulator doesn't support Bluetooth and will return null
