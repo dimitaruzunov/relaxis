@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
+	public static final int REQUEST_ENABLE_BT = 1000;
+	
 	private TextView tvTest;
 	private TextView tv;
 	private TextView heartRateTextView;
@@ -152,6 +154,25 @@ public class MainActivity extends Activity {
 		}
 		return handled;
 	}
+	
+	
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent resultIntent) {
+		switch (requestCode) {
+		case REQUEST_ENABLE_BT:
+			handleBluetoothConnectResult(resultCode, resultIntent);
+			break;
+		}
+	}
+
+	private void handleBluetoothConnectResult(int resultCode, Intent resultIntent) {
+		if (resultCode == RESULT_OK) {
+            Toast.makeText(this, "Bluetooth is now enabled", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "User cancelled the bluetooth connect intent", Toast.LENGTH_LONG).show();
+        }
+	}
 
 	void onClickMenuBluetoothConnect(MenuItem item) {
 		item.setIcon(R.drawable.ic_action_bluetooth_searching);
@@ -168,10 +189,10 @@ public class MainActivity extends Activity {
 			return;
 		}
 
-		// TODO ask user for explicit permission
 		// Enable bluetooth
 		if (!BtConnection.adapter.isEnabled()) {
-			BtConnection.adapter.enable();
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 		}
 
 		// TODO try to write this better
