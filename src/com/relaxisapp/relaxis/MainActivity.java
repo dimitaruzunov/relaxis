@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
 	}
 
 	void handleApp1ButtonClick(Button button) {
-		Intent intent = new Intent(this, App1Activity.class);
+		Intent intent = new Intent(this, BreathingActivity.class);
 		startActivity(intent);
 	}
 
