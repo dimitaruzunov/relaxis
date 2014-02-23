@@ -11,5 +11,8 @@
     <string name="instantHeartRate">Instant Heart Rate</string>
     <string name="statusMessage">Status message</string>
     <string name="stressLevel">Stress level</string>
+    <string name="score">Score</string>
+    <string name="lastAntiScore">Last anti score</string>
+    <string name="timeLeft">Time left</string>
 
 </resources>
