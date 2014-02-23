@@ -15,7 +15,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.LineGraphView;
 
-public class App1Activity extends Activity {
+public class BreathingActivity extends Activity {
 
 	// TODO find out why it is breaking at some point
 
@@ -53,7 +53,7 @@ public class App1Activity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_app1);
+		setContentView(R.layout.activity_breathing);
 
 		setupViews();
 		
