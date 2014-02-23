@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,9 +21,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
 	public static final int REQUEST_ENABLE_BT = 1000;
-	
-	private TextView tvTest;
-	private TextView tv;
+
 	private TextView heartRateTextView;
 	private TextView instantSpeedTextView;
 	private TextView rRIntervalTextView;
@@ -47,29 +44,19 @@ public class MainActivity extends Activity {
 		 * Sending a message to android that we are going to initiate a pairing
 		 * request
 		 */
-		IntentFilter filter = new IntentFilter(
-				"android.bluetooth.device.action.PAIRING_REQUEST");
+		IntentFilter filter = new IntentFilter("android.bluetooth.device.action.PAIRING_REQUEST");
 		/*
 		 * Registering a new BTBroadcast receiver from the Main Activity context
 		 * with pairing request event
 		 */
-		this.getApplicationContext().registerReceiver(
-				new BTBroadcastReceiver(), filter);
+		this.getApplicationContext().registerReceiver(new BTBroadcastReceiver(), filter);
 		// Registering the BTBondReceiver in the application that the
 		// status of the receiver has changed to Paired
-		IntentFilter filter2 = new IntentFilter(
-				"android.bluetooth.device.action.BOND_STATE_CHANGED");
-		this.getApplicationContext().registerReceiver(new BTBondReceiver(),
-				filter2);
-
-		tvTest.setText("App started.");
+		IntentFilter filter2 = new IntentFilter("android.bluetooth.device.action.BOND_STATE_CHANGED");
+		this.getApplicationContext().registerReceiver(new BTBondReceiver(), filter2);
 	}
 
 	private void setupViews() {
-		// Testing purposes
-		tvTest = (TextView) findViewById(R.id.testTextView);
-		tv = (TextView) findViewById(R.id.labelStatusMsg);
-
 		heartRateTextView = (TextView) findViewById(R.id.heartRateTextView);
 		heartRateTextView.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -154,8 +141,6 @@ public class MainActivity extends Activity {
 		}
 		return handled;
 	}
-	
-	
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent resultIntent) {
@@ -180,12 +165,10 @@ public class MainActivity extends Activity {
 
 		// Getting the Bluetooth adapter
 		BtConnection.adapter = BluetoothAdapter.getDefaultAdapter();
-		tvTest.append("\nAdapter: " + BtConnection.adapter);
 
-		// Check for Bluetooth support in the first place
-		// Emulator doesn't support Bluetooth and will return null
+		// Check for Bluetooth support
 		if (BtConnection.adapter == null) {
-			tvTest.append("\nBluetooth NOT supported. Aborting.");
+			Toast.makeText(this, "Bluetooth is not supported.", Toast.LENGTH_LONG).show();
 			return;
 		}
 
@@ -200,23 +183,18 @@ public class MainActivity extends Activity {
 													// is on
 		}
 
-		Set<BluetoothDevice> pairedDevices = BtConnection.adapter
-				.getBondedDevices();
+		Set<BluetoothDevice> pairedDevices = BtConnection.adapter.getBondedDevices();
 		if (pairedDevices.size() > 0) {
 			for (BluetoothDevice device : pairedDevices) {
 				if (device.getName().startsWith("HXM")) {
 					BluetoothDevice btDevice = device;
 					BtConnection.BhMacID = btDevice.getAddress();
 
-					BluetoothDevice Device = BtConnection.adapter
-							.getRemoteDevice(BtConnection.BhMacID);
+					BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BtConnection.BhMacID);
 					String DeviceName = Device.getName();
-					BtConnection._bt = new BTClient(BtConnection.adapter,
-							BtConnection.BhMacID);
-					BtConnection._NConnListener = new NewConnectedListener(
-							Newhandler, Newhandler);
-					BtConnection._bt
-							.addConnectedEventListener(BtConnection._NConnListener);
+					BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
+					BtConnection._NConnListener = new NewConnectedListener(Newhandler, Newhandler);
+					BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
 
 					if (BtConnection._bt.IsConnected()) {
 						connected = true;
@@ -224,23 +202,21 @@ public class MainActivity extends Activity {
 						item.setTitle(R.string.action_bluetooth_disconnect);
 
 						BtConnection._bt.start();
-						tv.setText("Connected to HxM " + DeviceName);
+						
+						Toast.makeText(this, "Connected to HxM " + DeviceName, Toast.LENGTH_LONG).show();
 
 						// TODO Reset all the values to 0s
 					} else {
 						item.setIcon(R.drawable.ic_action_bluetooth);
 						item.setTitle(R.string.action_bluetooth_connect);
-
-						tv.setText("Unable to Connect!");
+						
+						Toast.makeText(this, "Unable to Connect!", Toast.LENGTH_LONG).show();
 					}
 
 					break;
 				}
 			}
 		}
-
-		Toast toast = Toast.makeText(this, "Woohoo!", Toast.LENGTH_LONG);
-		toast.show();
 	}
 
 	void onClickMenuBluetoothDisconnect(MenuItem item) {
@@ -248,13 +224,12 @@ public class MainActivity extends Activity {
 		item.setIcon(R.drawable.ic_action_bluetooth);
 		item.setTitle(R.string.action_bluetooth_connect);
 
-		tv.setText("Disconnected from HxM!");
+		Toast.makeText(this, "Disconnected from HxM!", Toast.LENGTH_LONG).show();
 
 		/*
 		 * This disconnects listener from acting on received messages
 		 */
-		BtConnection._bt
-				.removeConnectedEventListener(BtConnection._NConnListener);
+		BtConnection._bt.removeConnectedEventListener(BtConnection._NConnListener);
 		/*
 		 * Close the communication with the device & throw an exception if
 		 * failure
@@ -273,8 +248,7 @@ public class MainActivity extends Activity {
 				break;
 
 			case BtConnection.INSTANT_SPEED:
-				String InstantSpeedtext = msg.getData().getString(
-						"InstantSpeed");
+				String InstantSpeedtext = msg.getData().getString("InstantSpeed");
 				instantSpeedTextView.setText(InstantSpeedtext);
 				break;
 

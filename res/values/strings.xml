@@ -9,7 +9,6 @@
     <string name="instantSpeed">Instant Speed</string>
     <string name="rRInterval">R-R Interval</string>
     <string name="instantHeartRate">Instant Heart Rate</string>
-    <string name="statusMessage">Status message</string>
     <string name="stressLevel">Stress level</string>
 
 </resources>
