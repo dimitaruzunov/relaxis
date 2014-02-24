@@ -14,11 +14,13 @@ import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ListView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements ListView.OnItemClickListener {
 
 	public static final int REQUEST_ENABLE_BT = 1000;
 
@@ -30,7 +32,8 @@ public class MainActivity extends Activity {
 	private Button stressAppButton;
 	private Button app3Button;
 	private boolean connected = false;
-	Intent intent;
+	
+	NavigationDrawerHelper navigationDrawerHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,9 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		setupViews();
+		
+		navigationDrawerHelper = new NavigationDrawerHelper();
+        navigationDrawerHelper.init(this, this);
 
 		// TODO Try to put the following code out of the onCreate method
 
@@ -127,7 +133,7 @@ public class MainActivity extends Activity {
 	}
 
 	void handleStressAppButtonClick(Button button) {
-		intent = new Intent(this, StressEstimationActivity.class);
+		Intent intent = new Intent(this, StressEstimationActivity.class);
 		startActivity(intent);
 	}
 
@@ -288,5 +294,10 @@ public class MainActivity extends Activity {
 		}
 
 	};
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int option, long id) {
+		navigationDrawerHelper.handleSelect(this, view, option);
+	}
 
 }
