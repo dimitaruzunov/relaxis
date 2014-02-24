@@ -12,7 +12,7 @@
     </style>
     
     <style name="ActionBar" parent="android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/purple</item>
+        <item name="android:background">@color/lightred</item>
     </style>
 
 </resources>

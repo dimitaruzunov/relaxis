@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="purple">#9933CC</color>
+    <color name="lightred">#FF6060</color>
+    <color name="lightgreen">#D6FFE2</color>
 
 </resources>
