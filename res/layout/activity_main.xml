@@ -44,6 +44,8 @@
             android:id="@+id/rRIntervalTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_rr_interval"
+            android:drawablePadding="@dimen/activity_horizontal_margin"
             android:layout_below="@+id/divider2"
             android:hint="@string/rRInterval"
             android:textAppearance="?android:attr/textAppearanceLarge" />
