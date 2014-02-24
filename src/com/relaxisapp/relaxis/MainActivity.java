@@ -26,10 +26,11 @@ public class MainActivity extends Activity {
 	private TextView instantSpeedTextView;
 	private TextView rRIntervalTextView;
 	private TextView instantHeartRateTextView;
-	private Button app1Button;
-	private Button app2Button;
+	private Button breathingAppButton;
+	private Button stressAppButton;
 	private Button app3Button;
 	private boolean connected = false;
+	Intent intent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,19 +84,19 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		app1Button = (Button) findViewById(R.id.app1Button);
-		app1Button.setOnClickListener(new View.OnClickListener() {
+		breathingAppButton = (Button) findViewById(R.id.breathingAppButton);
+		breathingAppButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				handleApp1ButtonClick((Button) view);
+				handleBreathingAppButtonClick((Button) view);
 			}
 		});
 
-		app2Button = (Button) findViewById(R.id.app2Button);
-		app2Button.setOnClickListener(new View.OnClickListener() {
+		stressAppButton = (Button) findViewById(R.id.stressAppButton);
+		stressAppButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				handleApp2ButtonClick((Button) view);
+				handleStressAppButtonClick((Button) view);
 			}
 		});
 
@@ -120,13 +121,13 @@ public class MainActivity extends Activity {
 		HintHelper.createAndPositionHint(this, R.string.rRInterval, textView).show();
 	}
 
-	void handleApp1ButtonClick(Button button) {
+	void handleBreathingAppButtonClick(Button button) {
 		Intent intent = new Intent(this, BreathingActivity.class);
 		startActivity(intent);
 	}
 
-	void handleApp2ButtonClick(Button button) {
-		Intent intent = new Intent(this, StressEstimationActivity.class);
+	void handleStressAppButtonClick(Button button) {
+		intent = new Intent(this, StressEstimationActivity.class);
 		startActivity(intent);
 	}
 

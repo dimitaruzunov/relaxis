@@ -11,6 +11,7 @@ import android.os.Message;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.LineGraphView;
@@ -19,8 +20,12 @@ public class BreathingActivity extends Activity {
 
 	// TODO find out why it is breaking at some point
 
-	static private Timer graphUpdateTimer = new Timer();
+	private Timer graphUpdateTimer = new Timer();
+	private GraphUpdateTimerTask graphUpdateTimerTask = new GraphUpdateTimerTask();
 
+	private Handler idealHRUpdateHandler = new Handler();
+
+	private int TIMER_TICKS_PER_SECOND = 10;
 	private int VIEWPORT_WIDTH = 24;
 	private int IDEAL_MID_HR = 73;
 	private int IDEAL_HR_DEVIATION = 7;
@@ -30,33 +35,35 @@ public class BreathingActivity extends Activity {
 
 	private int tMaxHR = idealMaxHR;
 	private int tMinHR = idealMinHR;
-	private double tAvgHR;
+	private double tAvgHR = (tMaxHR + tMinHR) / 2.0;
 	private double tDeviation;
 	private double tIdealHR;
 	private double antiScoreSum = 0;
 	private double score;
 
+	// level settings
 	private int EASY_TIME_SECONDS = 60;
 	private int INTERMEDIATE_TIME_SECONDS = 120;
 	private int HARD_TIME_SECONDS = 180;
-	
+
 	private int beatsCount = 0;
 	private int timerCounter = 0;
-	
-	private Handler idealHRUpdateHandler = new Handler();
 
+	private LinearLayout layout;
+	
+	private GraphView graphView;
 
 	private TextView timeLeftTextView;
 	private TextView scoreTextView;
 	private TextView lastAntiScoreTextView;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_breathing);
 
 		setupViews();
-		
+
 		BtConnection._bt.Close();
 
 		BtConnection._bt = new BTClient(BtConnection.adapter,
@@ -68,29 +75,52 @@ public class BreathingActivity extends Activity {
 				.addConnectedEventListener(BtConnection.instantHRListener);
 
 		BtConnection._bt.start();
-
-		GraphView graphView = new LineGraphView(this, "GraphViewTest");
+		
+		
 		graphView.setScrollable(true);
 		graphView.setScalable(true);
 		graphView.setViewPort(0, VIEWPORT_WIDTH);
+		graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
+			
+			@Override
+			public String formatLabel(double value, boolean isValueX) {
+				if (isValueX) {
+					if (value < 0) {
+						return "";
+					}
+					return String.valueOf((int)Math.floor(value));
+				}
+				else {
+					return String.valueOf((int)Math.floor(value));
+				}
+			}
+		});
+		graphView.getGraphViewStyle().setNumHorizontalLabels(VIEWPORT_WIDTH / 2);
+		graphView.getGraphViewStyle().setNumVerticalLabels(5);
+		graphView.getGraphViewStyle().setVerticalLabelsWidth(80);
+		BtConnection.idealBreathingCycle.resetData(new GraphViewData[] {});
+		BtConnection.instantHRSeries.resetData(new GraphViewData[] {});
+		BtConnection.dummySeries.resetData(new GraphViewData[] {});
 		graphView.addSeries(BtConnection.idealBreathingCycle);
 		graphView.addSeries(BtConnection.instantHRSeries);
 		graphView.addSeries(BtConnection.dummySeries);
 		// TODO show legend and customize it
 
-		LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
+		
 		layout.addView(graphView);
 
 		// TODO check if the timer is cleared when the back button is pressed
 		// and then the activity is started again
-		graphUpdateTimer.cancel();
-		graphUpdateTimer = new Timer();
-		graphUpdateTimer.scheduleAtFixedRate(new GraphUpdateTimerTask(),
-				1000, 100);
+		graphUpdateTimer.scheduleAtFixedRate(graphUpdateTimerTask, 1000,
+				1000 / TIMER_TICKS_PER_SECOND);
 
 	}
-	
+
 	private void setupViews() {
+		layout = (LinearLayout) findViewById(R.id.graph1);
+		
+		graphView = new LineGraphView(this, "GraphViewTest");
+		
 		timeLeftTextView = (TextView) findViewById(R.id.timeLeft);
 		scoreTextView = (TextView) findViewById(R.id.score);
 		lastAntiScoreTextView = (TextView) findViewById(R.id.lastAntiScore);
@@ -100,8 +130,9 @@ public class BreathingActivity extends Activity {
 
 		@Override
 		public void run() {
-			tIdealHR = tAvgHR + Math.sin(timerCounter * Math.PI / 60)
-					* tDeviation;
+			tIdealHR = tAvgHR
+					+ Math.sin(timerCounter * Math.PI
+							/ (6 * TIMER_TICKS_PER_SECOND)) * tDeviation;
 			idealHRUpdateHandler.post(new Runnable() {
 
 				@Override
@@ -117,18 +148,19 @@ public class BreathingActivity extends Activity {
 
 	private void updateIdealHRGraph(final double currentIdealHR) {
 		BtConnection.idealBreathingCycle.appendData(new GraphViewData(
-				timerCounter / 10.0, currentIdealHR), false,
-				VIEWPORT_WIDTH * 10);
+				timerCounter * 1.0 / TIMER_TICKS_PER_SECOND, currentIdealHR),
+				false, VIEWPORT_WIDTH * TIMER_TICKS_PER_SECOND);
 
 		// keep the viewport 2 seconds forward and zoom it to the min/max ideal
 		// HR
 		BtConnection.dummySeries.appendData(new GraphViewData(
-				(timerCounter / 10.0) + 2, (timerCounter % 2 == 0) ? idealMinHR
-						: idealMaxHR), true, 2);
+				(timerCounter * 1.0 / TIMER_TICKS_PER_SECOND) + 2,
+				(timerCounter % 2 == 0) ? idealMinHR : idealMaxHR), true, 2);
 	}
 
 	private void updateTimeLeft() {
-		timeLeftTextView.setText(String.valueOf(EASY_TIME_SECONDS - timerCounter / 10));
+		timeLeftTextView.setText(String.valueOf(EASY_TIME_SECONDS
+				- timerCounter / TIMER_TICKS_PER_SECOND));
 	}
 
 	final Handler Newhandler = new Handler() {
@@ -140,7 +172,7 @@ public class BreathingActivity extends Activity {
 				String instantHRString = msg.getData().getString("InstantHR");
 				int instantHR = Integer.parseInt(instantHRString);
 				BtConnection.instantHRSeries.appendData(new GraphViewData(
-						beatsCount, instantHR), false, VIEWPORT_WIDTH);
+						beatsCount, instantHR), false, VIEWPORT_WIDTH+1);
 				beatsCount++;
 
 				if (instantHR > tMaxHR) {
@@ -156,7 +188,8 @@ public class BreathingActivity extends Activity {
 				score = beatsCount * 100.0 / antiScoreSum;
 
 				scoreTextView.setText(String.valueOf(score));
-				lastAntiScoreTextView.setText(String.valueOf(Math.abs(instantHR - tIdealHR)));
+				lastAntiScoreTextView.setText(String.valueOf(Math.abs(instantHR
+						- tIdealHR)));
 
 				break;
 			}
@@ -164,4 +197,14 @@ public class BreathingActivity extends Activity {
 
 	};
 
+	@Override
+    public void onDestroy() {
+        super.onDestroy();
+        
+        graphUpdateTimerTask.cancel();
+		graphUpdateTimer.cancel();
+		
+		layout.removeView(graphView);
+    }
+	
 }

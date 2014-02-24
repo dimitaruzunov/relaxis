@@ -13,5 +13,7 @@
     <string name="score">Score</string>
     <string name="lastAntiScore">Last anti score</string>
     <string name="timeLeft">Time left</string>
+    <string name="breathing">Breathing</string>
+    <string name="stress">Stress</string>
 
 </resources>
