@@ -3,7 +3,6 @@ package com.relaxisapp.relaxis;
 import java.util.Set;
 
 import zephyr.android.HxMBT.BTClient;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
@@ -11,39 +10,37 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ListView;
 
-public class MainActivity extends Activity implements ListView.OnItemClickListener {
+public class MainActivity extends FragmentActivity implements ListView.OnItemClickListener {
 
 	public static final int REQUEST_ENABLE_BT = 1000;
 
-	private TextView heartRateTextView;
-	private TextView instantSpeedTextView;
-	private TextView rRIntervalTextView;
-	private TextView instantHeartRateTextView;
-	private Button breathingAppButton;
-	private Button stressAppButton;
-	private Button app3Button;
 	private boolean connected = false;
 	
 	NavigationDrawerHelper navigationDrawerHelper;
+	SectionsPagerAdapter sectionsPagerAdapter;
+	ViewPager viewPager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		setupViews();
 		
 		navigationDrawerHelper = new NavigationDrawerHelper();
         navigationDrawerHelper.init(this, this);
+        
+        sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
+        
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
 
 		// TODO Try to put the following code out of the onCreate method
 
@@ -61,85 +58,6 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 		// status of the receiver has changed to Paired
 		IntentFilter filter2 = new IntentFilter("android.bluetooth.device.action.BOND_STATE_CHANGED");
 		this.getApplicationContext().registerReceiver(new BTBondReceiver(), filter2);
-	}
-
-	private void setupViews() {
-		heartRateTextView = (TextView) findViewById(R.id.heartRateTextView);
-		heartRateTextView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				handleHeartRateTextViewClick((TextView) view);
-			}
-		});
-		
-		instantSpeedTextView = (TextView) findViewById(R.id.instantSpeedTextView);
-		
-		rRIntervalTextView = (TextView) findViewById(R.id.rRIntervalTextView);
-		rRIntervalTextView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				handleRRIntervalTextViewClick((TextView) view);
-			}
-		});
-		
-		instantHeartRateTextView = (TextView) findViewById(R.id.instantHeartRateTextView);
-		instantHeartRateTextView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				handleInstantHeartRateTextViewClick((TextView) view);
-			}
-		});
-
-		breathingAppButton = (Button) findViewById(R.id.breathingAppButton);
-		breathingAppButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				handleBreathingAppButtonClick((Button) view);
-			}
-		});
-
-		stressAppButton = (Button) findViewById(R.id.stressAppButton);
-		stressAppButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				handleStressAppButtonClick((Button) view);
-			}
-		});
-
-		app3Button = (Button) findViewById(R.id.app3Button);
-		app3Button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				handleApp3ButtonClick((Button) view);
-			}
-		});
-	}
-	
-	void handleHeartRateTextViewClick(TextView textView) {
-		HintHelper.createAndPositionHint(this, R.string.heartRate, textView).show();
-	}
-	
-	void handleInstantHeartRateTextViewClick(TextView textView) {
-		HintHelper.createAndPositionHint(this, R.string.instantHeartRate, textView).show();
-	}
-	
-	void handleRRIntervalTextViewClick(TextView textView) {
-		HintHelper.createAndPositionHint(this, R.string.rRInterval, textView).show();
-	}
-
-	void handleBreathingAppButtonClick(Button button) {
-		Intent intent = new Intent(this, BreathingActivity.class);
-		startActivity(intent);
-	}
-
-	void handleStressAppButtonClick(Button button) {
-		Intent intent = new Intent(this, StressEstimationActivity.class);
-		startActivity(intent);
-	}
-
-	void handleApp3ButtonClick(Button button) {
-		// Intent intent = new Intent(this, App3Activity.class);
-		// startActivity(intent);
 	}
 
 	@Override
@@ -273,22 +191,22 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 			switch (msg.what) {
 			case BtConnection.HEART_RATE:
 				String HeartRatetext = msg.getData().getString("HeartRate");
-				heartRateTextView.setText(HeartRatetext);
+				HomeFragment.heartRateTextView.setText(HeartRatetext);
 				break;
 
 			case BtConnection.INSTANT_SPEED:
 				String InstantSpeedtext = msg.getData().getString("InstantSpeed");
-				instantSpeedTextView.setText(InstantSpeedtext);
+				HomeFragment.instantSpeedTextView.setText(InstantSpeedtext);
 				break;
 
 			case BtConnection.RR_INTERVAL:
 				String RRInterval = msg.getData().getString("RRInterval");
-				rRIntervalTextView.setText(RRInterval);
+				HomeFragment.rRIntervalTextView.setText(RRInterval);
 				break;
 
 			case BtConnection.INSTANT_HR:
 				String InstantHR = msg.getData().getString("InstantHR");
-				instantHeartRateTextView.setText(InstantHR);
+				HomeFragment.instantHeartRateTextView.setText(InstantHR);
 				break;
 			}
 		}

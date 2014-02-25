@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Course Titles -->
+    <string-array name="section_titles">
+        <item>@string/home_title</item>
+        <!-- <item>@string/breathing_app_title</item> -->
+        <!-- <item>@string/stress_app_title</item> -->
+    </string-array>
+
+</resources>

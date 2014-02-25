@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">Home</string>
+    <string name="breathing_app_title">Breathing</string>
+    <string name="stress_app_title">Stress</string>
+</resources>
