@@ -25,10 +25,12 @@ public class BreathingActivity extends Activity {
 
 	private Handler idealHRUpdateHandler = new Handler();
 
-	private int TIMER_TICKS_PER_SECOND = 10;
-	private int VIEWPORT_WIDTH = 24;
-	private int IDEAL_MID_HR = 73;
-	private int IDEAL_HR_DEVIATION = 7;
+	private final int TIMER_TICKS_PER_SECOND = 10;
+	private final int VIEWPORT_WIDTH = 24;
+	private final int IDEAL_MID_HR = 73;
+	private final int IDEAL_HR_DEVIATION = 7;
+	
+	private final int POINT_BARRIER = 10;
 
 	private int idealMinHR = IDEAL_MID_HR - IDEAL_HR_DEVIATION;
 	private int idealMaxHR = IDEAL_MID_HR + IDEAL_HR_DEVIATION;
@@ -38,13 +40,14 @@ public class BreathingActivity extends Activity {
 	private double tAvgHR = (tMaxHR + tMinHR) / 2.0;
 	private double tDeviation;
 	private double tIdealHR;
-	private double antiScoreSum = 0;
-	private double score;
+	private int score = 0;
+	private int consecutivePoints = 0;
+	private int multiplier = 1;
 
 	// level settings
-	private int EASY_TIME_SECONDS = 60;
-	private int INTERMEDIATE_TIME_SECONDS = 120;
-	private int HARD_TIME_SECONDS = 180;
+	private final int EASY_TIME_SECONDS = 60;
+	private final int INTERMEDIATE_TIME_SECONDS = 120;
+	private final int HARD_TIME_SECONDS = 180;
 
 	private int beatsCount = 0;
 	private int timerCounter = 0;
@@ -55,7 +58,6 @@ public class BreathingActivity extends Activity {
 
 	private TextView timeLeftTextView;
 	private TextView scoreTextView;
-	private TextView lastAntiScoreTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +125,6 @@ public class BreathingActivity extends Activity {
 		
 		timeLeftTextView = (TextView) findViewById(R.id.timeLeft);
 		scoreTextView = (TextView) findViewById(R.id.score);
-		lastAntiScoreTextView = (TextView) findViewById(R.id.lastAntiScore);
 	}
 
 	private class GraphUpdateTimerTask extends TimerTask {
@@ -184,12 +185,19 @@ public class BreathingActivity extends Activity {
 				tAvgHR = (tMaxHR + tMinHR) / 2.0;
 				tDeviation = tMaxHR - tAvgHR;
 
-				antiScoreSum += Math.abs(instantHR - tIdealHR);
-				score = beatsCount * 100.0 / antiScoreSum;
-
+				if (Math.abs(tIdealHR - instantHR) <= POINT_BARRIER) {
+					consecutivePoints++;
+					if (consecutivePoints >= 5 * multiplier) {
+						multiplier++;
+					}
+					score += multiplier;
+				}
+				else {
+					consecutivePoints = 0;
+					multiplier = 1;
+				}
+				
 				scoreTextView.setText(String.valueOf(score));
-				lastAntiScoreTextView.setText(String.valueOf(Math.abs(instantHR
-						- tIdealHR)));
 
 				break;
 			}

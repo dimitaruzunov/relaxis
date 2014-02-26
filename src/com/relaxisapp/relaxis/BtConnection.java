@@ -17,6 +17,7 @@ public class BtConnection {
 	static NewConnectedListener instantHRListener;
 	static NewConnectedListener stressLevelListener;
 	static String BhMacID;
+	static String deviceName;
 
 	static final int HEART_RATE = 0x100;
 	static final int INSTANT_SPEED = 0x101;
