@@ -1,5 +1,6 @@
 package com.relaxisapp.relaxis;
 
+import java.lang.reflect.Field;
 import java.util.Set;
 
 import zephyr.android.HxMBT.BTClient;
@@ -10,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -139,9 +141,10 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 					BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BtConnection.BhMacID);
 					String DeviceName = Device.getName();
+					
 					BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
-					BtConnection._NConnListener = new NewConnectedListener(Newhandler, Newhandler);
-					BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
+					
+					setHandler();
 
 					if (BtConnection._bt.IsConnected()) {
 						connected = true;
@@ -183,35 +186,21 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		 */
 		BtConnection._bt.Close();
 	}
-
-	final Handler Newhandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case BtConnection.HEART_RATE:
-				String HeartRatetext = msg.getData().getString("HeartRate");
-				HomeFragment.heartRateTextView.setText(HeartRatetext);
-				break;
-
-			case BtConnection.INSTANT_SPEED:
-				String InstantSpeedtext = msg.getData().getString("InstantSpeed");
-				HomeFragment.instantSpeedTextView.setText(InstantSpeedtext);
-				break;
-
-			case BtConnection.RR_INTERVAL:
-				String RRInterval = msg.getData().getString("RRInterval");
-				HomeFragment.rRIntervalTextView.setText(RRInterval);
-				break;
-
-			case BtConnection.INSTANT_HR:
-				String InstantHR = msg.getData().getString("InstantHR");
-				HomeFragment.instantHeartRateTextView.setText(InstantHR);
-				break;
-			}
+	
+	private Fragment getCurrentFragment() {
+		int index = viewPager.getCurrentItem();
+		
+		return sectionsPagerAdapter.getFragment(index);
+	}
+	
+	private void setHandler() {
+		switch (viewPager.getCurrentItem()) {
+		case 0:
+			BtConnection._NConnListener = new NewConnectedListener(HomeFragment.Newhandler, HomeFragment.Newhandler);
+			BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
+			break;
 		}
-
-	};
+	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int option, long id) {

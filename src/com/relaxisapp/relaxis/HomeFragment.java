@@ -67,4 +67,33 @@ public class HomeFragment extends Fragment {
 		HintHelper.createAndPositionHint(getActivity(), R.string.rRInterval, textView).show();
 	}
 	
+	final static Handler Newhandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case BtConnection.HEART_RATE:
+				String HeartRatetext = msg.getData().getString("HeartRate");
+				HomeFragment.heartRateTextView.setText(HeartRatetext);
+				break;
+
+			case BtConnection.INSTANT_SPEED:
+				String InstantSpeedtext = msg.getData().getString("InstantSpeed");
+				HomeFragment.instantSpeedTextView.setText(InstantSpeedtext);
+				break;
+
+			case BtConnection.RR_INTERVAL:
+				String RRInterval = msg.getData().getString("RRInterval");
+				HomeFragment.rRIntervalTextView.setText(RRInterval);
+				break;
+
+			case BtConnection.INSTANT_HR:
+				String InstantHR = msg.getData().getString("InstantHR");
+				HomeFragment.instantHeartRateTextView.setText(InstantHR);
+				break;
+			}
+		}
+
+	};
+	
 }
