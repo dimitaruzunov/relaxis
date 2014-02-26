@@ -24,8 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity implements
-		ListView.OnItemClickListener {
+public class MainActivity extends FragmentActivity implements ListView.OnItemClickListener {
 
 	public static final int REQUEST_ENABLE_BT = 1000;
 
@@ -49,25 +48,6 @@ public class MainActivity extends FragmentActivity implements
 
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
-		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-			@Override
-			public void onPageSelected(int position) {
-				if (BtConnection._bt != null) {
-					setHandler();
-				}
-			}
-
-			@Override
-			public void onPageScrolled(int position, float positionOffset,
-					int positionOffsetPixels) {
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int state) {
-			}
-
-		});
 
 		// TODO Try to put the following code out of the onCreate method
 
@@ -75,20 +55,16 @@ public class MainActivity extends FragmentActivity implements
 		 * Sending a message to android that we are going to initiate a pairing
 		 * request
 		 */
-		IntentFilter filter = new IntentFilter(
-				"android.bluetooth.device.action.PAIRING_REQUEST");
+		IntentFilter filter = new IntentFilter("android.bluetooth.device.action.PAIRING_REQUEST");
 		/*
 		 * Registering a new BTBroadcast receiver from the Main Activity context
 		 * with pairing request event
 		 */
-		this.getApplicationContext().registerReceiver(
-				new BTBroadcastReceiver(), filter);
+		this.getApplicationContext().registerReceiver(new BTBroadcastReceiver(), filter);
 		// Registering the BTBondReceiver in the application that the
 		// status of the receiver has changed to Paired
-		IntentFilter filter2 = new IntentFilter(
-				"android.bluetooth.device.action.BOND_STATE_CHANGED");
-		this.getApplicationContext().registerReceiver(new BTBondReceiver(),
-				filter2);
+		IntentFilter filter2 = new IntentFilter("android.bluetooth.device.action.BOND_STATE_CHANGED");
+		this.getApplicationContext().registerReceiver(new BTBondReceiver(), filter2);
 	}
 
 	@Override
@@ -121,8 +97,7 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent resultIntent) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent resultIntent) {
 		switch (requestCode) {
 		case REQUEST_ENABLE_BT:
 			handleBluetoothConnectResult(resultCode, resultIntent);
@@ -130,14 +105,11 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	private void handleBluetoothConnectResult(int resultCode,
-			Intent resultIntent) {
+	private void handleBluetoothConnectResult(int resultCode, Intent resultIntent) {
 		if (resultCode == RESULT_OK) {
-			Toast.makeText(this, "Bluetooth is now enabled", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(this, "Bluetooth is now enabled", Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(this, "User cancelled the bluetooth connect intent",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "User cancelled the bluetooth connect intent", Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -166,8 +138,7 @@ public class MainActivity extends FragmentActivity implements
 		public MenuItem item;
 	}
 
-	private class BluetoothConnectTask extends
-			AsyncTask<MenuItem, Void, AsyncTaskResults> {
+	private class BluetoothConnectTask extends AsyncTask<MenuItem, Void, AsyncTaskResults> {
 
 		private final int CODE_NO_BT = 2;
 		private final int CODE_FAILURE = 1;
@@ -190,8 +161,7 @@ public class MainActivity extends FragmentActivity implements
 
 			// Enable bluetooth if not enabled
 			if (!BtConnection.adapter.isEnabled()) {
-				Intent enableBtIntent = new Intent(
-						BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 			}
 
@@ -201,22 +171,20 @@ public class MainActivity extends FragmentActivity implements
 														// is on
 			}
 
-			Set<BluetoothDevice> pairedDevices = BtConnection.adapter
-					.getBondedDevices();
+			Set<BluetoothDevice> pairedDevices = BtConnection.adapter.getBondedDevices();
 			if (pairedDevices.size() > 0) {
 				for (BluetoothDevice device : pairedDevices) {
 					if (device.getName().startsWith("HXM")) {
 						BluetoothDevice btDevice = device;
 						BtConnection.BhMacID = btDevice.getAddress();
 
-						BluetoothDevice Device = BtConnection.adapter
-								.getRemoteDevice(BtConnection.BhMacID);
+						BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BtConnection.BhMacID);
 						BtConnection.deviceName = Device.getName();
 
-						BtConnection._bt = new BTClient(BtConnection.adapter,
-								BtConnection.BhMacID);
+						BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
 
-						setHandler();
+						BtConnection._NConnListener = new NewConnectedListener(SensorDataHandler, SensorDataHandler);
+						BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
 
 						if (BtConnection._bt.IsConnected()) {
 							connected = true;
@@ -243,19 +211,15 @@ public class MainActivity extends FragmentActivity implements
 			switch (results.result) {
 			case CODE_NO_BT:
 				changeBtIconConnect(results.item);
-				Toast.makeText(MainActivity.this, "Bluetooth is not supported",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, "Bluetooth is not supported", Toast.LENGTH_LONG).show();
 				break;
 			case CODE_FAILURE:
 				changeBtIconConnect(results.item);
-				Toast.makeText(MainActivity.this, "Unable to connect",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, "Unable to connect", Toast.LENGTH_LONG).show();
 				break;
 			case CODE_SUCCESS:
 				changeBtIconConnected(results.item);
-				Toast.makeText(MainActivity.this,
-						"Connected to HxM " + BtConnection.deviceName,
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, "Connected to HxM " + BtConnection.deviceName, Toast.LENGTH_LONG).show();
 				break;
 			}
 		}
@@ -271,8 +235,7 @@ public class MainActivity extends FragmentActivity implements
 		/*
 		 * This disconnects listener from acting on received messages
 		 */
-		BtConnection._bt
-				.removeConnectedEventListener(BtConnection._NConnListener);
+		BtConnection._bt.removeConnectedEventListener(BtConnection._NConnListener);
 		/*
 		 * Close the communication with the device & throw an exception if
 		 * failure
@@ -286,26 +249,8 @@ public class MainActivity extends FragmentActivity implements
 		return sectionsPagerAdapter.getFragment(index);
 	}
 
-	private void setHandler() {
-		switch (viewPager.getCurrentItem()) {
-		case 0:
-			BtConnection._NConnListener = new NewConnectedListener(
-					SensorDataHandler, SensorDataHandler);
-			BtConnection._bt
-					.addConnectedEventListener(BtConnection._NConnListener);
-			break;
-		case 1:
-			BtConnection.instantHRListener = new NewConnectedListener(
-					SensorDataHandler, SensorDataHandler);
-			BtConnection._bt
-					.addConnectedEventListener(BtConnection.instantHRListener);
-			break;
-		}
-	}
-
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int option,
-			long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int option, long id) {
 		navigationDrawerHelper.handleSelect(this, view, option);
 	}
 	
