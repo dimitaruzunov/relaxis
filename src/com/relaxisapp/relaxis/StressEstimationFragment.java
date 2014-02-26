@@ -3,56 +3,46 @@ package com.relaxisapp.relaxis;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import zephyr.android.HxMBT.BTClient;
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class StressEstimationActivity extends Activity {
+public class StressEstimationFragment extends Fragment {
 
+	public final static String SECTION_TITLE = "section title";
+	
 	private Timer graphUpdateTimer = new Timer();
 	private TimeLeftUpdateTimerTask graphUpdateTimerTask = new TimeLeftUpdateTimerTask();
 	
 	private Handler timeLeftUpdateHandler = new Handler();
 	
-	private int TIME_SECONDS = 60;
+	private static int TIME_SECONDS = 60;
 	
-	private int timeLeft = TIME_SECONDS;
+	static int timeLeft = TIME_SECONDS;
 
-	private TextView stressLevelTextView;
+	static TextView stressLevelTextView;
 	private TextView timeLeftTextView;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_stress_estimation);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_stress_estimation, container, false);
 		
-		setupViews();
+		setupViews(view);
 		
-		BtConnection._bt.Close();
-
-		BtConnection._bt = new BTClient(BtConnection.adapter,
-				BtConnection.BhMacID);
-
-		BtConnection.stressLevelListener = new NewConnectedListener(Newhandler,
-				Newhandler);
-		BtConnection._bt
-				.addConnectedEventListener(BtConnection.instantHRListener);
-
-		BtConnection._bt.start();
-
 		// TODO check if the timer is cleared when the back button is pressed
 		// and then the activity is started again
 		graphUpdateTimer.scheduleAtFixedRate(graphUpdateTimerTask, 0, 1000);
 		
+		return view;
 	}
 
-	private void setupViews() {
-		stressLevelTextView = (TextView) findViewById(R.id.stressLevel);
-		timeLeftTextView = (TextView) findViewById(R.id.timeLeft);
+	private void setupViews(View view) {
+		stressLevelTextView = (TextView) view.findViewById(R.id.stressLevel);
+		timeLeftTextView = (TextView) view.findViewById(R.id.timeLeft);
 	}
 	
 	private class TimeLeftUpdateTimerTask extends TimerTask {
@@ -102,23 +92,5 @@ public class StressEstimationActivity extends Activity {
 //		
 //		return stressLevel; 
 //	}
-	
-	final Handler Newhandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			if (timeLeft <= 0) {
-				switch (msg.what) {
-				case BtConnection.PNN50:
-					String pNN50 = msg.getData().getString("pNN50");
-					
-					stressLevelTextView.setText("Current stress level: " + pNN50);
-
-					break;
-				}
-			}
-		}
-
-	};
 
 }

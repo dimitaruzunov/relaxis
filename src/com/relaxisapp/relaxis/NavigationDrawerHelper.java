@@ -3,13 +3,11 @@ package com.relaxisapp.relaxis;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.content.Intent;
 
 public class NavigationDrawerHelper {
 
@@ -50,7 +48,7 @@ public class NavigationDrawerHelper {
     }
     
     void handleStressAppOptionClick(Context context, View view) {
-    	Intent intent = new Intent(context, StressEstimationActivity.class);
+    	Intent intent = new Intent(context, StressEstimationFragment.class);
 		context.startActivity(intent);
     }
 	

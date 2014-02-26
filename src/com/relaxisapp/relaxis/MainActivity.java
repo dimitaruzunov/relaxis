@@ -351,8 +351,14 @@ public class MainActivity extends FragmentActivity implements
 					BreathingFragment.multiplier = 1;
 				}
 
-				BreathingFragment.scoreTextView.setText(String
-						.valueOf(BreathingFragment.score));
+				BreathingFragment.scoreTextView.setText(String.valueOf(BreathingFragment.score));
+				break;
+			case BtConnection.PNN50:
+				if (StressEstimationFragment.timeLeft <= 0) {
+					String pNN50 = msg.getData().getString("pNN50");
+					
+					StressEstimationFragment.stressLevelTextView.setText("Current stress level: " + pNN50);
+				}
 				break;
 			}
 		}

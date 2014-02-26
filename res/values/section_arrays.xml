@@ -5,7 +5,7 @@
     <string-array name="section_titles">
         <item>@string/home_title</item>
         <item>@string/breathing_app_title</item>
-        <!-- <item>@string/stress_app_title</item> -->
+        <item>@string/stress_app_title</item>
     </string-array>
 
 </resources>
