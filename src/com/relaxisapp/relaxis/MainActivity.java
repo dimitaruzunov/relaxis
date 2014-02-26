@@ -130,26 +130,34 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		changeBtIconConnecting(item);		
 		new BluetoothConnectTask().execute(item);
 	}
+	
+	private class AsyncTaskResults {
+		public int result;
+		public MenuItem item;
+	}
 
-	private class BluetoothConnectTask extends AsyncTask<MenuItem, Void, Integer> {
+	private class BluetoothConnectTask extends AsyncTask<MenuItem, Void, AsyncTaskResults> {
 
 		private final int CODE_NO_BT = 2;
 		private final int CODE_FAILURE = 1;
 		private final int CODE_SUCCESS = 0;
 		
-		
 		@Override
-		protected Integer doInBackground(MenuItem... menuItems) {
+		protected AsyncTaskResults doInBackground(MenuItem... menuItems) {
+			// Setting the results to be returned
+			AsyncTaskResults results = new AsyncTaskResults();
+			results.item = menuItems[0];
+			
 			// Getting the Bluetooth adapter
 			BtConnection.adapter = BluetoothAdapter.getDefaultAdapter();
 
 			// Check for Bluetooth support
 			if (BtConnection.adapter == null) {
-				return CODE_NO_BT;
+				results.result = CODE_NO_BT;
+				return results;
 			}
 
-
-			// Enable bluetooth
+			// Enable bluetooth if not enabled
 			if (!BtConnection.adapter.isEnabled()) {
 				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 	            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -159,7 +167,6 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			while (!BtConnection.adapter.isEnabled()) { // wait until the bluetooth
 														// is on
 			}
-
 
 			Set<BluetoothDevice> pairedDevices = BtConnection.adapter.getBondedDevices();
 			if (pairedDevices.size() > 0) {
@@ -177,39 +184,37 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 						if (BtConnection._bt.IsConnected()) {
 							connected = true;
-							//changeBtIconConnected(menuItems[0]);
 
 							BtConnection._bt.start();
 							
 							// TODO ? Reset all the values to 0s
 
-							return CODE_SUCCESS;
+							results.result = CODE_SUCCESS;
+							return results;
 						} else {
-							//changeBtIconConnect(menuItems[0]);
-							
-							return CODE_FAILURE;
+							results.result = CODE_FAILURE;
+							return results;
 						}
-
 					}
 				}
 			}
 			
-			return null;
+			results.result = CODE_FAILURE;
+			return results;
 		}
 		
-		protected void onPostExecute(int result) {
-			switch (result) {
+		protected void onPostExecute(AsyncTaskResults results) {
+			switch (results.result) {
 			case CODE_NO_BT:
-				Toast.makeText(MainActivity.this, "Bluetooth is not supported.", Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, "Bluetooth is not supported", Toast.LENGTH_LONG).show();
 				break;
-			case CODE_FAILURE:				
-				Toast.makeText(MainActivity.this, "Unable to Connect!", Toast.LENGTH_LONG).show();				
+			case CODE_FAILURE:
+				changeBtIconConnect(results.item);
+				Toast.makeText(MainActivity.this, "Unable to connect", Toast.LENGTH_LONG).show();
 				break;
 			case CODE_SUCCESS:
+				changeBtIconConnected(results.item);
 				Toast.makeText(MainActivity.this, "Connected to HxM " + BtConnection.deviceName, Toast.LENGTH_LONG).show();
-				break;
-
-			default:
 				break;
 			}
 		}
@@ -218,10 +223,9 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	
 	void onClickMenuBluetoothDisconnect(MenuItem item) {
 		connected = false;
-		item.setIcon(R.drawable.ic_action_bluetooth);
-		item.setTitle(R.string.action_bluetooth_connect);
+		changeBtIconConnect(item);
 
-		Toast.makeText(this, "Disconnected from HxM!", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Disconnected from HxM", Toast.LENGTH_LONG).show();
 
 		/*
 		 * This disconnects listener from acting on received messages
