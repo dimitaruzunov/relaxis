@@ -3,8 +3,6 @@ package com.relaxisapp.relaxis;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import zephyr.android.HxMBT.BTClient;
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;

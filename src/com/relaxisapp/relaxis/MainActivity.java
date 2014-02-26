@@ -43,6 +43,20 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
         
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int position) {
+				setHandler();
+			}
+			
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+			
+			@Override
+			public void onPageScrollStateChanged(int state) {}
+			
+		});
 
 		// TODO Try to put the following code out of the onCreate method
 
@@ -176,8 +190,6 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 						BtConnection.deviceName = Device.getName();
 						
 						BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
-						
-						setHandler();
 
 						if (BtConnection._bt.IsConnected()) {
 							connected = true;
@@ -249,8 +261,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
 			break;
 		case 1:
-			BtConnection._NConnListener = new NewConnectedListener(BreathingFragment.Newhandler, BreathingFragment.Newhandler);
-			BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
+			BtConnection.instantHRListener = new NewConnectedListener(BreathingFragment.Newhandler, BreathingFragment.Newhandler);
+			BtConnection._bt.addConnectedEventListener(BtConnection.instantHRListener);
 			break;
 		}
 	}
@@ -259,5 +271,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	public void onItemClick(AdapterView<?> parent, View view, int option, long id) {
 		navigationDrawerHelper.handleSelect(this, view, option);
 	}
+	
+	
 
 }
