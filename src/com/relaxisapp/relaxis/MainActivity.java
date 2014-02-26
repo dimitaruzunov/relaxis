@@ -148,7 +148,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 				return CODE_NO_BT;
 			}
 
-<<<<<<< HEAD
+
 			// Enable bluetooth
 			if (!BtConnection.adapter.isEnabled()) {
 				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -159,38 +159,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			while (!BtConnection.adapter.isEnabled()) { // wait until the bluetooth
 														// is on
 			}
-=======
-		Set<BluetoothDevice> pairedDevices = BtConnection.adapter.getBondedDevices();
-		if (pairedDevices.size() > 0) {
-			for (BluetoothDevice device : pairedDevices) {
-				if (device.getName().startsWith("HXM")) {
-					BluetoothDevice btDevice = device;
-					BtConnection.BhMacID = btDevice.getAddress();
 
-					BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BtConnection.BhMacID);
-					String DeviceName = Device.getName();
-					
-					BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
-					
-					setHandler();
-
-					if (BtConnection._bt.IsConnected()) {
-						connected = true;
-						item.setIcon(R.drawable.ic_action_bluetooth_connected);
-						item.setTitle(R.string.action_bluetooth_disconnect);
-
-						BtConnection._bt.start();
-						
-						Toast.makeText(this, "Connected to HxM " + DeviceName, Toast.LENGTH_LONG).show();
-
-						// TODO Reset all the values to 0s
-					} else {
-						item.setIcon(R.drawable.ic_action_bluetooth);
-						item.setTitle(R.string.action_bluetooth_connect);
-						
-						Toast.makeText(this, "Unable to Connect!", Toast.LENGTH_LONG).show();
-					}
->>>>>>> 225ee62cb6647158eeae5ef8205668af23c1e98e
 
 			Set<BluetoothDevice> pairedDevices = BtConnection.adapter.getBondedDevices();
 			if (pairedDevices.size() > 0) {
@@ -198,24 +167,25 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 					if (device.getName().startsWith("HXM")) {
 						BluetoothDevice btDevice = device;
 						BtConnection.BhMacID = btDevice.getAddress();
-
+	
 						BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BtConnection.BhMacID);
-						BtConnection.deviceName= Device.getName();
+						BtConnection.deviceName = Device.getName();
+						
 						BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
-						BtConnection._NConnListener = new NewConnectedListener(Newhandler, Newhandler);
-						BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
+						
+						setHandler();
 
 						if (BtConnection._bt.IsConnected()) {
 							connected = true;
-							changeBtIconConnected(menuItems[0]);
+							//changeBtIconConnected(menuItems[0]);
 
 							BtConnection._bt.start();
+							
+							// TODO ? Reset all the values to 0s
 
 							return CODE_SUCCESS;
-							
-							// TODO Reset all the values to 0s
 						} else {
-							changeBtIconConnect(menuItems[0]);
+							//changeBtIconConnect(menuItems[0]);
 							
 							return CODE_FAILURE;
 						}
