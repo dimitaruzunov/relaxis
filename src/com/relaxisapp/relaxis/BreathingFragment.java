@@ -23,12 +23,12 @@ public class BreathingFragment extends Fragment {
 
 	public final static String SECTION_TITLE = "section title";
 
-	Timer graphUpdateTimer = new Timer();
-	GraphUpdateTimerTask graphUpdateTimerTask = new GraphUpdateTimerTask();
+	static Timer graphUpdateTimer = new Timer();
+	static GraphUpdateTimerTask graphUpdateTimerTask;
 
-	Handler idealHRUpdateHandler = new Handler();
+	static Handler idealHRUpdateHandler = new Handler();
 
-	final int TIMER_TICKS_PER_SECOND = 10;
+	final static int TIMER_TICKS_PER_SECOND = 10;
 	final static int VIEWPORT_WIDTH = 24;
 	final static int IDEAL_MID_HR = 73;
 	final static int IDEAL_HR_DEVIATION = 7;
@@ -60,7 +60,7 @@ public class BreathingFragment extends Fragment {
 	static GraphView graphView;
 
 	static TextView timeLeftTextView;
-	
+
 	static TextView scoreTextView;
 
 	@Override
@@ -102,11 +102,6 @@ public class BreathingFragment extends Fragment {
 
 		layout.addView(graphView);
 
-		// TODO check if the timer is cleared when the back button is pressed
-		// and then the activity is started again
-		graphUpdateTimer.scheduleAtFixedRate(graphUpdateTimerTask, 1000,
-				1000 / TIMER_TICKS_PER_SECOND);
-
 		return view;
 	}
 
@@ -118,7 +113,7 @@ public class BreathingFragment extends Fragment {
 		graphView = new LineGraphView(getActivity(), "GraphViewTest");
 	}
 
-	private class GraphUpdateTimerTask extends TimerTask {
+	static class GraphUpdateTimerTask extends TimerTask {
 
 		@Override
 		public void run() {
@@ -138,7 +133,7 @@ public class BreathingFragment extends Fragment {
 
 	}
 
-	private void updateIdealHRGraph(final double currentIdealHR) {
+	private static void updateIdealHRGraph(final double currentIdealHR) {
 		BtConnection.idealBreathingCycle.appendData(new GraphViewData(
 				timerCounter * 1.0 / TIMER_TICKS_PER_SECOND, currentIdealHR),
 				false, VIEWPORT_WIDTH * TIMER_TICKS_PER_SECOND);
@@ -150,7 +145,7 @@ public class BreathingFragment extends Fragment {
 				(timerCounter % 2 == 0) ? idealMinHR : idealMaxHR), true, 2);
 	}
 
-	private void updateTimeLeft() {
+	private static void updateTimeLeft() {
 		timeLeftTextView.setText(String.valueOf(EASY_TIME_SECONDS
 				- timerCounter / TIMER_TICKS_PER_SECOND));
 	}

@@ -120,30 +120,20 @@ public class NewConnectedListener extends ConnectListenerImpl {
 							rrIntervals[12] - rrIntervals[13] };
 
 					// Standard Deviation
-					double mean = 0;
-					for (int i = 0; i < 6; i++) {
-						mean += rrDiffs[i];
-					}
-					mean /= 6.0d;
-
-					double SD = 0;
-					for (int i = 0; i < 6; i++) {
-						SD += ((rrDiffs[i] - mean) * (rrDiffs[i] - mean));
-					}
-					SD /= 6.0d;
-					SD = Math.sqrt(SD);
-
-					System.out.println("SD: " + SD);
-
-					// SD of the last two differences
-					BtConnection.SDCount++;
-					mean = (rrDiffs[0] + rrDiffs[1]) / 2.0;
-					BtConnection.SDSum += Math.sqrt(((rrDiffs[0] - mean)
-							* (rrDiffs[0] - mean) + (rrDiffs[1] - mean)
-							* (rrDiffs[1] - mean)) / 2.0);
-
-					System.out.println("Mean SD: " + BtConnection.SDSum
-							/ BtConnection.SDCount);
+//					double mean = 0;
+//					for (int i = 0; i < 6; i++) {
+//						mean += rrDiffs[i];
+//					}
+//					mean /= 6.0d;
+//
+//					double SD = 0;
+//					for (int i = 0; i < 6; i++) {
+//						SD += ((rrDiffs[i] - mean) * (rrDiffs[i] - mean));
+//					}
+//					SD /= 6.0d;
+//					SD = Math.sqrt(SD);
+//
+//					System.out.println("SD: " + SD);
 
 					// HRV = mean of nn50 and nn20
 					int nn50 = 0, nn20 = 0, nnCount = 12;
@@ -164,9 +154,9 @@ public class NewConnectedListener extends ConnectListenerImpl {
 						BtConnection.nn50++;
 					}
 					double pNN50 = BtConnection.nn50 * 1.0
-							/ BtConnection.nnCount;
+							/ ((BtConnection.nnCount == 0) ? 1 : BtConnection.nnCount);
 
-					int instantHR = 60000 / rrIntervals[0];
+					int instantHR = (rrIntervals[0] == 0) ? 0 : (60000 / rrIntervals[0]);
 
 					System.out.println(CustomUtilities
 							.ByteToUnsignedInt(DataArray[9])); // HR
