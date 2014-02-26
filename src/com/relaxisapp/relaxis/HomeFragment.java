@@ -1,5 +1,7 @@
 package com.relaxisapp.relaxis;
 
+import com.jjoe64.graphview.GraphView.GraphViewData;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -66,34 +68,5 @@ public class HomeFragment extends Fragment {
 	void handleRRIntervalTextViewClick(TextView textView) {
 		HintHelper.createAndPositionHint(getActivity(), R.string.rRInterval, textView).show();
 	}
-	
-	final static Handler Newhandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case BtConnection.HEART_RATE:
-				String HeartRatetext = msg.getData().getString("HeartRate");
-				heartRateTextView.setText(HeartRatetext);
-				break;
-
-			case BtConnection.INSTANT_SPEED:
-				String InstantSpeedtext = msg.getData().getString("InstantSpeed");
-				instantSpeedTextView.setText(InstantSpeedtext);
-				break;
-
-			case BtConnection.RR_INTERVAL:
-				String RRInterval = msg.getData().getString("RRInterval");
-				rRIntervalTextView.setText(RRInterval);
-				break;
-
-			case BtConnection.INSTANT_HR:
-				String InstantHR = msg.getData().getString("InstantHR");
-				instantHeartRateTextView.setText(InstantHR);
-				break;
-			}
-		}
-
-	};
 	
 }
