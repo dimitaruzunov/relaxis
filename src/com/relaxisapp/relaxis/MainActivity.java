@@ -197,7 +197,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			return null;
 		}
 		
-		protected Void onPostExecute(int result) {
+		protected void onPostExecute(int result) {
 			switch (result) {
 			case CODE_NO_BT:
 				Toast.makeText(MainActivity.this, "Bluetooth is not supported.", Toast.LENGTH_LONG).show();
@@ -212,8 +212,6 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			default:
 				break;
 			}
-			
-			return null;
 		}
 		
 	}
