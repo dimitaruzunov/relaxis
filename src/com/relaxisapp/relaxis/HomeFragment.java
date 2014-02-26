@@ -1,10 +1,6 @@
 package com.relaxisapp.relaxis;
 
-import com.jjoe64.graphview.GraphView.GraphViewData;
-
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
