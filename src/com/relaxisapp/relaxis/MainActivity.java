@@ -47,7 +47,9 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			
 			@Override
 			public void onPageSelected(int position) {
-				setHandler();
+				if (BtConnection._bt != null) {
+					setHandler();
+				}
 			}
 			
 			@Override
@@ -190,6 +192,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 						BtConnection.deviceName = Device.getName();
 						
 						BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
+						
+						setHandler();
 
 						if (BtConnection._bt.IsConnected()) {
 							connected = true;
