@@ -20,6 +20,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import android.widget.ListView;
@@ -38,6 +39,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+	    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
 		navigationDrawerHelper = new NavigationDrawerHelper();
         navigationDrawerHelper.init(this, this);
@@ -206,6 +208,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		protected void onPostExecute(AsyncTaskResults results) {
 			switch (results.result) {
 			case CODE_NO_BT:
+				changeBtIconConnect(results.item);
 				Toast.makeText(MainActivity.this, "Bluetooth is not supported", Toast.LENGTH_LONG).show();
 				break;
 			case CODE_FAILURE:
