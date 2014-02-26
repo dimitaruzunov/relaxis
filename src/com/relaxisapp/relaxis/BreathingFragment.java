@@ -8,6 +8,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,9 +20,11 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.LineGraphView;
 
-public class BreathingActivity extends Activity {
+public class BreathingFragment extends Fragment {
 
 	// TODO find out why it is breaking at some point
+	
+	public final static String SECTION_TITLE = "section title";
 
 	private Timer graphUpdateTimer = new Timer();
 	private GraphUpdateTimerTask graphUpdateTimerTask = new GraphUpdateTimerTask();
@@ -26,30 +32,30 @@ public class BreathingActivity extends Activity {
 	private Handler idealHRUpdateHandler = new Handler();
 
 	private final int TIMER_TICKS_PER_SECOND = 10;
-	private final int VIEWPORT_WIDTH = 24;
-	private final int IDEAL_MID_HR = 73;
-	private final int IDEAL_HR_DEVIATION = 7;
+	private final static int VIEWPORT_WIDTH = 24;
+	private final static int IDEAL_MID_HR = 73;
+	private final static int IDEAL_HR_DEVIATION = 7;
 	
-	private final int POINT_BARRIER = 10;
+	private final static int POINT_BARRIER = 10;
 
-	private int idealMinHR = IDEAL_MID_HR - IDEAL_HR_DEVIATION;
-	private int idealMaxHR = IDEAL_MID_HR + IDEAL_HR_DEVIATION;
+	private static int idealMinHR = IDEAL_MID_HR - IDEAL_HR_DEVIATION;
+	private static int idealMaxHR = IDEAL_MID_HR + IDEAL_HR_DEVIATION;
 
-	private int tMaxHR = idealMaxHR;
-	private int tMinHR = idealMinHR;
-	private double tAvgHR = (tMaxHR + tMinHR) / 2.0;
-	private double tDeviation;
-	private double tIdealHR;
-	private int score = 0;
-	private int consecutivePoints = 0;
-	private int multiplier = 1;
+	private static int tMaxHR = idealMaxHR;
+	private static int tMinHR = idealMinHR;
+	private static double tAvgHR = (tMaxHR + tMinHR) / 2.0;
+	private static double tDeviation;
+	private static double tIdealHR;
+	private static int score = 0;
+	private static int consecutivePoints = 0;
+	private static int multiplier = 1;
 
 	// level settings
 	private final int EASY_TIME_SECONDS = 60;
 	private final int INTERMEDIATE_TIME_SECONDS = 120;
 	private final int HARD_TIME_SECONDS = 180;
 
-	private int beatsCount = 0;
+	private static int beatsCount = 0;
 	private int timerCounter = 0;
 
 	private LinearLayout layout;
@@ -57,27 +63,13 @@ public class BreathingActivity extends Activity {
 	private GraphView graphView;
 
 	private TextView timeLeftTextView;
-	private TextView scoreTextView;
+	private static TextView scoreTextView;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_breathing);
-
-		setupViews();
-
-		BtConnection._bt.Close();
-
-		BtConnection._bt = new BTClient(BtConnection.adapter,
-				BtConnection.BhMacID);
-
-		BtConnection.instantHRListener = new NewConnectedListener(Newhandler,
-				Newhandler);
-		BtConnection._bt
-				.addConnectedEventListener(BtConnection.instantHRListener);
-
-		BtConnection._bt.start();
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_breathing, container, false);
 		
+		setupViews(view);
 		
 		graphView.setScrollable(true);
 		graphView.setScalable(true);
@@ -115,16 +107,16 @@ public class BreathingActivity extends Activity {
 		// and then the activity is started again
 		graphUpdateTimer.scheduleAtFixedRate(graphUpdateTimerTask, 1000,
 				1000 / TIMER_TICKS_PER_SECOND);
-
+		
+		return view;
 	}
 
-	private void setupViews() {
-		layout = (LinearLayout) findViewById(R.id.graph1);
+	private void setupViews(View view) {
+		layout = (LinearLayout) view.findViewById(R.id.graph1);
+		timeLeftTextView = (TextView) view.findViewById(R.id.timeLeft);
+		scoreTextView = (TextView) view.findViewById(R.id.score);
 		
-		graphView = new LineGraphView(this, "GraphViewTest");
-		
-		timeLeftTextView = (TextView) findViewById(R.id.timeLeft);
-		scoreTextView = (TextView) findViewById(R.id.score);
+		graphView = new LineGraphView(getActivity(), "GraphViewTest");
 	}
 
 	private class GraphUpdateTimerTask extends TimerTask {
@@ -164,7 +156,7 @@ public class BreathingActivity extends Activity {
 				- timerCounter / TIMER_TICKS_PER_SECOND));
 	}
 
-	final Handler Newhandler = new Handler() {
+	final static Handler Newhandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {

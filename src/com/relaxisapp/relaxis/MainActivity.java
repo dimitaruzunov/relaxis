@@ -1,19 +1,14 @@
 package com.relaxisapp.relaxis;
 
-import java.lang.reflect.Field;
 import java.util.Set;
 
 import zephyr.android.HxMBT.BTClient;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -21,8 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements ListView.OnItemClickListener {
 
@@ -206,6 +201,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		protected void onPostExecute(AsyncTaskResults results) {
 			switch (results.result) {
 			case CODE_NO_BT:
+				changeBtIconConnect(results.item);
 				Toast.makeText(MainActivity.this, "Bluetooth is not supported", Toast.LENGTH_LONG).show();
 				break;
 			case CODE_FAILURE:
@@ -248,6 +244,10 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		switch (viewPager.getCurrentItem()) {
 		case 0:
 			BtConnection._NConnListener = new NewConnectedListener(HomeFragment.Newhandler, HomeFragment.Newhandler);
+			BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
+			break;
+		case 1:
+			BtConnection._NConnListener = new NewConnectedListener(BreathingFragment.Newhandler, BreathingFragment.Newhandler);
 			BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
 			break;
 		}

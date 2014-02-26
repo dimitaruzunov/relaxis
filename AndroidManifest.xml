@@ -26,9 +26,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.relaxisapp.relaxis.BreathingActivity"
-            android:label="@string/app_name" />
-        <activity
             android:name="com.relaxisapp.relaxis.StressEstimationActivity"
             android:label="@string/app_name" />
     </application>

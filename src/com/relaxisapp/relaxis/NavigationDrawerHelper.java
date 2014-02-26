@@ -45,7 +45,7 @@ public class NavigationDrawerHelper {
     }
     
     void handleBreathingAppOptionClick(Context context, View view) {
-    	Intent intent = new Intent(context, BreathingActivity.class);
+    	Intent intent = new Intent(context, BreathingFragment.class);
 		context.startActivity(intent);
     }
     

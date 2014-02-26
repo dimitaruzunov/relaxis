@@ -36,6 +36,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 			fragment.setArguments(arguments);
 			pageReferenceMap.put(position, fragment);
 			break;
+		case 1:
+			arguments.putString(BreathingFragment.SECTION_TITLE, sectionTitles[position]);
+			fragment = new BreathingFragment();
+			fragment.setArguments(arguments);
+			pageReferenceMap.put(position, fragment);
+			break;
 		}
 		
 		return fragment;
