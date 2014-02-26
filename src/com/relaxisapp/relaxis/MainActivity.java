@@ -1,5 +1,6 @@
 package com.relaxisapp.relaxis;
 
+import java.lang.reflect.Field;
 import java.util.Set;
 
 import zephyr.android.HxMBT.BTClient;
@@ -13,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -146,6 +148,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 				return CODE_NO_BT;
 			}
 
+<<<<<<< HEAD
 			// Enable bluetooth
 			if (!BtConnection.adapter.isEnabled()) {
 				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -156,6 +159,38 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			while (!BtConnection.adapter.isEnabled()) { // wait until the bluetooth
 														// is on
 			}
+=======
+		Set<BluetoothDevice> pairedDevices = BtConnection.adapter.getBondedDevices();
+		if (pairedDevices.size() > 0) {
+			for (BluetoothDevice device : pairedDevices) {
+				if (device.getName().startsWith("HXM")) {
+					BluetoothDevice btDevice = device;
+					BtConnection.BhMacID = btDevice.getAddress();
+
+					BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BtConnection.BhMacID);
+					String DeviceName = Device.getName();
+					
+					BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
+					
+					setHandler();
+
+					if (BtConnection._bt.IsConnected()) {
+						connected = true;
+						item.setIcon(R.drawable.ic_action_bluetooth_connected);
+						item.setTitle(R.string.action_bluetooth_disconnect);
+
+						BtConnection._bt.start();
+						
+						Toast.makeText(this, "Connected to HxM " + DeviceName, Toast.LENGTH_LONG).show();
+
+						// TODO Reset all the values to 0s
+					} else {
+						item.setIcon(R.drawable.ic_action_bluetooth);
+						item.setTitle(R.string.action_bluetooth_connect);
+						
+						Toast.makeText(this, "Unable to Connect!", Toast.LENGTH_LONG).show();
+					}
+>>>>>>> 225ee62cb6647158eeae5ef8205668af23c1e98e
 
 			Set<BluetoothDevice> pairedDevices = BtConnection.adapter.getBondedDevices();
 			if (pairedDevices.size() > 0) {
@@ -230,35 +265,21 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		 */
 		BtConnection._bt.Close();
 	}
-
-	final Handler Newhandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case BtConnection.HEART_RATE:
-				String HeartRatetext = msg.getData().getString("HeartRate");
-				HomeFragment.heartRateTextView.setText(HeartRatetext);
-				break;
-
-			case BtConnection.INSTANT_SPEED:
-				String InstantSpeedtext = msg.getData().getString("InstantSpeed");
-				HomeFragment.instantSpeedTextView.setText(InstantSpeedtext);
-				break;
-
-			case BtConnection.RR_INTERVAL:
-				String RRInterval = msg.getData().getString("RRInterval");
-				HomeFragment.rRIntervalTextView.setText(RRInterval);
-				break;
-
-			case BtConnection.INSTANT_HR:
-				String InstantHR = msg.getData().getString("InstantHR");
-				HomeFragment.instantHeartRateTextView.setText(InstantHR);
-				break;
-			}
+	
+	private Fragment getCurrentFragment() {
+		int index = viewPager.getCurrentItem();
+		
+		return sectionsPagerAdapter.getFragment(index);
+	}
+	
+	private void setHandler() {
+		switch (viewPager.getCurrentItem()) {
+		case 0:
+			BtConnection._NConnListener = new NewConnectedListener(HomeFragment.Newhandler, HomeFragment.Newhandler);
+			BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
+			break;
 		}
-
-	};
+	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int option, long id) {
