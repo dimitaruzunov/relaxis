@@ -48,6 +48,7 @@ public class MainActivity extends FragmentActivity implements
 
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
+		viewPager.setCurrentItem(1);
 
 		// TODO Try to put the following code out of the onCreate method
 
