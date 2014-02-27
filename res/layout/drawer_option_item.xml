@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="@dimen/list_item_vertical_padding"
+    android:paddingBottom="@dimen/list_item_vertical_padding"
+    android:paddingLeft="@dimen/list_item_horizontal_padding"
     android:textAppearance="?android:attr/textAppearanceLarge"
-    android:text="Large Text"
-    android:id="@+id/textView"
-    android:textColor="#FFFFFF"
-    android:gravity="center|center_vertical"
-    android:background="?android:attr/activatedBackgroundIndicator" />
+    android:textColor="@color/white"
+    android:background="@color/darkgrey" />
