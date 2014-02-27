@@ -44,7 +44,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 			break;
 		case 2:
 			arguments.putString(StressEstimationFragment.SECTION_TITLE, sectionTitles[position]);
-			fragment = new BreathingFragment();
+			fragment = new StressEstimationFragment();
 			fragment.setArguments(arguments);
 			pageReferenceMap.put(position, fragment);
 			break;
