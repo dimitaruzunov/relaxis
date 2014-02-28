@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <!-- Main content view -->
     <android.support.v4.view.ViewPager
@@ -12,35 +12,29 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity" >
-
-        <!--
-		    This title strip will display the currently visible page title, as well as the page
-		    titles for adjacent pages.
-        -->
+        tools:context=".MainActivity">
 
         <android.support.v4.view.PagerTitleStrip
             android:id="@+id/pager_title_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:background="#555"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp"
-            android:textColor="#fff" />
+            android:background="@color/darkgrey"
+            android:paddingBottom="@dimen/pager_title_strip_vertical_padding"
+            android:paddingTop="@dimen/pager_title_strip_vertical_padding"
+            android:textColor="@color/white" />
         
     </android.support.v4.view.ViewPager>
 
     <!-- Navigation drawer -->
-
     <ListView
         android:id="@+id/left_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#111"
+        android:background="@color/darkgrey"
         android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+        android:divider="@color/lightgrey"
+        android:dividerHeight="1dp" />
 
 </android.support.v4.widget.DrawerLayout>

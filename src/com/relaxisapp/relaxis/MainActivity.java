@@ -2,8 +2,6 @@ package com.relaxisapp.relaxis;
 
 import java.util.Set;
 
-import com.jjoe64.graphview.GraphView.GraphViewData;
-
 import zephyr.android.HxMBT.BTClient;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -13,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -24,8 +21,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity implements
-		ListView.OnItemClickListener {
+import com.jjoe64.graphview.GraphView.GraphViewData;
+
+public class MainActivity extends FragmentActivity implements ListView.OnItemClickListener {
 
 	public static final int REQUEST_ENABLE_BT = 1000;
 
@@ -284,8 +282,7 @@ public class MainActivity extends FragmentActivity implements
 		Toast.makeText(this, "Disconnected from HxM", Toast.LENGTH_LONG).show();
 
 		// This disconnects listener from acting on received messages
-		BtConnection._bt
-				.removeConnectedEventListener(BtConnection._NConnListener);
+		BtConnection._bt.removeConnectedEventListener(BtConnection._NConnListener);
 		// Close the communication with the device & throw an exception if
 		// failure
 		BtConnection._bt.Close();
@@ -293,16 +290,10 @@ public class MainActivity extends FragmentActivity implements
 		BreathingFragment.graphUpdateTimerTask.cancel();
 	}
 
-	private Fragment getCurrentFragment() {
-		int index = viewPager.getCurrentItem();
-
-		return sectionsPagerAdapter.getFragment(index);
-	}
-
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int option,
-			long id) {
-		navigationDrawerHelper.handleSelect(this, view, option);
+	public void onItemClick(AdapterView<?> parent, View view, int option, long id) {
+		sectionsPagerAdapter.setFragment(option, viewPager);
+		navigationDrawerHelper.handleSelect(option);
 	}
 
 	final static Handler SensorDataHandler = new Handler() {

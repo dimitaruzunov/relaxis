@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="lightred">#FF6060</color>
-    <color name="lightgreen">#D6FFE2</color>
+    <color name="lightred">#ff6060</color>
+    <color name="lightgrey">#ccc</color>
+    <color name="darkgrey">#555</color>
+    <color name="white">#fff</color>
 
 </resources>

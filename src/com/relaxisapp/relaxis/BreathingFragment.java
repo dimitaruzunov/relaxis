@@ -33,7 +33,7 @@ public class BreathingFragment extends Fragment {
 	final static int IDEAL_MID_HR = 73;
 	final static int IDEAL_HR_DEVIATION = 7;
 
-	final static int POINT_BARRIER = 10;
+	final static int POINT_BARRIER = 20;
 
 	static int idealMinHR = IDEAL_MID_HR - IDEAL_HR_DEVIATION;
 	static int idealMaxHR = IDEAL_MID_HR + IDEAL_HR_DEVIATION;

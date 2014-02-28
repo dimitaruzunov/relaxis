@@ -6,10 +6,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	
+	public final static int BREATHING_FRAGMENT = 0;
+	public final static int HOME_FRAGMENT = 1;
+	public final static int STRESS_FRAGMENT = 2;
 	
 	String[] sectionTitles;
 	SparseArray<Fragment> pageReferenceMap;
@@ -74,4 +79,18 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	    return pageReferenceMap.get(key);
 	}
 	
+	public void setFragment(int position, ViewPager viewPager) {
+		switch (position) {
+		case 0:
+			viewPager.setCurrentItem(HOME_FRAGMENT);
+			break;
+		case 1:
+			viewPager.setCurrentItem(BREATHING_FRAGMENT);
+			break;
+		case 2:
+			viewPager.setCurrentItem(STRESS_FRAGMENT);
+			break;
+		}
+	}
+
 }
