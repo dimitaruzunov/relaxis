@@ -25,8 +25,8 @@ public class BtConnection {
 	static final int INSTANT_HR = 0x103;
 	static final int PNN50 = 0x104;
 
-	static int nn50 = 0;
-	static int nnCount = 0;
+	static int [] recentNn50;
+	static int nnCount;
 
 	static double SDSum = 0;
 	static double SDCount = 0;
