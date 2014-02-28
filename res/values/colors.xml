@@ -3,7 +3,8 @@
 
     <color name="lightred">#ff6060</color>
     <color name="lightgrey">#ccc</color>
-    <color name="darkgrey">#555</color>
+    <color name="grey">#333</color>
+    <color name="darkgrey">#222</color>
     <color name="white">#fff</color>
 
 </resources>

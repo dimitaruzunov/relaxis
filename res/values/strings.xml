@@ -15,5 +15,7 @@
     <string name="timeLeft">Time left</string>
     <string name="breathing">Breathing</string>
     <string name="stress">Stress</string>
+    <string name="open_drawer_message">Open navigation menu</string>
+    <string name="close_drawer_message">Close navigation menu</string>
 
 </resources>

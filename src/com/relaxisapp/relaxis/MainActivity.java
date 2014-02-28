@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -69,6 +70,20 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		this.getApplicationContext().registerReceiver(new BTBondReceiver(),
 				filter2);
 	}
+	
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		
+		navigationDrawerHelper.syncState();
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		navigationDrawerHelper.handleOnPrepareOptionsMenu(menu);
+		
+		return super.onPrepareOptionsMenu(menu);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,6 +98,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		boolean handled = true;
+		
+		navigationDrawerHelper.handleOnOptionsItemSelected(item);
 
 		int id = item.getItemId();
 		switch (id) {
@@ -97,6 +114,12 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			handled = super.onOptionsItemSelected(item);
 		}
 		return handled;
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		navigationDrawerHelper.syncState();
+		super.onConfigurationChanged(newConfig);
 	}
 
 	@Override

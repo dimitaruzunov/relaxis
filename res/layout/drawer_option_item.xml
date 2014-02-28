@@ -8,4 +8,4 @@
     android:paddingLeft="@dimen/list_item_horizontal_padding"
     android:textAppearance="?android:attr/textAppearanceLarge"
     android:textColor="@color/white"
-    android:background="@color/darkgrey" />
+    android:background="@color/grey" />
