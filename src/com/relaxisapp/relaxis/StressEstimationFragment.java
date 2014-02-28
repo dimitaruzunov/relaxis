@@ -35,7 +35,7 @@ public class StressEstimationFragment extends Fragment {
 		
 		// TODO check if the timer is cleared when the back button is pressed
 		// and then the activity is started again
-		graphUpdateTimer.scheduleAtFixedRate(graphUpdateTimerTask, 0, 1000);
+		// graphUpdateTimer.scheduleAtFixedRate(graphUpdateTimerTask, 0, 1000);
 		
 		return view;
 	}

@@ -286,6 +286,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int option, long id) {
 		sectionsPagerAdapter.setFragment(option, viewPager);
+		navigationDrawerHelper.handleSelect(option);
 	}
 
 	final static Handler SensorDataHandler = new Handler() {
