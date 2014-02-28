@@ -72,6 +72,16 @@
             style="@style/Divider"
             android:layout_below="@+id/instantHeartRateTextView"
             android:layout_marginBottom="@dimen/activity_vertical_margin" />
+
+        <TextView
+            android:id="@+id/testTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider4"
+            android:drawableLeft="@drawable/ic_instant_heart_rate"
+            android:drawablePadding="@dimen/activity_horizontal_margin"
+            android:hint="@string/instantHeartRate"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
     </RelativeLayout>
 
 </ScrollView>
