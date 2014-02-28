@@ -23,5 +23,27 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">?android:attr/listDivider</item>
     </style>
+    
+    <style name="PagerTitleStrip">
+        <item name="android:background">@color/grey</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:paddingTop">@dimen/pager_title_strip_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/pager_title_strip_vertical_padding</item>
+    </style>
+    
+    <style name="NavigationDrawerListView">
+        <item name="android:background">@color/grey</item>
+        <item name="android:divider">@color/darkgrey</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+    
+    <style name="DrawerOptionItem">
+        <item name="android:background">@color/grey</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:paddingTop">@dimen/list_item_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/list_item_vertical_padding</item>
+        <item name="android:paddingLeft">@dimen/list_item_horizontal_padding</item>
+    </style>
 
 </resources>
