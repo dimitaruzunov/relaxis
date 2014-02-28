@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:background="@color/darkgrey"
+            android:background="@color/grey"
             android:paddingBottom="@dimen/pager_title_strip_vertical_padding"
             android:paddingTop="@dimen/pager_title_strip_vertical_padding"
             android:textColor="@color/white" />
@@ -32,9 +32,9 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/darkgrey"
+        android:background="@color/grey"
         android:choiceMode="singleChoice"
-        android:divider="@color/lightgrey"
+        android:divider="@color/darkgrey"
         android:dividerHeight="1dp" />
 
 </android.support.v4.widget.DrawerLayout>
