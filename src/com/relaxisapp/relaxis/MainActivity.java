@@ -24,7 +24,8 @@ import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView.GraphViewData;
 
-public class MainActivity extends FragmentActivity implements ListView.OnItemClickListener {
+public class MainActivity extends FragmentActivity implements
+		ListView.OnItemClickListener {
 
 	public static final int REQUEST_ENABLE_BT = 1000;
 
@@ -43,7 +44,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		navigationDrawerHelper = new NavigationDrawerHelper();
 		navigationDrawerHelper.init(this, this);
 
-		sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
+		sectionsPagerAdapter = new SectionsPagerAdapter(
+				getSupportFragmentManager(), this);
 
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
@@ -70,18 +72,18 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		this.getApplicationContext().registerReceiver(new BTBondReceiver(),
 				filter2);
 	}
-	
+
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		
+
 		navigationDrawerHelper.syncState();
 	}
-	
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		navigationDrawerHelper.handleOnPrepareOptionsMenu(menu);
-		
+
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -98,24 +100,22 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		boolean handled = true;
-		
+
 		navigationDrawerHelper.handleOnOptionsItemSelected(item);
 
 		int id = item.getItemId();
-		switch (id) {
-		case R.id.action_bluetooth:
+		if (id == R.id.action_bluetooth) {
 			if (!isConnected) {
 				onClickMenuBluetoothConnect(item);
 			} else {
 				onClickMenuBluetoothDisconnect(item);
 			}
-			break;
-		default:
+		} else {
 			handled = super.onOptionsItemSelected(item);
 		}
 		return handled;
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		navigationDrawerHelper.syncState();
@@ -181,20 +181,21 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			// Setting the results to be returned
 			AsyncTaskResults results = new AsyncTaskResults();
 			results.item = menuItems[0];
-			
-			// do the work unless user cancel
-			while(!isCancelled()) {
-				// Setting up an event listener listening for cancel intent
-				results.item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-					
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
-						cancel(true);
 
-						return false;
-					}
-					
-				});
+			// do the work unless user cancel
+			while (!isCancelled()) {
+				// Setting up an event listener listening for cancel intent
+				results.item
+						.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+							@Override
+							public boolean onMenuItemClick(MenuItem item) {
+								cancel(true);
+
+								return false;
+							}
+
+						});
 
 				// Getting the Bluetooth adapter
 				BtConnection.adapter = BluetoothAdapter.getDefaultAdapter();
@@ -207,7 +208,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 				// Enable bluetooth if not enabled
 				if (!BtConnection.adapter.isEnabled()) {
-					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+					Intent enableBtIntent = new Intent(
+							BluetoothAdapter.ACTION_REQUEST_ENABLE);
 					startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 				}
 
@@ -216,20 +218,25 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 					// wait until the bluetooth is on
 				}
 
-				Set<BluetoothDevice> pairedDevices = BtConnection.adapter.getBondedDevices();
+				Set<BluetoothDevice> pairedDevices = BtConnection.adapter
+						.getBondedDevices();
 				if (pairedDevices.size() > 0) {
 					for (BluetoothDevice device : pairedDevices) {
 						if (device.getName().startsWith("HXM")) {
 							BluetoothDevice btDevice = device;
 							BtConnection.BhMacID = btDevice.getAddress();
 
-							BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BtConnection.BhMacID);
+							BluetoothDevice Device = BtConnection.adapter
+									.getRemoteDevice(BtConnection.BhMacID);
 							BtConnection.deviceName = Device.getName();
 
-							BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
+							BtConnection._bt = new BTClient(
+									BtConnection.adapter, BtConnection.BhMacID);
 
-							BtConnection._NConnListener = new NewConnectedListener(SensorDataHandler, SensorDataHandler);
-							BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
+							BtConnection._NConnListener = new NewConnectedListener(
+									SensorDataHandler, SensorDataHandler);
+							BtConnection._bt
+									.addConnectedEventListener(BtConnection._NConnListener);
 
 							if (BtConnection._bt.IsConnected()) {
 								BtConnection._bt.start();
@@ -275,9 +282,9 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 				BtConnection.recentNn50 = new int[60];
 				for (int i = 0; i < BtConnection.recentNn50.length; i++) {
 					BtConnection.recentNn50[i] = 0;
-					
+
 				}
-				
+
 				// TODO check if the timer is cleared when the back button is
 				// pressed
 				// and then the activity is started again
@@ -293,7 +300,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		@Override
 		protected void onCancelled(AsyncTaskResults results) {
 			changeBtIconConnect(results.item);
-			Toast.makeText(MainActivity.this, "Connecting cancelled", Toast.LENGTH_LONG).show();
+			Toast.makeText(MainActivity.this, "Connecting cancelled",
+					Toast.LENGTH_LONG).show();
 		}
 
 	}
@@ -305,7 +313,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		Toast.makeText(this, "Disconnected from HxM", Toast.LENGTH_LONG).show();
 
 		// This disconnects listener from acting on received messages
-		BtConnection._bt.removeConnectedEventListener(BtConnection._NConnListener);
+		BtConnection._bt
+				.removeConnectedEventListener(BtConnection._NConnListener);
 		// Close the communication with the device & throw an exception if
 		// failure
 		BtConnection._bt.Close();
@@ -314,7 +323,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int option, long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int option,
+			long id) {
 		sectionsPagerAdapter.setFragment(option, viewPager);
 		navigationDrawerHelper.handleSelect(option);
 	}
@@ -348,8 +358,9 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 				HomeFragment.instantHeartRateTextView.setText(instantHRString);
 
 				// update BreathingFragment
-				BtConnection.instantHRSeries.appendData(new GraphViewData(BreathingFragment.beatsCount, instantHR),
-						false, BreathingFragment.VIEWPORT_WIDTH + 1);
+				BtConnection.instantHRSeries.appendData(new GraphViewData(
+						BreathingFragment.beatsCount, instantHR), false,
+						BreathingFragment.VIEWPORT_WIDTH + 1);
 				BreathingFragment.beatsCount++;
 
 				if (instantHR > BreathingFragment.tMaxHR) {
@@ -373,13 +384,15 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 					BreathingFragment.multiplier = 1;
 				}
 
-				BreathingFragment.scoreTextView.setText(String.valueOf(BreathingFragment.score));
+				BreathingFragment.scoreTextView.setText(String
+						.valueOf(BreathingFragment.score));
 				break;
 			case BtConnection.PNN50:
 				if (StressEstimationFragment.timeLeft <= 0) {
 					String pNN50 = msg.getData().getString("pNN50");
-					
-					StressEstimationFragment.stressLevelTextView.setText("Current stress level: " + pNN50);
+
+					StressEstimationFragment.stressLevelTextView
+							.setText("Current stress level: " + pNN50);
 				}
 				break;
 			}
