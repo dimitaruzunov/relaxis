@@ -41,6 +41,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	SectionsPagerAdapter sectionsPagerAdapter;
 	ViewPager viewPager;
 	OnBtConnectionChangeListener btConnectionChangeListener;
+	
+	private HomeFragment homeFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,10 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
 		viewPager.setCurrentItem(1);
+		
+		if (savedInstanceState != null) {
+			homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(android.R.id.content);
+		}
 
 		// TODO Try to put the following code out of the onCreate method
 

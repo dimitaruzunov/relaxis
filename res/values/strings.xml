@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Relaxis</string>
+    <string name="app_id">1414231085481831</string>
     <string name="action_bluetooth_connect">Connect</string>
     <string name="action_bluetooth_connecting">Connecting</string>
     <string name="action_bluetooth_disconnect">Disconnect</string>
@@ -17,6 +18,5 @@
     <string name="stress">Stress</string>
     <string name="open_drawer_message">Open navigation menu</string>
     <string name="close_drawer_message">Close navigation menu</string>
-    <string name="app_id">1414231085481831</string>
 
 </resources>
