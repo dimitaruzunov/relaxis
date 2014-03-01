@@ -45,7 +45,6 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 //		try {
 //	        PackageInfo info = getPackageManager().getPackageInfo(
 //	                "com.relaxisapp.relaxis", 
@@ -60,6 +59,7 @@ public class MainActivity extends FragmentActivity implements
 //	    } catch (NoSuchAlgorithmException e) {
 //
 //	    }
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		navigationDrawerHelper = new NavigationDrawerHelper();
