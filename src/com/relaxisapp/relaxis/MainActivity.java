@@ -46,20 +46,23 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-//		try {
-//	        PackageInfo info = getPackageManager().getPackageInfo(
-//	                "com.relaxisapp.relaxis", 
-//	                PackageManager.GET_SIGNATURES);
-//	        for (Signature signature : info.signatures) {
-//	            MessageDigest md = MessageDigest.getInstance("SHA");
-//	            md.update(signature.toByteArray());
-//	            System.out.println("KeyHash:"+ Base64.encodeToString(md.digest(), Base64.DEFAULT));
-//	            }
-//	    } catch (NameNotFoundException e) {
-//
-//	    } catch (NoSuchAlgorithmException e) {
-//
-//	    }
+		// Add code to print out the key hash
+	    try {
+	        PackageInfo info = getPackageManager().getPackageInfo(
+	                "com.relaxisapp.relaxis", 
+	                PackageManager.GET_SIGNATURES);
+	        for (Signature signature : info.signatures) {
+	            MessageDigest md = MessageDigest.getInstance("SHA");
+	            md.update(signature.toByteArray());
+	            System.out.println("KeyHash:"+Base64.encodeToString(md.digest(), Base64.DEFAULT));
+	            }
+	    } catch (NameNotFoundException e) {
+	    	System.out.println("KeyHash:"+"1");
+
+	    } catch (NoSuchAlgorithmException e) {
+	    	System.out.println("KeyHash:"+"2");
+
+	    }
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
