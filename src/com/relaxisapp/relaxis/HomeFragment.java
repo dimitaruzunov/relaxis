@@ -62,10 +62,7 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
 	    uiHelper.onActivityResult(requestCode, resultCode, data);
-	    Session.getActiveSession()
-        .onActivityResult(this.getActivity(), requestCode, resultCode, data);
 	}
-
 
 	@Override
 	public void onPause() {

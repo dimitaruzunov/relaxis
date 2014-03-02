@@ -1,7 +1,5 @@
 package com.relaxisapp.relaxis;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 
 import zephyr.android.HxMBT.BTClient;
@@ -9,10 +7,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,8 +14,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,27 +34,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	ViewPager viewPager;
 	OnBtConnectionChangeListener btConnectionChangeListener;
 	
-	private HomeFragment homeFragment;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// Add code to print out the key hash
-	    try {
-	        PackageInfo info = getPackageManager().getPackageInfo(
-	                "com.relaxisapp.relaxis", 
-	                PackageManager.GET_SIGNATURES);
-	        for (Signature signature : info.signatures) {
-	            MessageDigest md = MessageDigest.getInstance("SHA");
-	            md.update(signature.toByteArray());
-	            System.out.println("KeyHash:"+Base64.encodeToString(md.digest(), Base64.DEFAULT));
-	            }
-	    } catch (NameNotFoundException e) {
-	    	System.out.println("KeyHash:"+"1");
-
-	    } catch (NoSuchAlgorithmException e) {
-	    	System.out.println("KeyHash:"+"2");
-
-	    }
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -74,10 +47,6 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
 		viewPager.setCurrentItem(1);
-		
-		if (savedInstanceState != null) {
-			homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(android.R.id.content);
-		}
 
 		// TODO Try to put the following code out of the onCreate method
 
@@ -138,8 +107,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent resultIntent) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent resultIntent) {
 		super.onActivityResult(requestCode, resultCode, resultIntent);
 		switch (requestCode) {
 		case REQUEST_ENABLE_BT:
@@ -148,8 +116,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		}
 	}
 
-	private void handleBluetoothConnectResult(int resultCode,
-			Intent resultIntent) {
+	private void handleBluetoothConnectResult(int resultCode, Intent resultIntent) {
 		if (resultCode == RESULT_OK) {
 			Toast.makeText(this, "Bluetooth is now enabled", Toast.LENGTH_LONG).show();
 		} else {
