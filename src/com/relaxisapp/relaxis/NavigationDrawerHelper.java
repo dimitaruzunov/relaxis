@@ -9,20 +9,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class NavigationDrawerHelper {
 
 	DrawerLayout drawerLayout;
-	LinearLayout drawerLinearLayout;
 	ListView drawerListView;
 	
 	private ActionBarDrawerToggle drawerToggle;
 
     public void init(Activity activity, ListView.OnItemClickListener listener) {
         drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
-        drawerLinearLayout = (LinearLayout) activity.findViewById(R.id.left_drawer_linear_layout);
         drawerListView = (ListView) activity.findViewById(R.id.left_drawer);
 
         String[] navigationDrawerOptions = activity.getResources().getStringArray(R.array.navigation_drawer_options);
@@ -61,11 +58,11 @@ public class NavigationDrawerHelper {
     }
 
     public void handleSelect(int option) {
-        drawerLayout.closeDrawer(drawerLinearLayout);
+        drawerLayout.closeDrawer(drawerListView);
     }
     
     public void handleOnPrepareOptionsMenu(Menu menu) {
-    	boolean itemVisible = !drawerLayout.isDrawerOpen(drawerLinearLayout);
+    	boolean itemVisible = !drawerLayout.isDrawerOpen(drawerListView);
     	
     	for (int index = 0; index < menu.size(); index++) {
     		MenuItem item = menu.getItem(index);

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Course Titles -->
+    <!-- Section titles -->
     <string-array name="section_titles">
         <item>@string/breathing_app_title</item>
         <item>@string/home_title</item>
         <item>@string/stress_app_title</item>
+        <item>@string/login_title</item>
+    </string-array>
+    
+    <!-- Navigation drawer titles -->
+    <string-array name="navigation_drawer_options">
+        <item>@string/home_title</item>
+        <item>@string/breathing_app_title</item>
+        <item>@string/stress_app_title</item>
+        <item>@string/login_title</item>
     </string-array>
 
 </resources>

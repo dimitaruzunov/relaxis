@@ -24,20 +24,12 @@
     </android.support.v4.view.ViewPager>
 
     <!-- Navigation drawer -->
-    <LinearLayout
-        android:id="@+id/left_drawer_linear_layout"
+    <ListView
+        android:id="@+id/left_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start">
-        
-        <ListView 
-            android:id="@+id/left_drawer"
-            android:layout_width="match_parent"
-        	android:layout_height="match_parent"
-        	android:choiceMode="singleChoice"
-        	style="@style/NavigationDrawerListView" />
-        
-    </LinearLayout>
-    
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        style="@style/NavigationDrawerListView" />
 
 </android.support.v4.widget.DrawerLayout>

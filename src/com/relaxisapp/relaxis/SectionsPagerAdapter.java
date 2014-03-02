@@ -15,6 +15,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	public final static int BREATHING_FRAGMENT = 0;
 	public final static int HOME_FRAGMENT = 1;
 	public final static int STRESS_FRAGMENT = 2;
+	public final static int LOGIN_FRAGMENT = 3;
 	
 	String[] sectionTitles;
 	SparseArray<Fragment> pageReferenceMap;
@@ -50,6 +51,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		case 2:
 			arguments.putString(StressEstimationFragment.SECTION_TITLE, sectionTitles[position]);
 			fragment = new StressEstimationFragment();
+			fragment.setArguments(arguments);
+			pageReferenceMap.put(position, fragment);
+			break;
+		case 3:
+			arguments.putString(StressEstimationFragment.SECTION_TITLE, sectionTitles[position]);
+			fragment = new LoginFragment();
 			fragment.setArguments(arguments);
 			pageReferenceMap.put(position, fragment);
 			break;
@@ -89,6 +96,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 			break;
 		case 2:
 			viewPager.setCurrentItem(STRESS_FRAGMENT);
+			break;
+		case 3:
+			viewPager.setCurrentItem(LOGIN_FRAGMENT);
 			break;
 		}
 	}
