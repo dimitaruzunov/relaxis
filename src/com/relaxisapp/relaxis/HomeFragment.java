@@ -1,10 +1,6 @@
 package com.relaxisapp.relaxis;
 
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -242,30 +238,6 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	void changeBtIconConnected(Button button) {
 		button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_bluetooth_connected, 0, 0, 0);
 		button.setText(R.string.action_bluetooth_disconnect);
-	}
-	
-	private class HttpRequestTask extends AsyncTask<Void, Void, User> {
-		@Override
-		protected User doInBackground(Void... params) {
-			try {
-				final String url = "http://rest-service.guides.spring.io/greeting";
-				RestTemplate restTemplate = new RestTemplate();
-				restTemplate.getMessageConverters().add(
-						new MappingJackson2HttpMessageConverter());
-				User greeting = restTemplate.getForObject(url, User.class);
-				return greeting;
-			} catch (Exception e) {
-				Log.e("MainActivity", e.getMessage(), e);
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(User user) {
-			testTextView.setText(user.getUserId() + user.getFacebookId());
-		}
-
 	}
 
 }

@@ -62,7 +62,7 @@ public class BreathingFragment extends Fragment {
 	static TextView timeLeftTextView;
 
 	static TextView scoreTextView;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -159,5 +159,5 @@ public class BreathingFragment extends Fragment {
 
 		layout.removeView(graphView);
 	}
-
+	
 }

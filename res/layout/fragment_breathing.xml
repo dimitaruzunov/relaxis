@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/graph1"
     android:layout_width="match_parent"
     android:layout_height="250dp"
-    android:orientation="vertical"
-    android:id="@+id/graph1">
-    
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/connectButton"
+        android:onClick="getUser"
+        style="@style/ConnectButton" />
+
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lastAntiScore"
-            android:id="@+id/lastAntiScore" />
-    
+        android:id="@+id/lastAntiScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lastAntiScore" />
+
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/score"
-            android:id="@+id/score" />
-    
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/score" />
+
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/timeLeft"
-            android:id="@+id/timeLeft" />
+        android:id="@+id/timeLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/timeLeft" />
 
 </LinearLayout>

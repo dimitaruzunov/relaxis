@@ -2,6 +2,9 @@ package com.relaxisapp.relaxis;
 
 import java.util.Set;
 
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
 import zephyr.android.HxMBT.BTClient;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -14,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +37,10 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	SectionsPagerAdapter sectionsPagerAdapter;
 	ViewPager viewPager;
 	OnBtConnectionChangeListener btConnectionChangeListener;
+
+	public void getUser(View view) {
+		new HttpRequestTask().execute();
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -350,4 +358,28 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		}
 
 	};
+	
+	private class HttpRequestTask extends AsyncTask<Void, Void, User> {
+		@Override
+		protected User doInBackground(Void... params) {
+			try {
+				final String url = "http://relaxisapp.com.91-215-216-74.hera.icnhost.net/api/users/1";
+				RestTemplate restTemplate = new RestTemplate();
+				restTemplate.getMessageConverters().add(
+						new MappingJackson2HttpMessageConverter());
+				User user = restTemplate.getForObject(url, User.class);
+				return user;
+			} catch (Exception e) {
+				Log.e("MainActivity", e.getMessage(), e);
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(User user) {
+			System.out.println("spring " + user.getUserId() + " " + user.getFbUserId());
+		}
+
+	}
 }
