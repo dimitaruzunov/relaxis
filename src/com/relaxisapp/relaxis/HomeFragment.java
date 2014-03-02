@@ -21,6 +21,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.facebook.widget.ProfilePictureView;
 
 public class HomeFragment extends Fragment implements OnBtConnectionChangeListener {
 	
@@ -33,6 +34,8 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	static TextView rRIntervalTextView;
 	static TextView instantHeartRateTextView;
 	static TextView testTextView;
+	
+	static ProfilePictureView profilePictureView;
 	
 	int connectionState = 0;
 	Button connectButton;
@@ -120,6 +123,7 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 		                        String user_ID = user.getId();//user id
 		                        String profileName = user.getName();//user's profile name
 		            			testTextView.setText(user_ID + " " + profileName);
+		            			profilePictureView.setProfileId(user.getId());
 		                    }   
 		                }   
 						
@@ -146,6 +150,9 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 				handleConnectButtonClick((Button) view);
 			}
 		});
+		
+		profilePictureView = (ProfilePictureView) view.findViewById(R.id.selection_profile_pic);
+		profilePictureView.setCropped(true);
 		
 		testTextView = (TextView) view.findViewById(R.id.testTextView);
 
