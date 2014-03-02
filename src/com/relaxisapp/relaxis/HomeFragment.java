@@ -20,7 +20,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
 
 public class HomeFragment extends Fragment implements OnBtConnectionChangeListener {
-
+	
 	private UiLifecycleHelper uiHelper;
 
 	public final static String SECTION_TITLE = "section title";
@@ -37,6 +37,7 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		uiHelper = new UiLifecycleHelper(getActivity(), callback);
 		uiHelper.onCreate(savedInstanceState);
 	}
@@ -56,12 +57,15 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 		
 		uiHelper.onResume();
 	}
-
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		uiHelper.onActivityResult(requestCode, resultCode, data);
+	    super.onActivityResult(requestCode, resultCode, data);
+	    uiHelper.onActivityResult(requestCode, resultCode, data);
+	    Session.getActiveSession()
+        .onActivityResult(this.getActivity(), requestCode, resultCode, data);
 	}
+
 
 	@Override
 	public void onPause() {
@@ -89,7 +93,7 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 
 		LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
 		authButton.setFragment(this);
-
+		
 		return view;
 	}
 
@@ -102,9 +106,14 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 		if (state.isOpened()) {
+			testTextView.setText("Logged in");
 			Log.i("HomeFragment", "Logged in...");
 		} else if (state.isClosed()) {
+			testTextView.setText("Logged out");
 			Log.i("HomeFragment", "Logged out...");
+		} else {
+
+			testTextView.setText(state.toString());
 		}
 	}
 

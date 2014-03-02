@@ -43,7 +43,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	OnBtConnectionChangeListener btConnectionChangeListener;
 	
 	private HomeFragment homeFragment;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// Add code to print out the key hash
@@ -140,6 +140,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent resultIntent) {
+		super.onActivityResult(requestCode, resultCode, resultIntent);
 		switch (requestCode) {
 		case REQUEST_ENABLE_BT:
 			handleBluetoothConnectResult(resultCode, resultIntent);
