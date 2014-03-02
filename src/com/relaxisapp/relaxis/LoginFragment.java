@@ -1,5 +1,13 @@
 package com.relaxisapp.relaxis;
 
+import java.net.URI;
+import java.util.List;
+
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -10,8 +18,10 @@ import com.facebook.widget.LoginButton;
 import com.facebook.widget.ProfilePictureView;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +32,8 @@ public class LoginFragment extends Fragment {
 	public final static String SECTION_TITLE = "section title";
 	
 	private UiLifecycleHelper uiHelper;
+	
+	private Request meRequest;
 	
 	LoginButton authButton;
 	ProfilePictureView profilePictureView;
@@ -104,7 +116,7 @@ public class LoginFragment extends Fragment {
 	private void makeMeRequest(final Session session) {
 	    // Make an API call to get user data and define a 
 	    // new callback to handle the response.
-		Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+		meRequest = Request.newMeRequest(session, new Request.GraphUserCallback() {
 
 			@Override
 			public void onCompleted(GraphUser user, Response response) {
@@ -112,25 +124,29 @@ public class LoginFragment extends Fragment {
                 if (session == Session.getActiveSession()) {
                     if (user != null) {
                         String userId = user.getId();
+                        ApiConnection.FbUserId = userId;
+                        
                         String profileName = user.getName();
                         
             			userName.setText(profileName);
             			profilePictureView.setProfileId(userId);
                     }
                 }
+    			new CheckUserTask().execute();
 			}
+
         });
-        Request.executeBatchAsync(request);
+        Request.executeBatchAsync(meRequest);
 	}
 
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 		if (state.isOpened()) {
 			makeMeRequest(session);
-			toggleViewsVisibility(1);
-		} else if (state.isClosed()) {
 			toggleViewsVisibility(0);
+		} else if (state.isClosed()) {
+			toggleViewsVisibility(4);
 		} else {
-			//testTextView.setText(state.toString());
+			//System.out.println(state.toString());
 		}
 	}
 	
@@ -138,5 +154,58 @@ public class LoginFragment extends Fragment {
 		userName.setVisibility(visibility);
 		profilePictureView.setVisibility(visibility);
 	}
-	
+
+	private class CheckUserTask extends AsyncTask<Void, Void, User> {
+		@Override
+		protected User doInBackground(Void... params) {
+			try {
+				final String url = "http://relaxisapp.com.91-215-216-74.hera.icnhost.net/api/users/" + ApiConnection.FbUserId;
+				RestTemplate restTemplate = new RestTemplate();
+				restTemplate.getMessageConverters().add(
+						new MappingJackson2HttpMessageConverter());
+				User user = restTemplate.getForObject(url, User.class);
+				return user;
+			} catch (HttpClientErrorException e) {
+				if (e.getStatusCode().value() == 404) {
+					new CreateUserTask().execute();
+			    } else {
+			    	Log.e("MainActivity", e.getMessage(), e);
+			    }
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(User user) {
+			if (user != null) {
+				ApiConnection.UserId = user.getUserId();
+			}
+		}
+
+	}
+
+	private class CreateUserTask extends AsyncTask<Void, Void, User> {
+		@Override
+		protected User doInBackground(Void... params) {
+			try {
+				final String url = "http://relaxisapp.com.91-215-216-74.hera.icnhost.net/api/users/";
+				RestTemplate restTemplate = new RestTemplate();
+				restTemplate.getMessageConverters().add(
+						new MappingJackson2HttpMessageConverter());
+				User user = restTemplate.postForObject(url, new User(ApiConnection.FbUserId), User.class);
+				return user;
+			} catch (Exception e) {
+				Log.e("MainActivity", e.getMessage(), e);
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(User user) {
+			ApiConnection.UserId = user.getUserId();
+		}
+
+	}
 }

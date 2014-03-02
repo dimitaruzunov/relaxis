@@ -6,6 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class User {
 	
+	public User() {
+		
+	}
+	
+	public User(String fbUserId) {
+		this.fbUserId = fbUserId;
+	}
+	
 	private int userId;
     private String fbUserId;
 
