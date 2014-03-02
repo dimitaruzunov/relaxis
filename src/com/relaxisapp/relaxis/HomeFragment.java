@@ -106,31 +106,32 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 			onSessionStateChange(session, state, exception);
 		}
 	};
+	
+	private void makeMeRequest(final Session session) {
+	    // Make an API call to get user data and define a 
+	    // new callback to handle the response.
+		Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+
+			@Override
+			public void onCompleted(GraphUser user, Response response) {
+				// If the response is successful
+                if (session == Session.getActiveSession()) {
+                    if (user != null) {
+                        String user_ID = user.getId();//user id
+                        String profileName = user.getName();//user's profile name
+            			testTextView.setText(user_ID + " " + profileName);
+            			profilePictureView.setProfileId(user.getId());
+                    }   
+                }   
+				
+			}   
+        }); 
+        Request.executeBatchAsync(request);
+	} 
 
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 		if (state.isOpened()) {
-			final Session finalSession = session;
-		    if (session != null && session.isOpened()) {
-		        // If the session is open, make an API call to get user data
-		        // and define a new callback to handle the response
-		        Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
-
-					@Override
-					public void onCompleted(GraphUser user, Response response) {
-						// If the response is successful
-		                if (finalSession == Session.getActiveSession()) {
-		                    if (user != null) {
-		                        String user_ID = user.getId();//user id
-		                        String profileName = user.getName();//user's profile name
-		            			testTextView.setText(user_ID + " " + profileName);
-		            			profilePictureView.setProfileId(user.getId());
-		                    }   
-		                }   
-						
-					}   
-		        }); 
-		        Request.executeBatchAsync(request);
-		    }  
+			makeMeRequest(session);
 			testTextView.append("/n Logged in");
 			Log.i("HomeFragment", "Logged in...");
 		} else if (state.isClosed()) {
