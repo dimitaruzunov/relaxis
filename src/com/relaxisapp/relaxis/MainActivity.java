@@ -1,5 +1,6 @@
 package com.relaxisapp.relaxis;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -11,6 +12,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,11 +34,12 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 public class MainActivity extends FragmentActivity implements ListView.OnItemClickListener {
 
 	public static final int REQUEST_ENABLE_BT = 1000;
-
-	NavigationDrawerHelper navigationDrawerHelper;
-	SectionsPagerAdapter sectionsPagerAdapter;
-	ViewPager viewPager;
-	OnBtConnectionChangeListener btConnectionChangeListener;
+	
+	private NavigationDrawerListAdapter navigationDrawerListAdapter;
+	private ListView drawerListView;
+	private SectionsPagerAdapter sectionsPagerAdapter;
+	private ViewPager viewPager;
+	private OnBtConnectionChangeListener btConnectionChangeListener;
 
 	public void getUser(View view) {
 		new HttpRequestTask().execute();
@@ -49,14 +52,32 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
-		navigationDrawerHelper = new NavigationDrawerHelper();
-		navigationDrawerHelper.init(this, this);
+		// Navigation drawer setup
+		String[] navigationMenuTitles = getResources().getStringArray(R.array.navigation_drawer_options);
+        TypedArray navigationMenuIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons);
+        
+        ArrayList<NavigationDrawerItem> navigationDrawerItems = new ArrayList<NavigationDrawerItem>();
+        
+        for (int i = 0, len = navigationMenuTitles.length; i < len; i++) {
+        	navigationDrawerItems.add(new NavigationDrawerItem(navigationMenuTitles[i], navigationMenuIcons.getResourceId(i, -1)));
+        }
+        
+        // Recycle the typed array
+        navigationMenuIcons.recycle();
+		
+		navigationDrawerListAdapter = new NavigationDrawerListAdapter(getApplicationContext(), navigationDrawerItems);
+		
+		drawerListView = (ListView) findViewById(R.id.left_drawer);
+		drawerListView.setAdapter(navigationDrawerListAdapter);
 
+		navigationDrawerListAdapter.setup(this, this);
+
+		// Sections pager setup
 		sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
 
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
-		viewPager.setCurrentItem(1);
+		viewPager.setCurrentItem(SectionsPagerAdapter.HOME_FRAGMENT);
 
 		// TODO Try to put the following code out of the onCreate method
 
@@ -81,12 +102,12 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		navigationDrawerHelper.syncState();
+		navigationDrawerListAdapter.syncState();
 	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		navigationDrawerHelper.handleOnPrepareOptionsMenu(menu);
+		navigationDrawerListAdapter.handleOnPrepareOptionsMenu(menu);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -105,14 +126,14 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		// as you specify a parent activity in AndroidManifest.xml.
 		boolean handled = true;
 
-		navigationDrawerHelper.handleOnOptionsItemSelected(item);
+		navigationDrawerListAdapter.handleOnOptionsItemSelected(item);
 		
 		return handled;
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		navigationDrawerHelper.syncState();
+		navigationDrawerListAdapter.syncState();
 		super.onConfigurationChanged(newConfig);
 	}
 
@@ -287,7 +308,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int option, long id) {
 		sectionsPagerAdapter.setFragment(option, viewPager);
-		navigationDrawerHelper.handleSelect(option);
+		navigationDrawerListAdapter.handleSelect(option);
 	}
 
 	final static Handler SensorDataHandler = new Handler() {

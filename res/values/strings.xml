@@ -18,5 +18,6 @@
     <string name="stress">Stress</string>
     <string name="open_drawer_message">Open navigation menu</string>
     <string name="close_drawer_message">Close navigation menu</string>
+    <string name="desc_list_item_icon">Icon</string>
 
 </resources>

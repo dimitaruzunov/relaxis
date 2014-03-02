@@ -3,10 +3,10 @@
 
     <!-- Section titles -->
     <string-array name="section_titles">
-        <item>@string/breathing_app_title</item>
-        <item>@string/home_title</item>
-        <item>@string/stress_app_title</item>
         <item>@string/login_title</item>
+        <item>@string/home_title</item>
+        <item>@string/breathing_app_title</item>
+        <item>@string/stress_app_title</item>
     </string-array>
     
     <!-- Navigation drawer titles -->
@@ -16,5 +16,13 @@
         <item>@string/stress_app_title</item>
         <item>@string/login_title</item>
     </string-array>
+    
+    <!-- Navigation drawer icons -->
+    <array name="navigation_drawer_icons">
+        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_breathing</item>
+        <item>@drawable/ic_stress</item>
+        <item>@drawable/ic_fb</item>
+    </array>
 
 </resources>

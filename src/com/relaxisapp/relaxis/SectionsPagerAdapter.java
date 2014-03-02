@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	
-	public final static int BREATHING_FRAGMENT = 0;
+	public final static int LOGIN_FRAGMENT = 0;
 	public final static int HOME_FRAGMENT = 1;
-	public final static int STRESS_FRAGMENT = 2;
-	public final static int LOGIN_FRAGMENT = 3;
+	public final static int BREATHING_FRAGMENT = 2;
+	public final static int STRESS_FRAGMENT = 3;
 	
 	String[] sectionTitles;
 	SparseArray<Fragment> pageReferenceMap;
@@ -36,27 +36,27 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		Bundle arguments = new Bundle();
 		
 		switch (position) {
-		case 0:
-			arguments.putString(BreathingFragment.SECTION_TITLE, sectionTitles[position]);
-			fragment = new BreathingFragment();
+		case LOGIN_FRAGMENT:
+			arguments.putString(LoginFragment.SECTION_TITLE, sectionTitles[position]);
+			fragment = new LoginFragment();
 			fragment.setArguments(arguments);
 			pageReferenceMap.put(position, fragment);
 			break;
-		case 1:
+		case HOME_FRAGMENT:
 			arguments.putString(HomeFragment.SECTION_TITLE, sectionTitles[position]);
 			fragment = new HomeFragment();
 			fragment.setArguments(arguments);
 			pageReferenceMap.put(position, fragment);
 			break;
-		case 2:
-			arguments.putString(StressEstimationFragment.SECTION_TITLE, sectionTitles[position]);
-			fragment = new StressEstimationFragment();
+		case BREATHING_FRAGMENT:
+			arguments.putString(BreathingFragment.SECTION_TITLE, sectionTitles[position]);
+			fragment = new BreathingFragment();
 			fragment.setArguments(arguments);
 			pageReferenceMap.put(position, fragment);
 			break;
-		case 3:
+		case STRESS_FRAGMENT:
 			arguments.putString(StressEstimationFragment.SECTION_TITLE, sectionTitles[position]);
-			fragment = new LoginFragment();
+			fragment = new StressEstimationFragment();
 			fragment.setArguments(arguments);
 			pageReferenceMap.put(position, fragment);
 			break;
