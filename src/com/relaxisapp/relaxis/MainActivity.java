@@ -38,7 +38,9 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
 		navigationDrawerHelper = new NavigationDrawerHelper();
 		navigationDrawerHelper.init(this, this);
 
