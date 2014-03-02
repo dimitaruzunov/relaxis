@@ -1,16 +1,7 @@
 package com.relaxisapp.relaxis;
 
-<<<<<<< HEAD
-import android.content.Intent;
-=======
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import android.os.AsyncTask;
->>>>>>> 5d36ae2d3bb09613e4b26b08d600ae95f986e088
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
