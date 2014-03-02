@@ -14,9 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 
 public class HomeFragment extends Fragment implements OnBtConnectionChangeListener {
@@ -103,7 +106,28 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 		if (state.isOpened()) {
-			testTextView.setText("Logged in");
+			final Session finalSession = session;
+		    if (session != null && session.isOpened()) {
+		        // If the session is open, make an API call to get user data
+		        // and define a new callback to handle the response
+		        Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+
+					@Override
+					public void onCompleted(GraphUser user, Response response) {
+						// If the response is successful
+		                if (finalSession == Session.getActiveSession()) {
+		                    if (user != null) {
+		                        String user_ID = user.getId();//user id
+		                        String profileName = user.getName();//user's profile name
+		            			testTextView.setText(user_ID + " " + profileName);
+		                    }   
+		                }   
+						
+					}   
+		        }); 
+		        Request.executeBatchAsync(request);
+		    }  
+			testTextView.append("/n Logged in");
 			Log.i("HomeFragment", "Logged in...");
 		} else if (state.isClosed()) {
 			testTextView.setText("Logged out");
