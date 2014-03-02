@@ -28,66 +28,69 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class LoginFragment extends Fragment {
-	
+
 	public final static String SECTION_TITLE = "section title";
-	
+
 	private UiLifecycleHelper uiHelper;
-	
+
+	private Session mSession;
+
 	private Request meRequest;
-	
+
 	LoginButton authButton;
 	ProfilePictureView profilePictureView;
 	TextView userName;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		uiHelper = new UiLifecycleHelper(getActivity(), callback);
 		uiHelper.onCreate(savedInstanceState);
 	}
-	
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_login, container, false);
 
 		setupViews(view);
-		
+
 		return view;
 	}
-	
+
 	private void setupViews(View view) {
 		authButton = (LoginButton) view.findViewById(R.id.authButton);
 		authButton.setFragment(this);
-		
-		profilePictureView = (ProfilePictureView) view.findViewById(R.id.profilePic);
+
+		profilePictureView = (ProfilePictureView) view
+				.findViewById(R.id.profilePic);
 		profilePictureView.setCropped(true);
-		
+
 		userName = (TextView) view.findViewById(R.id.userName);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		// For scenarios where the main activity is launched and user
-	    // session is not null, the session state change notification
-	    // may not be triggered. Trigger it if it's open/closed.
-	    Session session = Session.getActiveSession();
-	    if (session != null &&
-	           (session.isOpened() || session.isClosed()) ) {
-	        onSessionStateChange(session, session.getState(), null);
-	    }
-		
+		// session is not null, the session state change notification
+		// may not be triggered. Trigger it if it's open/closed.
+		Session session = Session.getActiveSession();
+		if (session != null && (session.isOpened() || session.isClosed())) {
+			onSessionStateChange(session, session.getState(), null);
+		}
+
 		uiHelper.onResume();
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    super.onActivityResult(requestCode, resultCode, data);
-	    uiHelper.onActivityResult(requestCode, resultCode, data);
+		super.onActivityResult(requestCode, resultCode, data);
+		uiHelper.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -105,51 +108,76 @@ public class LoginFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 		uiHelper.onSaveInstanceState(outState);
 	}
-	
+
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 		@Override
-		public void call(Session session, SessionState state, Exception exception) {
+		public void call(Session session, SessionState state,
+				Exception exception) {
 			onSessionStateChange(session, state, exception);
 		}
 	};
-	
+
 	private void makeMeRequest(final Session session) {
-	    // Make an API call to get user data and define a 
-	    // new callback to handle the response.
-		meRequest = Request.newMeRequest(session, new Request.GraphUserCallback() {
+		// Make an API call to get user data and define a
+		// new callback to handle the response.
+		meRequest = Request.newMeRequest(session,
+				new Request.GraphUserCallback() {
 
-			@Override
-			public void onCompleted(GraphUser user, Response response) {
-				// If the response is successful
-                if (session == Session.getActiveSession()) {
-                    if (user != null) {
-                        String userId = user.getId();
-                        ApiConnection.FbUserId = userId;
-                        
-                        String profileName = user.getName();
-                        
-            			userName.setText(profileName);
-            			profilePictureView.setProfileId(userId);
-                    }
-                }
-    			new CheckUserTask().execute();
-			}
+					@Override
+					public void onCompleted(GraphUser user, Response response) {
+						// If the response is successful
+						if (session == Session.getActiveSession()) {
+							if (user != null) {
+								ApiConnection.FbUserId = user.getId();
+								ApiConnection.FbUserName = user.getName();
 
-        });
-        Request.executeBatchAsync(meRequest);
+								userName.setText(ApiConnection.FbUserName);
+								profilePictureView
+										.setProfileId(ApiConnection.FbUserId);
+							}
+						}
+						new CheckUserTask().execute();
+					}
+
+				});
+		Request.executeBatchAsync(meRequest);
 	}
 
-	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+	private void onSessionStateChange(Session session, SessionState state,
+			Exception exception) {
 		if (state.isOpened()) {
-			makeMeRequest(session);
-			toggleViewsVisibility(0);
+			// this is necessary because of a double callback one because of
+			// UiLifecycleHelper and second because of LoginFragment.onResume()
+			if (mSession == null || isSessionChanged(session)) {
+				mSession = session;
+				makeMeRequest(session);
+				toggleViewsVisibility(0);
+			}
 		} else if (state.isClosed()) {
 			toggleViewsVisibility(4);
 		} else {
-			//System.out.println(state.toString());
+			// System.out.println(state.toString());
 		}
 	}
-	
+
+	private boolean isSessionChanged(Session session) {
+
+		// Check if session state changed
+		if (mSession.getState() != session.getState())
+			return true;
+
+		// Check if accessToken changed
+		if (mSession.getAccessToken() != null) {
+			if (!mSession.getAccessToken().equals(session.getAccessToken()))
+				return true;
+		} else if (session.getAccessToken() != null) {
+			return true;
+		}
+
+		// Nothing changed
+		return false;
+	}
+
 	private void toggleViewsVisibility(int visibility) {
 		userName.setVisibility(visibility);
 		profilePictureView.setVisibility(visibility);
@@ -159,7 +187,8 @@ public class LoginFragment extends Fragment {
 		@Override
 		protected User doInBackground(Void... params) {
 			try {
-				final String url = "http://relaxisapp.com.91-215-216-74.hera.icnhost.net/api/users/" + ApiConnection.FbUserId;
+				final String url = "http://relaxisapp.com.91-215-216-74.hera.icnhost.net/api/users/"
+						+ ApiConnection.FbUserId;
 				RestTemplate restTemplate = new RestTemplate();
 				restTemplate.getMessageConverters().add(
 						new MappingJackson2HttpMessageConverter());
@@ -168,9 +197,9 @@ public class LoginFragment extends Fragment {
 			} catch (HttpClientErrorException e) {
 				if (e.getStatusCode().value() == 404) {
 					new CreateUserTask().execute();
-			    } else {
-			    	Log.e("MainActivity", e.getMessage(), e);
-			    }
+				} else {
+					Log.e("MainActivity", e.getMessage(), e);
+				}
 			}
 
 			return null;
@@ -193,7 +222,9 @@ public class LoginFragment extends Fragment {
 				RestTemplate restTemplate = new RestTemplate();
 				restTemplate.getMessageConverters().add(
 						new MappingJackson2HttpMessageConverter());
-				User user = restTemplate.postForObject(url, new User(ApiConnection.FbUserId), User.class);
+				User user = restTemplate.postForObject(url, new User(
+						ApiConnection.FbUserId, ApiConnection.FbUserName),
+						User.class);
 				return user;
 			} catch (Exception e) {
 				Log.e("MainActivity", e.getMessage(), e);
