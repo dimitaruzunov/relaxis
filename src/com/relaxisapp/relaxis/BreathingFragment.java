@@ -121,36 +121,6 @@ public class BreathingFragment extends Fragment {
 		// TODO show legend and customize it
 		
 		layout.addView(graphView, setupLayoutParams());
-<<<<<<< HEAD
-
-
-		return view;
-	}
-
-	private void setupViews(View view) {
-
-		layout = (RelativeLayout) view.findViewById(R.id.breathingFragmentLinearLayout);
-		
-		timeLeftTextView = (TextView) view.findViewById(R.id.breathingTimeLeftTextView);
-		timeLeftTextView.setText(String.valueOf(Const.TIME_SECONDS));
-		
-		scoreDescTextView = (TextView) view.findViewById(R.id.scoreDescTextView);
-
-		scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
-		scoreTextView.setVisibility(4);
-
-		startBreathingButton = (Button) view
-				.findViewById(R.id.startBreathingButton);
-		startBreathingButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				handleStartBreathingButtonClick((Button) view);
-			}
-		});
-
-		graphView = new LineGraphView(getActivity(), "Breathing");
-=======
->>>>>>> 92228be4092c4a2e0b5220bcf480a122e2e5f2e0
 	}
 	
 	private LayoutParams setupLayoutParams() {
