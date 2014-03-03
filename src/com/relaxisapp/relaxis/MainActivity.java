@@ -39,11 +39,15 @@ public class MainActivity extends FragmentActivity implements
 	private SectionsPagerAdapter sectionsPagerAdapter;
 	static ViewPager viewPager;
 	private OnBtConnectionChangeListener btConnectionChangeListener;
+<<<<<<< HEAD
 
 	public void getUser(View view) {
 		new HttpRequestTask().execute();
 	}
 
+=======
+	
+>>>>>>> cf964a275370e3207fd69cb1496cfbb63791f954
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -185,8 +189,13 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	void executeConnect(Button button) {
+<<<<<<< HEAD
 		btConnectionChangeListener = (OnBtConnectionChangeListener) sectionsPagerAdapter
 				.getFragment(1);
+=======
+		btConnectionChangeListener = (OnBtConnectionChangeListener)
+				sectionsPagerAdapter.getFragment(SectionsPagerAdapter.HOME_FRAGMENT);
+>>>>>>> cf964a275370e3207fd69cb1496cfbb63791f954
 		btConnectionChangeListener.onBtConnectionChange(1, button);
 
 		new BluetoothConnectTask().execute(button);
@@ -475,7 +484,15 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 	};
+<<<<<<< HEAD
 
+=======
+	
+	public void getUser(View view) {
+		new HttpRequestTask().execute();
+	}
+	
+>>>>>>> cf964a275370e3207fd69cb1496cfbb63791f954
 	private class HttpRequestTask extends AsyncTask<Void, Void, User> {
 		@Override
 		protected User doInBackground(Void... params) {

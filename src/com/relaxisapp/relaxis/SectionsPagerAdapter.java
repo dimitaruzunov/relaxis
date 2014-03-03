@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
-import android.view.ViewGroup;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	
@@ -74,13 +73,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	public CharSequence getPageTitle(int position) {
 		return sectionTitles[position];
 	}
-
-	@Override
-	public void destroyItem(ViewGroup container, int position, Object object) {
-		super.destroyItem(container, position, object);
-		
-		pageReferenceMap.remove(position);
-	}
 	
 	public Fragment getFragment(int key) {
 	    return pageReferenceMap.get(key);
@@ -88,16 +80,16 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	
 	public void setFragment(int position, ViewPager viewPager) {
 		switch (position) {
-		case 0:
+		case NavigationDrawerListAdapter.HOME_OPTION_ITEM:
 			viewPager.setCurrentItem(HOME_FRAGMENT);
 			break;
-		case 1:
+		case NavigationDrawerListAdapter.BREATHING_OPTION_ITEM:
 			viewPager.setCurrentItem(BREATHING_FRAGMENT);
 			break;
-		case 2:
+		case NavigationDrawerListAdapter.STRESS_OPTION_ITEM:
 			viewPager.setCurrentItem(STRESS_FRAGMENT);
 			break;
-		case 3:
+		case NavigationDrawerListAdapter.LOGIN_OPTION_ITEM:
 			viewPager.setCurrentItem(LOGIN_FRAGMENT);
 			break;
 		}
