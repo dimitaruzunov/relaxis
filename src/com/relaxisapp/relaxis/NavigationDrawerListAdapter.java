@@ -20,6 +20,11 @@ import android.widget.TextView;
 
 public class NavigationDrawerListAdapter extends BaseAdapter {
 
+	public final static int HOME_OPTION_ITEM = 0;
+	public final static int BREATHING_OPTION_ITEM = 1;
+	public final static int STRESS_OPTION_ITEM = 2;
+	public final static int LOGIN_OPTION_ITEM = 3;
+	
 	private Context context;
     private ArrayList<NavigationDrawerItem> navigationDrawerItems;
 	private DrawerLayout drawerLayout;
@@ -96,7 +101,27 @@ public class NavigationDrawerListAdapter extends BaseAdapter {
     }
 
     public void handleSelect(int option) {
-        drawerLayout.closeDrawer(drawerListView);
+    	switch (option) {
+		case SectionsPagerAdapter.HOME_FRAGMENT:
+			setSelection(HOME_OPTION_ITEM);
+			break;
+		case SectionsPagerAdapter.BREATHING_FRAGMENT:
+			setSelection(BREATHING_OPTION_ITEM);
+			break;
+		case SectionsPagerAdapter.STRESS_FRAGMENT:
+			setSelection(STRESS_OPTION_ITEM);
+			break;
+		case SectionsPagerAdapter.LOGIN_FRAGMENT:
+			setSelection(LOGIN_OPTION_ITEM);
+			break;
+		default:
+			// Drawer option doesn't exist
+			break;
+		}
+    }
+    
+    public void closeDrawer() {
+    	drawerLayout.closeDrawer(drawerListView);
     }
     
     public void handleOnPrepareOptionsMenu(Menu menu) {

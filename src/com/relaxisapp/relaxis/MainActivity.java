@@ -71,6 +71,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		drawerListView.setAdapter(navigationDrawerListAdapter);
 
 		navigationDrawerListAdapter.setup(this, this);
+		navigationDrawerListAdapter.setSelection(NavigationDrawerListAdapter.HOME_OPTION_ITEM);
 
 		// Sections pager setup
 		sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
@@ -78,6 +79,18 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
 		viewPager.setCurrentItem(SectionsPagerAdapter.HOME_FRAGMENT);
+		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageSelected(int position) {
+				navigationDrawerListAdapter.handleSelect(position);
+			}
+			
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+			
+			@Override
+			public void onPageScrollStateChanged(int state) {}
+		});
 
 		// TODO Try to put the following code out of the onCreate method
 
@@ -308,7 +321,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int option, long id) {
 		sectionsPagerAdapter.setFragment(option, viewPager);
-		navigationDrawerListAdapter.handleSelect(option);
+		navigationDrawerListAdapter.closeDrawer();
 	}
 
 	final static Handler SensorDataHandler = new Handler() {
