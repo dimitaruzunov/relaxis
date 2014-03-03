@@ -183,7 +183,7 @@ public class LoginFragment extends Fragment {
 		@Override
 		protected User doInBackground(Void... params) {
 			try {
-				final String url = "http://relaxisapp.com.91-215-216-74.hera.icnhost.net/api/users/"
+				final String url = "http://relaxisapp.com/api/users/"
 						+ ApiConnection.FbUserId;
 				RestTemplate restTemplate = new RestTemplate();
 				restTemplate.getMessageConverters().add(
@@ -214,7 +214,7 @@ public class LoginFragment extends Fragment {
 		@Override
 		protected User doInBackground(Void... params) {
 			try {
-				final String url = "http://relaxisapp.com.91-215-216-74.hera.icnhost.net/api/users/";
+				final String url = "http://relaxisapp.com/api/users/";
 				RestTemplate restTemplate = new RestTemplate();
 				restTemplate.getMessageConverters().add(
 						new MappingJackson2HttpMessageConverter());
