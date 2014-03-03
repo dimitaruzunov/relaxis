@@ -356,10 +356,10 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 				BreathingFragment.beatsCount++;
 
 				if (instantHR > BreathingFragment.tMaxHR) {
-					BreathingFragment.tMaxHR = instantHR;
+					BreathingFragment.newMaxHR = instantHR;
 				}
 				if (instantHR < BreathingFragment.tMinHR) {
-					BreathingFragment.tMinHR = instantHR;
+					BreathingFragment.newMinHR = instantHR;
 				}
 				BreathingFragment.tAvgHR = (BreathingFragment.tMaxHR + BreathingFragment.tMinHR) / 2.0;
 				BreathingFragment.tDeviation = BreathingFragment.tMaxHR

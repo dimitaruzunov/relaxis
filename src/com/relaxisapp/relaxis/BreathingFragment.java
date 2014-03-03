@@ -40,6 +40,8 @@ public class BreathingFragment extends Fragment {
 
 	static int tMaxHR = idealMaxHR;
 	static int tMinHR = idealMinHR;
+	static int newMaxHR = tMaxHR;
+	static int newMinHR = tMinHR;
 	static double tAvgHR = (tMaxHR + tMinHR) / 2.0;
 	static double tDeviation;
 	static double tIdealHR;
@@ -117,6 +119,13 @@ public class BreathingFragment extends Fragment {
 
 		@Override
 		public void run() {
+			if (Math.sin(timerCounter * Math.PI
+					/ (6 * TIMER_TICKS_PER_SECOND)) == 1) {
+				tMinHR = newMinHR;
+			} else if (Math.sin(timerCounter * Math.PI
+					/ (6 * TIMER_TICKS_PER_SECOND)) == -1) {
+				tMaxHR = newMaxHR;
+			}
 			tIdealHR = tAvgHR
 					+ Math.sin(timerCounter * Math.PI
 							/ (6 * TIMER_TICKS_PER_SECOND)) * tDeviation;
