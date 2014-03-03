@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -21,14 +22,14 @@
             style="@style/LargeButton" />
 
         <TextView
-            android:id="@+id/timeLeftDescTextView"
+            android:id="@+id/stressTimeLeftDescTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/time_left_desc"
             android:textAppearance="?android:attr/textAppearanceMedium" />
         
         <TextView
-            android:id="@+id/timeLeftTextView"
+            android:id="@+id/stressTimeLeftTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge" />

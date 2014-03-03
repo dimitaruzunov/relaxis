@@ -54,7 +54,7 @@ public class StressEstimationFragment extends Fragment {
 			}
 		});
 		
-		timeLeftTextView = (TextView) view.findViewById(R.id.timeLeftTextView);
+		timeLeftTextView = (TextView) view.findViewById(R.id.stressTimeLeftTextView);
 		timeLeftTextView.setText(String.valueOf(TIME_SECONDS));
 		
 		stressLevelDescTextView = (TextView) view.findViewById(R.id.stressLevelDescTextView);
@@ -77,14 +77,14 @@ public class StressEstimationFragment extends Fragment {
 		} else {
 			isStopped = false;
 			changeButtonIconStop(button);
-			stressLevelShow();
+			showStressLevel();
 		}
 	}
 	
 	private void stop(Button button) {
 		isStopped = true;
 		changeButtonIconStart(button);
-		stressLevelHide();
+		hideStressLevel();
 	}
 	
 	private void changeButtonIconStart(Button button) {
@@ -97,12 +97,12 @@ public class StressEstimationFragment extends Fragment {
 		button.setText(R.string.stop);
 	}
 	
-	private void stressLevelShow() {
+	private void showStressLevel() {
 		stressLevelDescTextView.setVisibility(1);
 		stressLevelTextView.setVisibility(1);
 	}
 	
-	private void stressLevelHide() {
+	private void hideStressLevel() {
 		stressLevelDescTextView.setVisibility(4);
 		stressLevelTextView.setVisibility(4);
 	}

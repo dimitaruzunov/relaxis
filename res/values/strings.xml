@@ -10,10 +10,9 @@
     <string name="instantSpeed">Instant Speed</string>
     <string name="rRInterval">R-R Interval</string>
     <string name="instantHeartRate">Instant Heart Rate</string>
-    <string name="stress_level_desc">Your stress level is: </string>
+    <string name="stress_level_desc">Your stress level is:</string>
     <string name="score">Score</string>
-    <string name="lastAntiScore">Last anti score</string>
-    <string name="timeLeft">Time left</string>
+    <string name="score_desc">Your score is:</string>
     <string name="time_left_desc">Time left:</string>
     <string name="breathing">Breathing</string>
     <string name="stress">Stress</string>

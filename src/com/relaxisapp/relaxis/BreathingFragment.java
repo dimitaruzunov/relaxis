@@ -9,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
@@ -57,13 +59,17 @@ public class BreathingFragment extends Fragment {
 	static int beatsCount = 0;
 	static int timerCounter = 0;
 
-	static LinearLayout layout;
+	LinearLayout layout;
 
 	static GraphView graphView;
 
 	static TextView timeLeftTextView;
 
 	static TextView scoreTextView;
+	
+	private boolean isStopped = true;
+	private Button startBreathingButton;
+	private TextView scoreDescTextView;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,11 +114,68 @@ public class BreathingFragment extends Fragment {
 	}
 
 	private void setupViews(View view) {
-		layout = (LinearLayout) view.findViewById(R.id.graph1);
-		timeLeftTextView = (TextView) view.findViewById(R.id.timeLeft);
-		scoreTextView = (TextView) view.findViewById(R.id.score);
+		layout = (LinearLayout) view.findViewById(R.id.breathingFragmentLinearLayout);
+		
+		timeLeftTextView = (TextView) view.findViewById(R.id.breathingTimeLeftTextView);
+		timeLeftTextView.setText(String.valueOf(EASY_TIME_SECONDS));
+		
+		scoreDescTextView = (TextView) view.findViewById(R.id.scoreDescTextView);
+		scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
+		
+		startBreathingButton = (Button) view.findViewById(R.id.startBreathingButton);
+		startBreathingButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				handleStartBreathingButtonClick((Button) view);
+			}
+		});
 
 		graphView = new LineGraphView(getActivity(), "GraphViewTest");
+	}
+	
+	private void handleStartBreathingButtonClick(Button button) {
+		if (isStopped) {
+			start(button);
+		} else {
+			stop(button);
+		}
+	}
+	
+	private void start(Button button) {
+		if (HomeFragment.connectionState != 2) {
+			MainActivity.viewPager.setCurrentItem(SectionsPagerAdapter.HOME_FRAGMENT);
+			Toast.makeText(getActivity(), "Please connect to HxM", Toast.LENGTH_SHORT).show();
+		} else {
+			isStopped = false;
+			changeButtonIconStop(button);
+			showScore();
+		}
+	}
+	
+	private void stop(Button button) {
+		isStopped = true;
+		changeButtonIconStart(button);
+		hideScore();
+	}
+	
+	private void showScore() {
+		scoreDescTextView.setVisibility(1);
+		scoreTextView.setVisibility(1);
+	}
+	
+	private void hideScore() {
+		scoreDescTextView.setVisibility(4);
+		scoreTextView.setVisibility(4);
+	}
+	
+	private void changeButtonIconStart(Button button) {
+		button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_play, 0, 0, 0);
+		button.setText(R.string.start);
+	}
+	
+	private void changeButtonIconStop(Button button) {
+		button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_stop, 0, 0, 0);
+		button.setText(R.string.stop);
 	}
 
 	static class GraphUpdateTimerTask extends TimerTask {
