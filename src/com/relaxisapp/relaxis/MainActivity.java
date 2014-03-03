@@ -325,7 +325,7 @@ public class MainActivity extends FragmentActivity implements
 				// pressed
 				// and then the activity is started again
 				BreathingFragment.graphUpdateTimerTask = new BreathingFragment.GraphUpdateTimerTask();
-				BreathingFragment.updateTimer.scheduleAtFixedRate(
+				BreathingFragment.graphUpdateTimer.scheduleAtFixedRate(
 						BreathingFragment.graphUpdateTimerTask, 1000,
 						1000 / Const.TIMER_TICKS_PER_SECOND);
 
@@ -425,31 +425,37 @@ public class MainActivity extends FragmentActivity implements
 							% Const.SAVED_HR_COUNT];
 					if (i < ((BreathingFragment.beatsCount - 1)
 							% Const.SAVED_HR_COUNT + Const.SAVED_HR_COUNT - 2)
-							% Const.SAVED_HR_COUNT) {
-						if (iHRPlus1 > 0 && iHRMinus1 > 0 && iHR > iHRPlus1
-								&& iHR > iHRPlus2 && iHR > iHRMinus1
-								&& iHR > iHRMinus2) {
+							% Const.SAVED_HR_COUNT
+							|| i > ((BreathingFragment.beatsCount - 1)
+									% Const.SAVED_HR_COUNT + 2)
+									% Const.SAVED_HR_COUNT) {
+						if (iHRPlus1 > 0 && iHRMinus1 > 0 && iHRPlus2 > 0
+								&& iHRMinus2 > 0 && iHR >= iHRPlus1
+								&& iHR >= iHRPlus2 && iHR >= iHRMinus1
+								&& iHR >= iHRMinus2) {
 							tAvgMaxHR += iHR;
 							tAvgMaxCount++;
-							i++; // skip the next HR as it would be irrelevant
-						} else if (iHRPlus1 > 0 && iHRMinus1 > 0
-								&& iHR < iHRPlus1 && iHR < iHRPlus2
-								&& iHR < iHRMinus1 && iHR < iHRMinus2) {
+						}
+						if (iHRPlus1 > 0 && iHRMinus1 > 0 && iHRPlus2 > 0
+								&& iHRMinus2 > 0 && iHR <= iHRPlus1
+								&& iHR <= iHRPlus2 && iHR <= iHRMinus1
+								&& iHR <= iHRMinus2) {
 							tAvgMinHR += iHR;
 							tAvgMinCount++;
-							i++; // skip the next HR as it would be irrelevant
 						}
 					}
 				}
 				if (tAvgMaxCount > 0) { // => tAvgMaxHR > 0
 					tAvgMaxHR /= tAvgMaxCount;
+					System.out.println("tihr max " + tAvgMaxHR);
 				}
 				if (tAvgMinCount > 0) { // => tAvgMinHR > 0
 					tAvgMinHR /= tAvgMinCount;
+					System.out.println("tihr min " + tAvgMinHR);
 				}
 
 				if (tAvgMaxCount > 0 && tAvgMinCount > 0) {
-					if (tAvgMaxHR - tAvgMinHR > Const.IDEAL_HR_DEVIATION) {
+					if ((tAvgMaxHR - tAvgMinHR) / 2 > Const.IDEAL_HR_DEVIATION) {
 						BreathingFragment.newMaxHR = tAvgMaxHR;
 						BreathingFragment.newMinHR = tAvgMinHR;
 					} else {
@@ -462,19 +468,22 @@ public class MainActivity extends FragmentActivity implements
 					}
 				}
 
-				if (Math.abs(BreathingFragment.tIdealHR - instantHR) <= Const.POINT_BARRIER) {
-					BreathingFragment.consecutivePoints++;
-					if (BreathingFragment.consecutivePoints >= 5 * BreathingFragment.multiplier) {
-						BreathingFragment.multiplier++;
+				if (BreathingFragment.updateScore) {
+					if (Math.abs(BreathingFragment.tIdealHR - instantHR) <= Const.POINT_BARRIER) {
+						BreathingFragment.consecutivePoints++;
+						if (BreathingFragment.consecutivePoints >= 5 * BreathingFragment.multiplier) {
+							BreathingFragment.multiplier++;
+						}
+						BreathingFragment.score += BreathingFragment.multiplier;
+					} else {
+						BreathingFragment.consecutivePoints = 0;
+						BreathingFragment.multiplier = 1;
 					}
-					BreathingFragment.score += BreathingFragment.multiplier;
-				} else {
-					BreathingFragment.consecutivePoints = 0;
-					BreathingFragment.multiplier = 1;
+
+					BreathingFragment.scoreTextView.setText(String
+							.valueOf(BreathingFragment.score));
 				}
 
-				BreathingFragment.scoreTextView.setText(String
-						.valueOf(BreathingFragment.score));
 				break;
 			case Const.PNN50:
 				if (StressEstimationFragment.timeLeft <= 0) {

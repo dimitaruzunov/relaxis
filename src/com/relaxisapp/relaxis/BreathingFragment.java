@@ -26,7 +26,8 @@ public class BreathingFragment extends Fragment {
 
 	public final static String SECTION_TITLE = "section title";
 
-	static Timer updateTimer = new Timer();
+	static Timer graphUpdateTimer = new Timer();
+	static Timer timeUpdateTimer = new Timer();
 	static GraphUpdateTimerTask graphUpdateTimerTask;
 	static TimeUpdateTimerTask timeUpdateTimerTask;
 
@@ -42,6 +43,8 @@ public class BreathingFragment extends Fragment {
 	static double tAvgHR = (avgMaxHR + avgMinHR) / 2.0;
 	static double tDeviation;
 	static double tIdealHR;
+
+	static Boolean updateScore = false;
 	static int score = 0;
 	static int consecutivePoints = 0;
 	static int multiplier = 1;
@@ -112,6 +115,7 @@ public class BreathingFragment extends Fragment {
 		scoreDescTextView = (TextView) view.findViewById(R.id.scoreDescTextView);
 
 		scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
+		scoreTextView.setVisibility(4);
 
 		startBreathingButton = (Button) view
 				.findViewById(R.id.startBreathingButton);
@@ -149,26 +153,31 @@ public class BreathingFragment extends Fragment {
 					Toast.LENGTH_SHORT).show();
 		} else {
 			resetScoreAndTime();
+			timeUpdateTimer = new Timer();
 			timeUpdateTimerTask = new TimeUpdateTimerTask();
-			updateTimer.scheduleAtFixedRate(
+			timeUpdateTimer.scheduleAtFixedRate(
 					timeUpdateTimerTask, 0,
 					1000);
+			updateScore = true;
 			isStopped = false;
 			changeButtonIconStop(button);
 			showScore();
 		}
 	}
 
+	private void stop(Button button) {
+		updateScore = false;
+		isStopped = true;
+		resetScoreAndTime();
+		hideScore();
+		timeUpdateTimerTask.cancel();
+		timeUpdateTimer.cancel();
+		changeButtonIconStart(button);
+	}
+
 	private void resetScoreAndTime() {
 		score = 0;
 		timeLeft = Const.TIME_SECONDS;
-	}
-
-	private void stop(Button button) {
-		isStopped = true;
-		timeUpdateTimerTask.cancel();
-		changeButtonIconStart(button);
-		hideScore();
 	}
 
 	private void showScore() {
@@ -268,8 +277,9 @@ public class BreathingFragment extends Fragment {
 		super.onDestroy();
 
 		timeUpdateTimerTask.cancel();
+		timeUpdateTimer.cancel();
 		graphUpdateTimerTask.cancel();
-		updateTimer.cancel();
+		graphUpdateTimer.cancel();
 
 		layout.removeView(graphView);
 	}
