@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +50,7 @@ public class BreathingFragment extends Fragment {
 	static int timerCounter = 0;
 	static int timeLeft = 0;
 
-	LinearLayout layout;
+	RelativeLayout layout;
 
 	static GraphView graphView;
 
@@ -98,22 +98,22 @@ public class BreathingFragment extends Fragment {
 		graphView.addSeries(BtConnection.instantHRSeries);
 		graphView.addSeries(BtConnection.dummySeries);
 		// TODO show legend and customize it
+		
+		layout.addView(graphView, setupLayoutParams());
 
-		layout.addView(graphView, 800, 800);
 
 		return view;
 	}
 
 	private void setupViews(View view) {
-		layout = (LinearLayout) view
-				.findViewById(R.id.breathingFragmentLinearLayout);
 
-		timeLeftTextView = (TextView) view
-				.findViewById(R.id.breathingTimeLeftTextView);
-		timeLeftTextView.setText(String.valueOf(Const.TIME_SECONDS));
+		layout = (RelativeLayout) view.findViewById(R.id.breathingFragmentLinearLayout);
+		
+		timeLeftTextView = (TextView) view.findViewById(R.id.breathingTimeLeftTextView);
+		timeLeftTextView.setText(String.valueOf(EASY_TIME_SECONDS));
+		
+		scoreDescTextView = (TextView) view.findViewById(R.id.scoreDescTextView);
 
-		scoreDescTextView = (TextView) view
-				.findViewById(R.id.scoreDescTextView);
 		scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
 
 		startBreathingButton = (Button) view
@@ -127,6 +127,14 @@ public class BreathingFragment extends Fragment {
 
 		graphView = new LineGraphView(getActivity(), "Breathing");
 	}
+	
+	private LayoutParams setupLayoutParams() {
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, 500);
+		layoutParams.addRule(RelativeLayout.BELOW, R.id.breathingDivider2);
+		
+		return layoutParams;
+	}
+	
 
 	private void handleStartBreathingButtonClick(Button button) {
 		if (isStopped) {
