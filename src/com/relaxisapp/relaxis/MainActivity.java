@@ -31,18 +31,13 @@ import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView.GraphViewData;
 
-public class MainActivity extends FragmentActivity implements
-		ListView.OnItemClickListener {
+public class MainActivity extends FragmentActivity implements ListView.OnItemClickListener {
 
 	private NavigationDrawerListAdapter navigationDrawerListAdapter;
 	private ListView drawerListView;
 	private SectionsPagerAdapter sectionsPagerAdapter;
 	static ViewPager viewPager;
 	private OnBtConnectionChangeListener btConnectionChangeListener;
-
-	public void getUser(View view) {
-		new HttpRequestTask().execute();
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -163,8 +158,7 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent resultIntent) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent resultIntent) {
 		super.onActivityResult(requestCode, resultCode, resultIntent);
 		switch (requestCode) {
 		case Const.REQUEST_ENABLE_BT:
@@ -173,22 +167,16 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	private void handleBluetoothConnectResult(int resultCode,
-			Intent resultIntent) {
+	private void handleBluetoothConnectResult(int resultCode, Intent resultIntent) {
 		if (resultCode == RESULT_OK) {
-			Toast.makeText(this, "Bluetooth is now enabled", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(this, "Bluetooth is now enabled", Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(this, "User cancelled the bluetooth connect intent",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "User cancelled the bluetooth connect intent", Toast.LENGTH_LONG).show();
 		}
 	}
 
 	void executeConnect(Button button) {
-		btConnectionChangeListener = (OnBtConnectionChangeListener) sectionsPagerAdapter
-				.getFragment(1);
-		btConnectionChangeListener = (OnBtConnectionChangeListener) sectionsPagerAdapter
-				.getFragment(SectionsPagerAdapter.HOME_FRAGMENT);
+		btConnectionChangeListener = (OnBtConnectionChangeListener) sectionsPagerAdapter.getFragment(SectionsPagerAdapter.HOME_FRAGMENT);
 		btConnectionChangeListener.onBtConnectionChange(1, button);
 
 		new BluetoothConnectTask().execute(button);
@@ -488,6 +476,10 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 	};
+	
+	public void getUser(View view) {
+		new HttpRequestTask().execute();
+	}
 
 	private class HttpRequestTask extends AsyncTask<Void, Void, User> {
 		@Override
