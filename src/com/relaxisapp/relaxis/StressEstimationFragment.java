@@ -49,9 +49,7 @@ public class StressEstimationFragment extends Fragment {
 
 		@Override
 		public void run() {
-			
 			timeLeftUpdateHandler.post(new Runnable() {
-
 				@Override
 				public void run() {
 					updateTimeLeft();
@@ -62,7 +60,7 @@ public class StressEstimationFragment extends Fragment {
 	}
 
 	private void updateTimeLeft() {
-		timeLeftTextView.setText(String.valueOf(timeLeft));
+		timeLeftTextView.append(": " + String.valueOf(timeLeft));
 		timeLeft--;
 	}
 	

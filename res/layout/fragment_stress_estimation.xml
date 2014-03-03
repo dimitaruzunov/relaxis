@@ -17,12 +17,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/timeLeft" />
+        
+        <TextView
+            android:id="@+id/timeLeftTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/timeLeft" />
 
         <TextView
             android:id="@+id/stressLevel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/timeLeft"
+            android:layout_below="@+id/timeLeftTextView"
+            android:text="@string/stressLevel" />
+        
+        <TextView
+            android:id="@+id/stressLevelTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timeLeftTextView"
             android:text="@string/stressLevel" />
         
     </RelativeLayout>
