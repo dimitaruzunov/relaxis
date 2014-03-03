@@ -64,6 +64,12 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 		});
 		
 		instantSpeedTextView = (TextView) view.findViewById(R.id.instantSpeedTextView);
+		instantSpeedTextView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				handleInstantSpeedTextViewClick((TextView) view);
+			}
+		});
 	}
 	
 	void handleConnectButtonClick(Button button) {
@@ -76,18 +82,19 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	}
 
 	void handleHeartRateTextViewClick(TextView textView) {
-		HintHelper.createAndPositionHint(getActivity(), R.string.heartRate,
-				textView).show();
+		HintHelper.createAndPositionHint(getActivity(), R.string.heartRate, textView).show();
 	}
 
 	void handleInstantHeartRateTextViewClick(TextView textView) {
-		HintHelper.createAndPositionHint(getActivity(),
-				R.string.instantHeartRate, textView).show();
+		HintHelper.createAndPositionHint(getActivity(), R.string.instantHeartRate, textView).show();
 	}
 
 	void handleRRIntervalTextViewClick(TextView textView) {
-		HintHelper.createAndPositionHint(getActivity(), R.string.rRInterval,
-				textView).show();
+		HintHelper.createAndPositionHint(getActivity(), R.string.rRInterval, textView).show();
+	}
+	
+	void handleInstantSpeedTextViewClick(TextView textView) {
+		HintHelper.createAndPositionHint(getActivity(), R.string.instantSpeed, textView).show();
 	}
 	
 	@Override

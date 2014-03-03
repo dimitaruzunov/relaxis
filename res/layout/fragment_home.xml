@@ -58,6 +58,7 @@
         <TextView
             android:id="@+id/instantSpeedTextView"
             android:layout_below="@+id/divider3"
+            android:drawableLeft="@drawable/ic_instant_speed"
             android:hint="@string/instantSpeed"
             style="@style/HomeTextView" />
 
