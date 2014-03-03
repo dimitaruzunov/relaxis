@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -101,7 +102,7 @@ public class BreathingFragment extends Fragment {
 		graphView.addSeries(BtConnection.dummySeries);
 		// TODO show legend and customize it
 
-		layout.addView(graphView);
+		layout.addView(graphView, 200, 200);
 
 		return view;
 	}
@@ -123,7 +124,7 @@ public class BreathingFragment extends Fragment {
 			}
 		});
 
-		graphView = new LineGraphView(getActivity(), "GraphViewTest");
+		graphView = new LineGraphView(getActivity(), "Breathing");
 	}
 	
 	private void handleStartBreathingButtonClick(Button button) {
