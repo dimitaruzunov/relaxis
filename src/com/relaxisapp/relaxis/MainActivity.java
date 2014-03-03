@@ -40,10 +40,6 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	private SectionsPagerAdapter sectionsPagerAdapter;
 	static ViewPager viewPager;
 	private OnBtConnectionChangeListener btConnectionChangeListener;
-
-	public void getUser(View view) {
-		new HttpRequestTask().execute();
-	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +165,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	}
 	
 	void executeConnect(Button button) {
-		btConnectionChangeListener = (OnBtConnectionChangeListener) sectionsPagerAdapter.getFragment(1);
+		btConnectionChangeListener = (OnBtConnectionChangeListener)
+				sectionsPagerAdapter.getFragment(SectionsPagerAdapter.HOME_FRAGMENT);
 		btConnectionChangeListener.onBtConnectionChange(1, button);
 		
 		new BluetoothConnectTask().execute(button);
@@ -394,6 +391,10 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		}
 
 	};
+	
+	public void getUser(View view) {
+		new HttpRequestTask().execute();
+	}
 	
 	private class HttpRequestTask extends AsyncTask<Void, Void, User> {
 		@Override

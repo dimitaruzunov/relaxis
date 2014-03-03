@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	
 	@Override
 	public void onBtConnectionChange(int connectionState, Button button) {
-		this.connectionState = connectionState;
+		HomeFragment.connectionState = connectionState;
 		
 		switch (connectionState) {
 		case 0:
