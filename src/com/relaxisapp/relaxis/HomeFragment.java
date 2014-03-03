@@ -73,10 +73,10 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	}
 	
 	void handleConnectButtonClick(Button button) {
-		if (this.connectionState == 0) {
+		if (connectionState == 0) {
 			((MainActivity) getActivity()).executeConnect(button);
 		}
-		else if (this.connectionState == 2) {
+		else if (connectionState == 2) {
 			((MainActivity) getActivity()).executeDisconnect(button);
 		}
 	}
