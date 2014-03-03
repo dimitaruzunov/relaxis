@@ -30,21 +30,14 @@ public class BreathingFragment extends Fragment {
 
 	static Handler idealHRUpdateHandler = new Handler();
 
-	final static int TIMER_TICKS_PER_SECOND = 10;
-	final static int VIEWPORT_WIDTH = 24;
-	final static int IDEAL_MID_HR = 73;
-	final static int IDEAL_HR_DEVIATION = 7;
+	static int idealMinHR = Const.IDEAL_MID_HR - Const.IDEAL_HR_DEVIATION;
+	static int idealMaxHR = Const.IDEAL_MID_HR + Const.IDEAL_HR_DEVIATION;
 
-	final static int POINT_BARRIER = 20;
-
-	static int idealMinHR = IDEAL_MID_HR - IDEAL_HR_DEVIATION;
-	static int idealMaxHR = IDEAL_MID_HR + IDEAL_HR_DEVIATION;
-
-	static int tMaxHR = idealMaxHR;
-	static int tMinHR = idealMinHR;
-	static int newMaxHR = tMaxHR;
-	static int newMinHR = tMinHR;
-	static double tAvgHR = (tMaxHR + tMinHR) / 2.0;
+	static int avgMaxHR = idealMaxHR;
+	static int avgMinHR = idealMinHR;
+	static int newMaxHR = avgMaxHR;
+	static int newMinHR = avgMinHR;
+	static double tAvgHR = (avgMaxHR + avgMinHR) / 2.0;
 	static double tDeviation;
 	static double tIdealHR;
 	static int score = 0;
@@ -81,7 +74,7 @@ public class BreathingFragment extends Fragment {
 
 		graphView.setScrollable(true);
 		graphView.setScalable(true);
-		graphView.setViewPort(0, VIEWPORT_WIDTH);
+		graphView.setViewPort(0, Const.VIEWPORT_WIDTH);
 		graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
 
 			@Override
@@ -97,7 +90,7 @@ public class BreathingFragment extends Fragment {
 			}
 		});
 		graphView.getGraphViewStyle()
-				.setNumHorizontalLabels(VIEWPORT_WIDTH / 2);
+				.setNumHorizontalLabels(Const.VIEWPORT_WIDTH / 2);
 		graphView.getGraphViewStyle().setNumVerticalLabels(5);
 		graphView.getGraphViewStyle().setVerticalLabelsWidth(80);
 		BtConnection.idealBreathingCycle.resetData(new GraphViewData[] {});
@@ -182,20 +175,11 @@ public class BreathingFragment extends Fragment {
 
 		@Override
 		public void run() {
-			if (Math.sin(timerCounter * Math.PI
-					/ (6 * TIMER_TICKS_PER_SECOND)) == 1) {
-				tMinHR = newMinHR;
-			} else if (Math.sin(timerCounter * Math.PI
-					/ (6 * TIMER_TICKS_PER_SECOND)) == -1) {
-				tMaxHR = newMaxHR;
-			}
-			tIdealHR = tAvgHR
-					+ Math.sin(timerCounter * Math.PI
-							/ (6 * TIMER_TICKS_PER_SECOND)) * tDeviation;
 			idealHRUpdateHandler.post(new Runnable() {
 
 				@Override
 				public void run() {
+					updateIdealHR();
 					updateIdealHRGraph(tIdealHR);
 					updateTimeLeft();
 				}
@@ -205,21 +189,35 @@ public class BreathingFragment extends Fragment {
 
 	}
 
+	private static void updateIdealHR() {
+		if (Math.sin(timerCounter * Math.PI / (6 * Const.TIMER_TICKS_PER_SECOND)) == 1) {
+			avgMinHR = newMinHR;
+		} else if (Math.sin(timerCounter * Math.PI
+				/ (6 * Const.TIMER_TICKS_PER_SECOND)) == -1) {
+			avgMaxHR = newMaxHR;
+		}
+		tAvgHR = (avgMaxHR + avgMinHR) / 2.0;
+		tDeviation = avgMaxHR - tAvgHR;
+		tIdealHR = tAvgHR
+				+ Math.sin(timerCounter * Math.PI
+						/ (6 * Const.TIMER_TICKS_PER_SECOND)) * tDeviation;
+	}
+
 	private static void updateIdealHRGraph(final double currentIdealHR) {
 		BtConnection.idealBreathingCycle.appendData(new GraphViewData(
-				timerCounter * 1.0 / TIMER_TICKS_PER_SECOND, currentIdealHR),
-				false, VIEWPORT_WIDTH * TIMER_TICKS_PER_SECOND);
+				timerCounter * 1.0 / Const.TIMER_TICKS_PER_SECOND, currentIdealHR),
+				false, Const.VIEWPORT_WIDTH * Const.TIMER_TICKS_PER_SECOND);
 
 		// keep the viewport 2 seconds forward and zoom it to the min/max ideal
 		// HR
 		BtConnection.dummySeries.appendData(new GraphViewData(
-				(timerCounter * 1.0 / TIMER_TICKS_PER_SECOND) + 2,
+				(timerCounter * 1.0 / Const.TIMER_TICKS_PER_SECOND) + 2,
 				(timerCounter % 2 == 0) ? idealMinHR : idealMaxHR), true, 2);
 	}
 
 	private static void updateTimeLeft() {
 		timeLeftTextView.setText(String.valueOf(EASY_TIME_SECONDS
-				- timerCounter / TIMER_TICKS_PER_SECOND));
+				- timerCounter / Const.TIMER_TICKS_PER_SECOND));
 	}
 
 	@Override
@@ -231,5 +229,5 @@ public class BreathingFragment extends Fragment {
 
 		layout.removeView(graphView);
 	}
-	
+
 }
