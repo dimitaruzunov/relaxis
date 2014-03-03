@@ -31,10 +31,9 @@ import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView.GraphViewData;
 
-public class MainActivity extends FragmentActivity implements ListView.OnItemClickListener {
+public class MainActivity extends FragmentActivity implements
+		ListView.OnItemClickListener {
 
-	public static final int REQUEST_ENABLE_BT = 1000;
-	
 	private NavigationDrawerListAdapter navigationDrawerListAdapter;
 	private ListView drawerListView;
 	private SectionsPagerAdapter sectionsPagerAdapter;
@@ -44,37 +43,44 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	public void getUser(View view) {
 		new HttpRequestTask().execute();
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		
+
 		// Navigation drawer setup
-		String[] navigationMenuTitles = getResources().getStringArray(R.array.navigation_drawer_options);
-        TypedArray navigationMenuIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons);
-        
-        ArrayList<NavigationDrawerItem> navigationDrawerItems = new ArrayList<NavigationDrawerItem>();
-        
-        for (int i = 0, len = navigationMenuTitles.length; i < len; i++) {
-        	navigationDrawerItems.add(new NavigationDrawerItem(navigationMenuTitles[i], navigationMenuIcons.getResourceId(i, -1)));
-        }
-        
-        // Recycle the typed array
-        navigationMenuIcons.recycle();
-		
-		navigationDrawerListAdapter = new NavigationDrawerListAdapter(getApplicationContext(), navigationDrawerItems);
-		
+		String[] navigationMenuTitles = getResources().getStringArray(
+				R.array.navigation_drawer_options);
+		TypedArray navigationMenuIcons = getResources().obtainTypedArray(
+				R.array.navigation_drawer_icons);
+
+		ArrayList<NavigationDrawerItem> navigationDrawerItems = new ArrayList<NavigationDrawerItem>();
+
+		for (int i = 0, len = navigationMenuTitles.length; i < len; i++) {
+			navigationDrawerItems.add(new NavigationDrawerItem(
+					navigationMenuTitles[i], navigationMenuIcons.getResourceId(
+							i, -1)));
+		}
+
+		// Recycle the typed array
+		navigationMenuIcons.recycle();
+
+		navigationDrawerListAdapter = new NavigationDrawerListAdapter(
+				getApplicationContext(), navigationDrawerItems);
+
 		drawerListView = (ListView) findViewById(R.id.left_drawer);
 		drawerListView.setAdapter(navigationDrawerListAdapter);
 
 		navigationDrawerListAdapter.setup(this, this);
-		navigationDrawerListAdapter.setSelection(NavigationDrawerListAdapter.HOME_OPTION_ITEM);
+		navigationDrawerListAdapter
+				.setSelection(NavigationDrawerListAdapter.HOME_OPTION_ITEM);
 
 		// Sections pager setup
-		sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
+		sectionsPagerAdapter = new SectionsPagerAdapter(
+				getSupportFragmentManager(), this);
 
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
@@ -84,12 +90,15 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			public void onPageSelected(int position) {
 				navigationDrawerListAdapter.handleSelect(position);
 			}
-			
+
 			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-			
+			public void onPageScrolled(int position, float positionOffset,
+					int positionOffsetPixels) {
+			}
+
 			@Override
-			public void onPageScrollStateChanged(int state) {}
+			public void onPageScrollStateChanged(int state) {
+			}
 		});
 
 		// TODO Try to put the following code out of the onCreate method
@@ -104,11 +113,14 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		 * Registering a new BTBroadcast receiver from the Main Activity context
 		 * with pairing request event
 		 */
-		this.getApplicationContext().registerReceiver(new BTBroadcastReceiver(), filter);
+		this.getApplicationContext().registerReceiver(
+				new BTBroadcastReceiver(), filter);
 		// Registering the BTBondReceiver in the application that the
 		// status of the receiver has changed to Paired
-		IntentFilter filter2 = new IntentFilter("android.bluetooth.device.action.BOND_STATE_CHANGED");
-		this.getApplicationContext().registerReceiver(new BTBondReceiver(), filter2);
+		IntentFilter filter2 = new IntentFilter(
+				"android.bluetooth.device.action.BOND_STATE_CHANGED");
+		this.getApplicationContext().registerReceiver(new BTBondReceiver(),
+				filter2);
 	}
 
 	@Override
@@ -140,7 +152,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		boolean handled = true;
 
 		navigationDrawerListAdapter.handleOnOptionsItemSelected(item);
-		
+
 		return handled;
 	}
 
@@ -151,27 +163,32 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent resultIntent) {
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent resultIntent) {
 		super.onActivityResult(requestCode, resultCode, resultIntent);
 		switch (requestCode) {
-		case REQUEST_ENABLE_BT:
+		case Const.REQUEST_ENABLE_BT:
 			handleBluetoothConnectResult(resultCode, resultIntent);
 			break;
 		}
 	}
 
-	private void handleBluetoothConnectResult(int resultCode, Intent resultIntent) {
+	private void handleBluetoothConnectResult(int resultCode,
+			Intent resultIntent) {
 		if (resultCode == RESULT_OK) {
-			Toast.makeText(this, "Bluetooth is now enabled", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "Bluetooth is now enabled", Toast.LENGTH_LONG)
+					.show();
 		} else {
-			Toast.makeText(this, "User cancelled the bluetooth connect intent", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "User cancelled the bluetooth connect intent",
+					Toast.LENGTH_LONG).show();
 		}
 	}
-	
+
 	void executeConnect(Button button) {
-		btConnectionChangeListener = (OnBtConnectionChangeListener) sectionsPagerAdapter.getFragment(1);
+		btConnectionChangeListener = (OnBtConnectionChangeListener) sectionsPagerAdapter
+				.getFragment(1);
 		btConnectionChangeListener.onBtConnectionChange(1, button);
-		
+
 		new BluetoothConnectTask().execute(button);
 	}
 
@@ -180,7 +197,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		public Button item;
 	}
 
-	private class BluetoothConnectTask extends AsyncTask<Button, Void, AsyncTaskResults> {
+	private class BluetoothConnectTask extends
+			AsyncTask<Button, Void, AsyncTaskResults> {
 
 		private final int CODE_CANCELLED = 3;
 		private final int CODE_NO_BT = 2;
@@ -196,12 +214,12 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			// do the work unless user cancel
 			while (!isCancelled()) {
 				// Setting up an event listener listening for cancel intent
-//				results.item.setOnClickListener(new View.OnClickListener() {
-//					@Override
-//					public void onClick(View view) {
-//						cancel(true);
-//					}
-//				});
+				// results.item.setOnClickListener(new View.OnClickListener() {
+				// @Override
+				// public void onClick(View view) {
+				// cancel(true);
+				// }
+				// });
 
 				// Getting the Bluetooth adapter
 				BtConnection.adapter = BluetoothAdapter.getDefaultAdapter();
@@ -214,8 +232,10 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 				// Enable bluetooth if not enabled
 				if (!BtConnection.adapter.isEnabled()) {
-					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-					startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+					Intent enableBtIntent = new Intent(
+							BluetoothAdapter.ACTION_REQUEST_ENABLE);
+					startActivityForResult(enableBtIntent,
+							Const.REQUEST_ENABLE_BT);
 				}
 
 				// TODO try to write this better
@@ -223,20 +243,25 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 					// wait until the bluetooth is on
 				}
 
-				Set<BluetoothDevice> pairedDevices = BtConnection.adapter.getBondedDevices();
+				Set<BluetoothDevice> pairedDevices = BtConnection.adapter
+						.getBondedDevices();
 				if (pairedDevices.size() > 0) {
 					for (BluetoothDevice device : pairedDevices) {
 						if (device.getName().startsWith("HXM")) {
 							BluetoothDevice btDevice = device;
 							BtConnection.BhMacID = btDevice.getAddress();
 
-							BluetoothDevice Device = BtConnection.adapter.getRemoteDevice(BtConnection.BhMacID);
+							BluetoothDevice Device = BtConnection.adapter
+									.getRemoteDevice(BtConnection.BhMacID);
 							BtConnection.deviceName = Device.getName();
 
-							BtConnection._bt = new BTClient(BtConnection.adapter, BtConnection.BhMacID);
+							BtConnection._bt = new BTClient(
+									BtConnection.adapter, BtConnection.BhMacID);
 
-							BtConnection._NConnListener = new NewConnectedListener(SensorDataHandler, SensorDataHandler);
-							BtConnection._bt.addConnectedEventListener(BtConnection._NConnListener);
+							BtConnection._NConnListener = new NewConnectedListener(
+									SensorDataHandler, SensorDataHandler);
+							BtConnection._bt
+									.addConnectedEventListener(BtConnection._NConnListener);
 
 							if (BtConnection._bt.IsConnected()) {
 								BtConnection._bt.start();
@@ -262,17 +287,20 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		protected void onPostExecute(AsyncTaskResults results) {
 			switch (results.result) {
 			case CODE_NO_BT:
-				btConnectionChangeListener.onBtConnectionChange(0, results.item);
+				btConnectionChangeListener
+						.onBtConnectionChange(0, results.item);
 				Toast.makeText(MainActivity.this, "Bluetooth is not supported",
 						Toast.LENGTH_LONG).show();
 				break;
 			case CODE_FAILURE:
-				btConnectionChangeListener.onBtConnectionChange(0, results.item);
+				btConnectionChangeListener
+						.onBtConnectionChange(0, results.item);
 				Toast.makeText(MainActivity.this, "Unable to connect",
 						Toast.LENGTH_LONG).show();
 				break;
 			case CODE_SUCCESS:
-				btConnectionChangeListener.onBtConnectionChange(2, results.item);
+				btConnectionChangeListener
+						.onBtConnectionChange(2, results.item);
 				Toast.makeText(MainActivity.this,
 						"Connected to HxM " + BtConnection.deviceName,
 						Toast.LENGTH_LONG).show();
@@ -284,13 +312,20 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 				}
 
+				// reset the instant HR arr
+				BtConnection.recentInstantHR = new int[Const.SAVED_HR_COUNT];
+				for (int i = 0; i < BtConnection.recentInstantHR.length; i++) {
+					BtConnection.recentInstantHR[i] = 0;
+
+				}
+
 				// TODO check if the timer is cleared when the back button is
 				// pressed
 				// and then the activity is started again
 				BreathingFragment.graphUpdateTimerTask = new BreathingFragment.GraphUpdateTimerTask();
 				BreathingFragment.graphUpdateTimer.scheduleAtFixedRate(
 						BreathingFragment.graphUpdateTimerTask, 1000,
-						1000 / BreathingFragment.TIMER_TICKS_PER_SECOND);
+						1000 / Const.TIMER_TICKS_PER_SECOND);
 
 				break;
 			}
@@ -299,7 +334,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		@Override
 		protected void onCancelled(AsyncTaskResults results) {
 			btConnectionChangeListener.onBtConnectionChange(0, results.item);
-			Toast.makeText(MainActivity.this, "Connecting cancelled", Toast.LENGTH_LONG).show();
+			Toast.makeText(MainActivity.this, "Connecting cancelled",
+					Toast.LENGTH_LONG).show();
 		}
 
 	}
@@ -310,7 +346,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		Toast.makeText(this, "Disconnected from HxM", Toast.LENGTH_LONG).show();
 
 		// This disconnects listener from acting on received messages
-		BtConnection._bt.removeConnectedEventListener(BtConnection._NConnListener);
+		BtConnection._bt
+				.removeConnectedEventListener(BtConnection._NConnListener);
 		// Close the communication with the device & throw an exception if
 		// failure
 		BtConnection._bt.Close();
@@ -319,7 +356,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int option, long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int option,
+			long id) {
 		sectionsPagerAdapter.setFragment(option, viewPager);
 		navigationDrawerListAdapter.closeDrawer();
 	}
@@ -329,23 +367,23 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case BtConnection.HEART_RATE:
+			case Const.HEART_RATE:
 				String HeartRatetext = msg.getData().getString("HeartRate");
 				HomeFragment.heartRateTextView.setText(HeartRatetext);
 				break;
 
-			case BtConnection.INSTANT_SPEED:
+			case Const.INSTANT_SPEED:
 				String InstantSpeedtext = msg.getData().getString(
 						"InstantSpeed");
 				HomeFragment.instantSpeedTextView.setText(InstantSpeedtext);
 				break;
 
-			case BtConnection.RR_INTERVAL:
+			case Const.RR_INTERVAL:
 				String RRInterval = msg.getData().getString("RRInterval");
 				HomeFragment.rRIntervalTextView.setText(RRInterval);
 				break;
 
-			case BtConnection.INSTANT_HR:
+			case Const.INSTANT_HR:
 				String instantHRString = msg.getData().getString("InstantHR");
 				int instantHR = Integer.parseInt(instantHRString);
 
@@ -355,20 +393,63 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 				// update BreathingFragment
 				BtConnection.instantHRSeries.appendData(new GraphViewData(
 						BreathingFragment.beatsCount, instantHR), false,
-						BreathingFragment.VIEWPORT_WIDTH + 1);
+						Const.VIEWPORT_WIDTH + 1);
 				BreathingFragment.beatsCount++;
 
-				if (instantHR > BreathingFragment.tMaxHR) {
-					BreathingFragment.newMaxHR = instantHR;
-				}
-				if (instantHR < BreathingFragment.tMinHR) {
-					BreathingFragment.newMinHR = instantHR;
-				}
-				BreathingFragment.tAvgHR = (BreathingFragment.tMaxHR + BreathingFragment.tMinHR) / 2.0;
-				BreathingFragment.tDeviation = BreathingFragment.tMaxHR
-						- BreathingFragment.tAvgHR;
+				BtConnection.recentInstantHR[BreathingFragment.beatsCount
+						% Const.SAVED_HR_COUNT] = instantHR;
 
-				if (Math.abs(BreathingFragment.tIdealHR - instantHR) <= BreathingFragment.POINT_BARRIER) {
+				int tAvgMaxHR = 0,
+				tAvgMinHR = 0,
+				tAvgMaxCount = 0,
+				tAvgMinCount = 0;
+				int iHR,
+				iHRPlus1,
+				iHRMinus1;
+
+				for (int i = 0; i < BtConnection.recentInstantHR.length; i++) {
+					iHR = BtConnection.recentInstantHR[i];
+					iHRPlus1 = BtConnection.recentInstantHR[(i + 1)
+							% Const.SAVED_HR_COUNT];
+					iHRMinus1 = BtConnection.recentInstantHR[(Const.SAVED_HR_COUNT
+							+ i - 1)
+							% Const.SAVED_HR_COUNT];
+					if (i < ((BreathingFragment.beatsCount - 1)
+							% Const.SAVED_HR_COUNT + Const.SAVED_HR_COUNT - 1)
+							% Const.SAVED_HR_COUNT) {
+						if (iHRPlus1 > 0 && iHRMinus1 > 0 && iHR > iHRPlus1
+								&& iHR > iHRMinus1) {
+							tAvgMaxHR += iHR;
+							tAvgMaxCount++;
+						} else if (iHRPlus1 > 0 && iHRMinus1 > 0
+								&& iHR < iHRPlus1 && iHR < iHRMinus1) {
+							tAvgMinHR += iHR;
+							tAvgMinCount++;
+						}
+					}
+				}
+				if (tAvgMaxCount > 0) { // => tAvgMaxHR > 0
+					tAvgMaxHR /= tAvgMaxCount;
+				}
+				if (tAvgMinCount > 0) { // => tAvgMinHR > 0
+					tAvgMinHR /= tAvgMinCount;
+				}
+
+				if (tAvgMaxCount > 0 && tAvgMinCount > 0) {
+					if (tAvgMaxHR - tAvgMinHR > Const.IDEAL_HR_DEVIATION) {
+						BreathingFragment.newMaxHR = tAvgMaxHR;
+						BreathingFragment.newMinHR = tAvgMinHR;
+					} else {
+						if (tAvgMaxHR > BreathingFragment.newMaxHR) {
+							BreathingFragment.newMaxHR = tAvgMaxHR;
+						}
+						if (tAvgMinHR < BreathingFragment.newMinHR) {
+							BreathingFragment.newMinHR = tAvgMaxHR;
+						}
+					}
+				}
+
+				if (Math.abs(BreathingFragment.tIdealHR - instantHR) <= Const.POINT_BARRIER) {
 					BreathingFragment.consecutivePoints++;
 					if (BreathingFragment.consecutivePoints >= 5 * BreathingFragment.multiplier) {
 						BreathingFragment.multiplier++;
@@ -382,7 +463,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 				BreathingFragment.scoreTextView.setText(String
 						.valueOf(BreathingFragment.score));
 				break;
-			case BtConnection.PNN50:
+			case Const.PNN50:
 				if (StressEstimationFragment.timeLeft <= 0) {
 					String pNN50 = msg.getData().getString("pNN50");
 
@@ -394,7 +475,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		}
 
 	};
-	
+
 	private class HttpRequestTask extends AsyncTask<Void, Void, User> {
 		@Override
 		protected User doInBackground(Void... params) {
@@ -414,7 +495,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 		@Override
 		protected void onPostExecute(User user) {
-			System.out.println("spring " + user.getUserId() + " " + user.getFbUserId());
+			System.out.println("spring " + user.getUserId() + " "
+					+ user.getFbUserId());
 		}
 
 	}

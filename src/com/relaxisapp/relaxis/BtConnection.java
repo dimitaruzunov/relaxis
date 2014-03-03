@@ -19,12 +19,8 @@ public class BtConnection {
 	static String BhMacID;
 	static String deviceName;
 
-	static final int HEART_RATE = 0x100;
-	static final int INSTANT_SPEED = 0x101;
-	static final int RR_INTERVAL = 0x102;
-	static final int INSTANT_HR = 0x103;
-	static final int PNN50 = 0x104;
-
+	static int [] recentInstantHR;
+	
 	static int [] recentNn50;
 	static int nnCount;
 

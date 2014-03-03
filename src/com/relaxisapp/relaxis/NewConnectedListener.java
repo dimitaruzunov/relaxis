@@ -160,7 +160,7 @@ public class NewConnectedListener extends ConnectListenerImpl {
 					for (int i = 0; i < BtConnection.recentNn50.length; i++) {
 						pNN50 += BtConnection.recentNn50[i];
 					}
-					pNN50 = pNN50 * 1.0 / ((BtConnection.nnCount == 0) ? 1 : BtConnection.nnCount);
+					pNN50 = pNN50 * 1.0 / ((BtConnection.nnCount == 0) ? 1 : ((BtConnection.nnCount < 60) ? BtConnection.nnCount : 60));
 
 					int instantHR = (rrIntervals[0] == 0) ? 0 : (60000 / rrIntervals[0]);
 
@@ -173,7 +173,7 @@ public class NewConnectedListener extends ConnectListenerImpl {
 					// Rate********************************
 					int HRate = HRSpeedDistPacket.GetHeartRate(DataArray);
 					Message text1 = _aNewHandler
-							.obtainMessage(BtConnection.HEART_RATE);
+							.obtainMessage(Const.HEART_RATE);
 					Bundle b1 = new Bundle();
 					b1.putString("HeartRate", String.valueOf(HRate));
 					text1.setData(b1);
@@ -186,7 +186,7 @@ public class NewConnectedListener extends ConnectListenerImpl {
 							.GetInstantSpeed(DataArray);
 
 					text1 = _aNewHandler
-							.obtainMessage(BtConnection.INSTANT_SPEED);
+							.obtainMessage(Const.INSTANT_SPEED);
 					b1.putString("InstantSpeed", String.valueOf(InstantSpeed));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
@@ -195,7 +195,7 @@ public class NewConnectedListener extends ConnectListenerImpl {
 					// *********** Add R-R interval to the message
 					// ****************
 					text1 = _aNewHandler
-							.obtainMessage(BtConnection.RR_INTERVAL);
+							.obtainMessage(Const.RR_INTERVAL);
 					b1.putString("RRInterval", String.valueOf(rrIntervals[0]));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
@@ -203,14 +203,14 @@ public class NewConnectedListener extends ConnectListenerImpl {
 
 					// *********** Add Instant heart rate to the message
 					// ****************
-					text1 = _aNewHandler.obtainMessage(BtConnection.INSTANT_HR);
+					text1 = _aNewHandler.obtainMessage(Const.INSTANT_HR);
 					b1.putString("InstantHR", String.valueOf(instantHR));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
 					System.out.println("Instant HR is " + instantHR);
 
 					// *********** Add pNN50 to the message ****************
-					text1 = _aNewHandler.obtainMessage(BtConnection.PNN50);
+					text1 = _aNewHandler.obtainMessage(Const.PNN50);
 					b1.putString("pNN50", String.valueOf(pNN50));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
