@@ -494,7 +494,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		@Override
 		protected User doInBackground(Void... params) {
 			try {
-				final String url = "http://relaxisapp.com.91-215-216-74.hera.icnhost.net/api/users/1";
+				final String url = "http://relaxisapp.com/api/users/1";
 				RestTemplate restTemplate = new RestTemplate();
 				restTemplate.getMessageConverters().add(
 						new MappingJackson2HttpMessageConverter());
