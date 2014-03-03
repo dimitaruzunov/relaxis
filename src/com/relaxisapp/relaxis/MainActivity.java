@@ -187,8 +187,8 @@ public class MainActivity extends FragmentActivity implements
 	void executeConnect(Button button) {
 		btConnectionChangeListener = (OnBtConnectionChangeListener) sectionsPagerAdapter
 				.getFragment(1);
-		btConnectionChangeListener = (OnBtConnectionChangeListener)
-				sectionsPagerAdapter.getFragment(SectionsPagerAdapter.HOME_FRAGMENT);
+		btConnectionChangeListener = (OnBtConnectionChangeListener) sectionsPagerAdapter
+				.getFragment(SectionsPagerAdapter.HOME_FRAGMENT);
 		btConnectionChangeListener.onBtConnectionChange(1, button);
 
 		new BluetoothConnectTask().execute(button);
@@ -407,26 +407,37 @@ public class MainActivity extends FragmentActivity implements
 				tAvgMinCount = 0;
 				int iHR,
 				iHRPlus1,
-				iHRMinus1;
+				iHRPlus2,
+				iHRMinus1,
+				iHRMinus2;
 
 				for (int i = 0; i < BtConnection.recentInstantHR.length; i++) {
 					iHR = BtConnection.recentInstantHR[i];
 					iHRPlus1 = BtConnection.recentInstantHR[(i + 1)
 							% Const.SAVED_HR_COUNT];
+					iHRPlus2 = BtConnection.recentInstantHR[(i + 2)
+							% Const.SAVED_HR_COUNT];
 					iHRMinus1 = BtConnection.recentInstantHR[(Const.SAVED_HR_COUNT
 							+ i - 1)
 							% Const.SAVED_HR_COUNT];
+					iHRMinus2 = BtConnection.recentInstantHR[(Const.SAVED_HR_COUNT
+							+ i - 2)
+							% Const.SAVED_HR_COUNT];
 					if (i < ((BreathingFragment.beatsCount - 1)
-							% Const.SAVED_HR_COUNT + Const.SAVED_HR_COUNT - 1)
+							% Const.SAVED_HR_COUNT + Const.SAVED_HR_COUNT - 2)
 							% Const.SAVED_HR_COUNT) {
 						if (iHRPlus1 > 0 && iHRMinus1 > 0 && iHR > iHRPlus1
-								&& iHR > iHRMinus1) {
+								&& iHR > iHRPlus2 && iHR > iHRMinus1
+								&& iHR > iHRMinus2) {
 							tAvgMaxHR += iHR;
 							tAvgMaxCount++;
+							i++; // skip the next HR as it would be irrelevant
 						} else if (iHRPlus1 > 0 && iHRMinus1 > 0
-								&& iHR < iHRPlus1 && iHR < iHRMinus1) {
+								&& iHR < iHRPlus1 && iHR < iHRPlus2
+								&& iHR < iHRMinus1 && iHR < iHRMinus2) {
 							tAvgMinHR += iHR;
 							tAvgMinCount++;
+							i++; // skip the next HR as it would be irrelevant
 						}
 					}
 				}
@@ -446,7 +457,7 @@ public class MainActivity extends FragmentActivity implements
 							BreathingFragment.newMaxHR = tAvgMaxHR;
 						}
 						if (tAvgMinHR < BreathingFragment.newMinHR) {
-							BreathingFragment.newMinHR = tAvgMaxHR;
+							BreathingFragment.newMinHR = tAvgMinHR;
 						}
 					}
 				}
