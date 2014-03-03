@@ -9,7 +9,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class StressEstimationFragment extends Fragment {
 
@@ -25,7 +27,10 @@ public class StressEstimationFragment extends Fragment {
 	static int timeLeft = TIME_SECONDS;
 
 	static TextView stressLevelTextView;
+	private TextView stressLevelDescTextView;
 	private TextView timeLeftTextView;
+	private Button startStressEstimationButton;
+	private boolean isStopped = true;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,17 +46,72 @@ public class StressEstimationFragment extends Fragment {
 	}
 
 	private void setupViews(View view) {
-		stressLevelTextView = (TextView) view.findViewById(R.id.stressLevel);
-		timeLeftTextView = (TextView) view.findViewById(R.id.timeLeft);
+		startStressEstimationButton = (Button) view.findViewById(R.id.startStressEstimationButton);
+		startStressEstimationButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				handleStartStressEstimationButtonClick((Button) view);
+			}
+		});
+		
+		timeLeftTextView = (TextView) view.findViewById(R.id.timeLeftTextView);
+		timeLeftTextView.setText(String.valueOf(TIME_SECONDS));
+		
+		stressLevelDescTextView = (TextView) view.findViewById(R.id.stressLevelDescTextView);
+		
+		stressLevelTextView = (TextView) view.findViewById(R.id.stressLevelTextView);
+	}
+	
+	private void handleStartStressEstimationButtonClick(Button button) {
+		if (isStopped) {
+			start(button);
+		} else {
+			stop(button);
+		}
+	}
+	
+	private void start(Button button) {
+		if (HomeFragment.connectionState != 2) {
+			MainActivity.viewPager.setCurrentItem(SectionsPagerAdapter.HOME_FRAGMENT);
+			Toast.makeText(getActivity(), "Please connect to HxM", Toast.LENGTH_SHORT).show();
+		} else {
+			isStopped = false;
+			changeButtonIconStop(button);
+			stressLevelShow();
+		}
+	}
+	
+	private void stop(Button button) {
+		isStopped = true;
+		changeButtonIconStart(button);
+		stressLevelHide();
+	}
+	
+	private void changeButtonIconStart(Button button) {
+		button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_play, 0, 0, 0);
+		button.setText(R.string.start);
+	}
+	
+	private void changeButtonIconStop(Button button) {
+		button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_stop, 0, 0, 0);
+		button.setText(R.string.stop);
+	}
+	
+	private void stressLevelShow() {
+		stressLevelDescTextView.setVisibility(1);
+		stressLevelTextView.setVisibility(1);
+	}
+	
+	private void stressLevelHide() {
+		stressLevelDescTextView.setVisibility(4);
+		stressLevelTextView.setVisibility(4);
 	}
 	
 	private class TimeLeftUpdateTimerTask extends TimerTask {
 
 		@Override
 		public void run() {
-			
 			timeLeftUpdateHandler.post(new Runnable() {
-
 				@Override
 				public void run() {
 					updateTimeLeft();
@@ -62,7 +122,7 @@ public class StressEstimationFragment extends Fragment {
 	}
 
 	private void updateTimeLeft() {
-		timeLeftTextView.setText(String.valueOf(timeLeft));
+		timeLeftTextView.append(": " + String.valueOf(timeLeft));
 		timeLeft--;
 	}
 	

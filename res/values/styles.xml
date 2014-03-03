@@ -17,6 +17,7 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:windowBackground">@color/lightgrey</item>
+        <item name="android:textColor">@color/grey</item>
     </style>
     
     <style name="Divider">
@@ -56,15 +57,13 @@
         <item name="android:drawablePadding">@dimen/activity_horizontal_margin</item>
     </style>
     
-    <style name="ConnectButton">
+    <style name="LargeButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
-        <item name="android:background">@color/green</item>
-        <item name="android:text">@string/action_bluetooth_connect</item>
+        <item name="android:background">@drawable/button_selector</item>
         <item name="android:textColor">@color/grey</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:drawableLeft">@drawable/ic_action_bluetooth</item>
         <item name="android:drawablePadding">@dimen/list_item_horizontal_padding</item>
         <item name="android:paddingRight">24dp</item>
     </style>

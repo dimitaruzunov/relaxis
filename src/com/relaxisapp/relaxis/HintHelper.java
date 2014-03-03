@@ -9,7 +9,7 @@ public class HintHelper {
 	
 	public static Toast createAndPositionHint(Context context, int stringId, View view) {
 		Toast hint = Toast.makeText(context, stringId, Toast.LENGTH_SHORT);
-		hint.setGravity(Gravity.TOP | Gravity.LEFT, view.getRight() + 16, view.getBottom() + 10);
+		hint.setGravity(Gravity.TOP | Gravity.LEFT, view.getRight(), view.getTop() + 90);
 		
 		return hint;
 	}
