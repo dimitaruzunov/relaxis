@@ -10,7 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +53,7 @@ public class BreathingFragment extends Fragment {
 	static int beatsCount = 0;
 	static int timerCounter = 0;
 
-	LinearLayout layout;
+	RelativeLayout layout;
 
 	static GraphView graphView;
 
@@ -100,14 +101,14 @@ public class BreathingFragment extends Fragment {
 		graphView.addSeries(BtConnection.instantHRSeries);
 		graphView.addSeries(BtConnection.dummySeries);
 		// TODO show legend and customize it
-
-		layout.addView(graphView);
+		
+		layout.addView(graphView, setupLayoutParams());
 
 		return view;
 	}
 
 	private void setupViews(View view) {
-		layout = (LinearLayout) view.findViewById(R.id.breathingFragmentLinearLayout);
+		layout = (RelativeLayout) view.findViewById(R.id.breathingFragmentLinearLayout);
 		
 		timeLeftTextView = (TextView) view.findViewById(R.id.breathingTimeLeftTextView);
 		timeLeftTextView.setText(String.valueOf(EASY_TIME_SECONDS));
@@ -124,6 +125,13 @@ public class BreathingFragment extends Fragment {
 		});
 
 		graphView = new LineGraphView(getActivity(), "GraphViewTest");
+	}
+	
+	private LayoutParams setupLayoutParams() {
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, 500);
+		layoutParams.addRule(RelativeLayout.BELOW, R.id.breathingDivider2);
+		
+		return layoutParams;
 	}
 	
 	private void handleStartBreathingButtonClick(Button button) {
