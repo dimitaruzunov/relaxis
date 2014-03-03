@@ -23,4 +23,6 @@ public class Const {
 	
 	static final int POINT_BARRIER = 15;
 
+	static final int TIME_SECONDS = 60;
+
 }

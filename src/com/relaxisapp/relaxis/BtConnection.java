@@ -37,5 +37,5 @@ public class BtConnection {
 	// HACK: used to move the viewport the way we want
 	static GraphViewSeries dummySeries = new GraphViewSeries(
 			"Ideal Breathing Curve", new GraphViewSeriesStyle(
-					Color.rgb(255, 255, 255), 0), new GraphViewData[] {});
+					R.color.lightgrey, 0), new GraphViewData[] {});
 }

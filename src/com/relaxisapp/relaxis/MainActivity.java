@@ -325,7 +325,7 @@ public class MainActivity extends FragmentActivity implements
 				// pressed
 				// and then the activity is started again
 				BreathingFragment.graphUpdateTimerTask = new BreathingFragment.GraphUpdateTimerTask();
-				BreathingFragment.graphUpdateTimer.scheduleAtFixedRate(
+				BreathingFragment.updateTimer.scheduleAtFixedRate(
 						BreathingFragment.graphUpdateTimerTask, 1000,
 						1000 / Const.TIMER_TICKS_PER_SECOND);
 

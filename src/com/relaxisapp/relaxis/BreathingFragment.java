@@ -26,8 +26,9 @@ public class BreathingFragment extends Fragment {
 
 	public final static String SECTION_TITLE = "section title";
 
-	static Timer graphUpdateTimer = new Timer();
+	static Timer updateTimer = new Timer();
 	static GraphUpdateTimerTask graphUpdateTimerTask;
+	static TimeUpdateTimerTask timeUpdateTimerTask;
 
 	static Handler idealHRUpdateHandler = new Handler();
 
@@ -45,13 +46,9 @@ public class BreathingFragment extends Fragment {
 	static int consecutivePoints = 0;
 	static int multiplier = 1;
 
-	// level settings
-	static final int EASY_TIME_SECONDS = 60;
-	static final int INTERMEDIATE_TIME_SECONDS = 120;
-	static final int HARD_TIME_SECONDS = 180;
-
 	static int beatsCount = 0;
 	static int timerCounter = 0;
+	static int timeLeft = 0;
 
 	LinearLayout layout;
 
@@ -60,11 +57,11 @@ public class BreathingFragment extends Fragment {
 	static TextView timeLeftTextView;
 
 	static TextView scoreTextView;
-	
+
 	private boolean isStopped = true;
 	private Button startBreathingButton;
 	private TextView scoreDescTextView;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -75,6 +72,7 @@ public class BreathingFragment extends Fragment {
 
 		graphView.setScrollable(true);
 		graphView.setScalable(true);
+		graphView.setDisableTouch(true);
 		graphView.setViewPort(0, Const.VIEWPORT_WIDTH);
 		graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
 
@@ -90,8 +88,7 @@ public class BreathingFragment extends Fragment {
 				}
 			}
 		});
-		graphView.getGraphViewStyle()
-				.setNumHorizontalLabels(Const.VIEWPORT_WIDTH / 2);
+		graphView.getGraphViewStyle().setNumHorizontalLabels(1);
 		graphView.getGraphViewStyle().setNumVerticalLabels(5);
 		graphView.getGraphViewStyle().setVerticalLabelsWidth(80);
 		BtConnection.idealBreathingCycle.resetData(new GraphViewData[] {});
@@ -102,21 +99,25 @@ public class BreathingFragment extends Fragment {
 		graphView.addSeries(BtConnection.dummySeries);
 		// TODO show legend and customize it
 
-		layout.addView(graphView, 200, 200);
+		layout.addView(graphView, 800, 800);
 
 		return view;
 	}
 
 	private void setupViews(View view) {
-		layout = (LinearLayout) view.findViewById(R.id.breathingFragmentLinearLayout);
-		
-		timeLeftTextView = (TextView) view.findViewById(R.id.breathingTimeLeftTextView);
-		timeLeftTextView.setText(String.valueOf(EASY_TIME_SECONDS));
-		
-		scoreDescTextView = (TextView) view.findViewById(R.id.scoreDescTextView);
+		layout = (LinearLayout) view
+				.findViewById(R.id.breathingFragmentLinearLayout);
+
+		timeLeftTextView = (TextView) view
+				.findViewById(R.id.breathingTimeLeftTextView);
+		timeLeftTextView.setText(String.valueOf(Const.TIME_SECONDS));
+
+		scoreDescTextView = (TextView) view
+				.findViewById(R.id.scoreDescTextView);
 		scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
-		
-		startBreathingButton = (Button) view.findViewById(R.id.startBreathingButton);
+
+		startBreathingButton = (Button) view
+				.findViewById(R.id.startBreathingButton);
 		startBreathingButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -126,7 +127,7 @@ public class BreathingFragment extends Fragment {
 
 		graphView = new LineGraphView(getActivity(), "Breathing");
 	}
-	
+
 	private void handleStartBreathingButtonClick(Button button) {
 		if (isStopped) {
 			start(button);
@@ -134,41 +135,56 @@ public class BreathingFragment extends Fragment {
 			stop(button);
 		}
 	}
-	
+
 	private void start(Button button) {
 		if (HomeFragment.connectionState != 2) {
-			MainActivity.viewPager.setCurrentItem(SectionsPagerAdapter.HOME_FRAGMENT);
-			Toast.makeText(getActivity(), "Please connect to HxM", Toast.LENGTH_SHORT).show();
+			MainActivity.viewPager
+					.setCurrentItem(SectionsPagerAdapter.HOME_FRAGMENT);
+			Toast.makeText(getActivity(), "Please connect to HxM",
+					Toast.LENGTH_SHORT).show();
 		} else {
+			resetScoreAndTime();
+			timeUpdateTimerTask = new TimeUpdateTimerTask();
+			updateTimer.scheduleAtFixedRate(
+					timeUpdateTimerTask, 0,
+					1000);
 			isStopped = false;
 			changeButtonIconStop(button);
 			showScore();
 		}
 	}
-	
+
+	private void resetScoreAndTime() {
+		score = 0;
+		timeLeft = Const.TIME_SECONDS;
+	}
+
 	private void stop(Button button) {
 		isStopped = true;
+		timeUpdateTimerTask.cancel();
 		changeButtonIconStart(button);
 		hideScore();
 	}
-	
+
 	private void showScore() {
 		scoreDescTextView.setVisibility(1);
 		scoreTextView.setVisibility(1);
 	}
-	
+
 	private void hideScore() {
 		scoreDescTextView.setVisibility(4);
 		scoreTextView.setVisibility(4);
 	}
-	
+
 	private void changeButtonIconStart(Button button) {
-		button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_play, 0, 0, 0);
+		button.setCompoundDrawablesWithIntrinsicBounds(
+				R.drawable.ic_action_play, 0, 0, 0);
 		button.setText(R.string.start);
 	}
-	
+
 	private void changeButtonIconStop(Button button) {
-		button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_stop, 0, 0, 0);
+		button.setCompoundDrawablesWithIntrinsicBounds(
+				R.drawable.ic_action_stop, 0, 0, 0);
 		button.setText(R.string.stop);
 	}
 
@@ -182,7 +198,6 @@ public class BreathingFragment extends Fragment {
 				public void run() {
 					updateIdealHR();
 					updateIdealHRGraph(tIdealHR);
-					updateTimeLeft();
 				}
 			});
 			timerCounter++;
@@ -191,7 +206,8 @@ public class BreathingFragment extends Fragment {
 	}
 
 	private static void updateIdealHR() {
-		if (Math.sin(timerCounter * Math.PI / (6 * Const.TIMER_TICKS_PER_SECOND)) == 1) {
+		if (Math.sin(timerCounter * Math.PI
+				/ (6 * Const.TIMER_TICKS_PER_SECOND)) == 1) {
 			avgMinHR = newMinHR;
 		} else if (Math.sin(timerCounter * Math.PI
 				/ (6 * Const.TIMER_TICKS_PER_SECOND)) == -1) {
@@ -206,8 +222,9 @@ public class BreathingFragment extends Fragment {
 
 	private static void updateIdealHRGraph(final double currentIdealHR) {
 		BtConnection.idealBreathingCycle.appendData(new GraphViewData(
-				timerCounter * 1.0 / Const.TIMER_TICKS_PER_SECOND, currentIdealHR),
-				false, Const.VIEWPORT_WIDTH * Const.TIMER_TICKS_PER_SECOND);
+				timerCounter * 1.0 / Const.TIMER_TICKS_PER_SECOND,
+				currentIdealHR), false, Const.VIEWPORT_WIDTH
+				* Const.TIMER_TICKS_PER_SECOND);
 
 		// keep the viewport 2 seconds forward and zoom it to the min/max ideal
 		// HR
@@ -216,17 +233,38 @@ public class BreathingFragment extends Fragment {
 				(timerCounter % 2 == 0) ? idealMinHR : idealMaxHR), true, 2);
 	}
 
+	static class TimeUpdateTimerTask extends TimerTask {
+
+		@Override
+		public void run() {
+			idealHRUpdateHandler.post(new Runnable() {
+
+				@Override
+				public void run() {
+					updateTimeLeft();
+				}
+			});
+		}
+
+	}
+
 	private static void updateTimeLeft() {
-		timeLeftTextView.setText(String.valueOf(EASY_TIME_SECONDS
-				- timerCounter / Const.TIMER_TICKS_PER_SECOND));
+		timeLeftTextView.setText(String.valueOf(timeLeft));
+		if (timeLeft == 0)
+		{
+			timeUpdateTimerTask.cancel();			
+			return;
+		}
+		timeLeft--;
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
+		timeUpdateTimerTask.cancel();
 		graphUpdateTimerTask.cancel();
-		graphUpdateTimer.cancel();
+		updateTimer.cancel();
 
 		layout.removeView(graphView);
 	}
