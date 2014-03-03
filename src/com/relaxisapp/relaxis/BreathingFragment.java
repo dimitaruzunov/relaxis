@@ -55,7 +55,6 @@ public class BreathingFragment extends Fragment {
 	static GraphView graphView;
 
 	static TextView timeLeftTextView;
-
 	static TextView scoreTextView;
 
 	private boolean isStopped = true;
@@ -63,19 +62,38 @@ public class BreathingFragment extends Fragment {
 	private TextView scoreDescTextView;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_breathing, container,
-				false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_breathing, container, false);
 
 		setupViews(view);
 
+		return view;
+	}
+
+	private void setupViews(View view) {
+		layout = (RelativeLayout) view.findViewById(R.id.breathingFragmentLinearLayout);
+		
+		timeLeftTextView = (TextView) view.findViewById(R.id.breathingTimeLeftTextView);
+		timeLeftTextView.setText(String.valueOf(Const.TIME_SECONDS));
+		
+		scoreDescTextView = (TextView) view.findViewById(R.id.scoreDescTextView);
+
+		scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
+
+		startBreathingButton = (Button) view.findViewById(R.id.startBreathingButton);
+		startBreathingButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				handleStartBreathingButtonClick((Button) view);
+			}
+		});
+
+		graphView = new LineGraphView(getActivity(), "Breathing");
 		graphView.setScrollable(true);
 		graphView.setScalable(true);
 		graphView.setDisableTouch(true);
 		graphView.setViewPort(0, Const.VIEWPORT_WIDTH);
 		graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
-
 			@Override
 			public String formatLabel(double value, boolean isValueX) {
 				if (isValueX) {
@@ -88,6 +106,9 @@ public class BreathingFragment extends Fragment {
 		graphView.getGraphViewStyle().setNumHorizontalLabels(1);
 		graphView.getGraphViewStyle().setNumVerticalLabels(5);
 		graphView.getGraphViewStyle().setVerticalLabelsWidth(1);
+		graphView.getGraphViewStyle().setGridColor(getResources().getColor(R.color.grey));
+		graphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.grey));
+		graphView.getGraphViewStyle().setTextSize(25);
 		BtConnection.idealBreathingCycle.resetData(new GraphViewData[] {});
 		BtConnection.instantHRSeries.resetData(new GraphViewData[] {});
 		BtConnection.dummySeries.resetData(new GraphViewData[] {});
@@ -97,32 +118,6 @@ public class BreathingFragment extends Fragment {
 		// TODO show legend and customize it
 		
 		layout.addView(graphView, setupLayoutParams());
-
-
-		return view;
-	}
-
-	private void setupViews(View view) {
-
-		layout = (RelativeLayout) view.findViewById(R.id.breathingFragmentLinearLayout);
-		
-		timeLeftTextView = (TextView) view.findViewById(R.id.breathingTimeLeftTextView);
-		timeLeftTextView.setText(String.valueOf(Const.TIME_SECONDS));
-		
-		scoreDescTextView = (TextView) view.findViewById(R.id.scoreDescTextView);
-
-		scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
-
-		startBreathingButton = (Button) view
-				.findViewById(R.id.startBreathingButton);
-		startBreathingButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				handleStartBreathingButtonClick((Button) view);
-			}
-		});
-
-		graphView = new LineGraphView(getActivity(), "Breathing");
 	}
 	
 	private LayoutParams setupLayoutParams() {
@@ -131,7 +126,6 @@ public class BreathingFragment extends Fragment {
 		
 		return layoutParams;
 	}
-	
 
 	private void handleStartBreathingButtonClick(Button button) {
 		if (isStopped) {
