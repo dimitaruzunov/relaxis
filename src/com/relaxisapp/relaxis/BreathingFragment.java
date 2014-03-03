@@ -79,18 +79,15 @@ public class BreathingFragment extends Fragment {
 			@Override
 			public String formatLabel(double value, boolean isValueX) {
 				if (isValueX) {
-					if (value < 0) {
-						return "";
-					}
-					return String.valueOf((int) Math.floor(value));
+					return "";
 				} else {
-					return String.valueOf((int) Math.floor(value));
+					return "";
 				}
 			}
 		});
 		graphView.getGraphViewStyle().setNumHorizontalLabels(1);
 		graphView.getGraphViewStyle().setNumVerticalLabels(5);
-		graphView.getGraphViewStyle().setVerticalLabelsWidth(80);
+		graphView.getGraphViewStyle().setVerticalLabelsWidth(1);
 		BtConnection.idealBreathingCycle.resetData(new GraphViewData[] {});
 		BtConnection.instantHRSeries.resetData(new GraphViewData[] {});
 		BtConnection.dummySeries.resetData(new GraphViewData[] {});
