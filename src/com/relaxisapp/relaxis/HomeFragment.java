@@ -18,7 +18,7 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	static TextView instantHeartRateTextView;
 	static TextView testTextView;
 	
-	int connectionState = 0;
+	public static int connectionState = 0;
 	Button connectButton;
 
 	@Override

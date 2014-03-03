@@ -10,14 +10,17 @@
     <string name="instantSpeed">Instant Speed</string>
     <string name="rRInterval">R-R Interval</string>
     <string name="instantHeartRate">Instant Heart Rate</string>
-    <string name="stressLevel">Stress level</string>
+    <string name="stress_level_desc">Your stress level is: </string>
     <string name="score">Score</string>
     <string name="lastAntiScore">Last anti score</string>
     <string name="timeLeft">Time left</string>
+    <string name="time_left_desc">Time left:</string>
     <string name="breathing">Breathing</string>
     <string name="stress">Stress</string>
     <string name="open_drawer_message">Open navigation menu</string>
     <string name="close_drawer_message">Close navigation menu</string>
-    <string name="desc_list_item_icon">Icon</string>
+    <string name="list_item_icon_desc">Icon</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
 
 </resources>

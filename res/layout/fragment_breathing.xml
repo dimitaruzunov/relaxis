@@ -9,7 +9,9 @@
     <Button
         android:id="@+id/connectButton"
         android:onClick="getUser"
-        style="@style/ConnectButton" />
+        android:text="@string/start"
+        android:drawableLeft="@drawable/ic_action_play"
+        style="@style/LargeButton" />
 
     <TextView
         android:id="@+id/lastAntiScore"

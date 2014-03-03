@@ -38,7 +38,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	private NavigationDrawerListAdapter navigationDrawerListAdapter;
 	private ListView drawerListView;
 	private SectionsPagerAdapter sectionsPagerAdapter;
-	private ViewPager viewPager;
+	static ViewPager viewPager;
 	private OnBtConnectionChangeListener btConnectionChangeListener;
 
 	public void getUser(View view) {

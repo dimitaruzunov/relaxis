@@ -17,7 +17,9 @@
         <Button
             android:id="@+id/connectButton"
             android:layout_centerHorizontal="true"
-            style="@style/ConnectButton" />
+            android:text="@string/action_bluetooth_connect"
+            android:drawableLeft="@drawable/ic_action_bluetooth"
+            style="@style/LargeButton" />
 
         <TextView
             android:id="@+id/heartRateTextView"
