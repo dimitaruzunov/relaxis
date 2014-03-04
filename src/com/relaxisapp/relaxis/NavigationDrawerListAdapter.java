@@ -31,7 +31,7 @@ public class NavigationDrawerListAdapter extends BaseAdapter {
 	private ListView drawerListView;
 	private ActionBarDrawerToggle drawerToggle;
 	
-	public NavigationDrawerListAdapter(Context context, ArrayList<NavigationDrawerItem> navigationDrawerItems){
+	public NavigationDrawerListAdapter(Context context, ArrayList<NavigationDrawerItem> navigationDrawerItems) {
         this.context = context;
         this.navigationDrawerItems = navigationDrawerItems;
     }

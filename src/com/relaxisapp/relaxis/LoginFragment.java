@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.Request;
@@ -30,6 +31,9 @@ public class LoginFragment extends Fragment {
 	LoginButton authButton;
 	ProfilePictureView profilePictureView;
 	TextView userName;
+	
+	private BreathingScoreResultsListAdapter breathingScoreResultsListAdapter;
+	private ListView breathingScoreResultsListView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,10 @@ public class LoginFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_login, container, false);
 
 		setupViews(view);
+		
+//		breathingScoreResultsListAdapter = new BreathingScoreResultsListAdapter(
+//				getActivity().getApplicationContext(),
+//				breathingScores);
 
 		return view;
 	}
