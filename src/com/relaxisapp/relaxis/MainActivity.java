@@ -302,11 +302,11 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 						"Connected to HxM " + BtConnection.deviceName,
 						Toast.LENGTH_LONG).show();
 
-				// reset the stress score
+				// reset the stress score and time
+				StressEstimationFragment.timeLeft = Const.TIME_STRESS_SECONDS;
 				BtConnection.recentNn50 = new int[Const.SAVED_NN50_COUNT];
 				for (int i = 0; i < BtConnection.recentNn50.length; i++) {
 					BtConnection.recentNn50[i] = 0;
-
 				}
 
 				// reset the instant HR arr

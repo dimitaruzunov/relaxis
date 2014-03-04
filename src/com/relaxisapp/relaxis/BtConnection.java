@@ -29,10 +29,10 @@ public class BtConnection {
 
 	static GraphViewSeries instantHRSeries = new GraphViewSeries(
 			"Instant HR Curve", new GraphViewSeriesStyle(
-					Color.rgb(20, 20, 255), 3), new GraphViewData[] {});
+					Color.rgb(20, 20, 255), 5), new GraphViewData[] {});
 	static GraphViewSeries idealBreathingCycle = new GraphViewSeries(
 			"Ideal Breathing Curve", new GraphViewSeriesStyle(
-					Color.rgb(255, 20, 20), 3), new GraphViewData[] {});
+					Color.rgb(255, 20, 20), 5), new GraphViewData[] {});
 	
 	// HACK: used to move the viewport the way we want
 	static GraphViewSeries dummySeries = new GraphViewSeries(

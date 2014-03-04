@@ -13,7 +13,7 @@ public class Const {
 
 	// settings constants
 	static final int SAVED_HR_COUNT = 24;
-	static final int SAVED_NN50_COUNT = 360;
+	static final int SAVED_NN50_COUNT = 180;
 	static final int TIMER_TICKS_PER_SECOND = 10;
 	
 	// breathing graph settings
@@ -25,6 +25,6 @@ public class Const {
 	static final int POINT_BARRIER = 15;
 
 	static final int TIME_BREATHING_SECONDS = 60;
-	static final int TIME_STRESS_SECONDS = 120;
+	static final int TIME_STRESS_SECONDS = 180;
 
 }

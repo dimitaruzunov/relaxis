@@ -1,9 +1,8 @@
 package com.relaxisapp.relaxis;
 
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import com.relaxisapp.relaxis.BreathingFragment.TimeUpdateTimerTask;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -91,7 +90,7 @@ public class StressEstimationFragment extends Fragment {
 	private void stop(Button button) {
 		isStopped = true;
 		changeButtonIconStart(button);
-		resetTime();
+		//resetTime();
 		hideStressLevel();
 		timeUpdateTimerTask.cancel();
 		timeUpdateTimer.cancel();
@@ -129,9 +128,9 @@ public class StressEstimationFragment extends Fragment {
 				@Override
 				public void run() {
 					StressEstimationFragment.stressLevelTextView
-					.setText(String.valueOf(stressLevel));
+					.setText(String.valueOf(new DecimalFormat("#0.00").format(stressLevel*100)));
 					updateTimeLeft();
-					System.out.println(BtConnection.nnCount);
+					System.out.println("test"+BtConnection.nnCount);
 				}
 			});
 		}
