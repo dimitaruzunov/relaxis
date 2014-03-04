@@ -257,6 +257,8 @@ public class BreathingFragment extends Fragment {
 	private static void updateTimeLeft() {
 		timeLeftTextView.setText(String.valueOf(timeLeft));
 		if (timeLeft <= 0) {
+			updateScore = false;
+			new ApiConnection.AddBreathingScoreTask().execute();
 			timeUpdateTimerTask.cancel();
 			return;
 		}
