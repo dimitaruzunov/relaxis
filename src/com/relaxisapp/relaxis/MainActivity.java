@@ -302,11 +302,11 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 						"Connected to HxM " + BtConnection.deviceName,
 						Toast.LENGTH_LONG).show();
 
-				// reset the stress score
-				BtConnection.recentNn50 = new int[60];
+				// reset the stress score and time
+				StressEstimationFragment.timeLeft = Const.TIME_STRESS_SECONDS;
+				BtConnection.recentNn50 = new int[Const.SAVED_NN50_COUNT];
 				for (int i = 0; i < BtConnection.recentNn50.length; i++) {
 					BtConnection.recentNn50[i] = 0;
-
 				}
 
 				// reset the instant HR arr
@@ -448,11 +448,9 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 				}
 				if (tAvgMaxCount > 0) { // => tAvgMaxHR > 0
 					tAvgMaxHR /= tAvgMaxCount;
-					System.out.println("tihr max " + tAvgMaxHR);
 				}
 				if (tAvgMinCount > 0) { // => tAvgMinHR > 0
 					tAvgMinHR /= tAvgMinCount;
-					System.out.println("tihr min " + tAvgMinHR);
 				}
 
 				if (tAvgMaxCount > 0 && tAvgMinCount > 0) {
@@ -487,11 +485,12 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 				break;
 			case Const.PNN50:
-				if (StressEstimationFragment.timeLeft <= 0) {
+				if (StressEstimationFragment.timeLeft > 0) {
 					String pNN50 = msg.getData().getString("pNN50");
 
-					StressEstimationFragment.stressLevelTextView
-							.setText("Current stress level: " + pNN50);
+					if (pNN50 != null) {
+						StressEstimationFragment.stressLevel = Double.parseDouble(pNN50);
+					}
 				}
 				break;
 			}

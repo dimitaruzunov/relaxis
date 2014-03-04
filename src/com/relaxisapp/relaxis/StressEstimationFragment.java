@@ -1,5 +1,6 @@
 package com.relaxisapp.relaxis;
 
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,16 +17,16 @@ import android.widget.Toast;
 public class StressEstimationFragment extends Fragment {
 
 	public final static String SECTION_TITLE = "section title";
-	
-	private Timer graphUpdateTimer = new Timer();
-	private TimeLeftUpdateTimerTask graphUpdateTimerTask = new TimeLeftUpdateTimerTask();
+
+	static Timer timeUpdateTimer = new Timer();
+	static TimeUpdateTimerTask timeUpdateTimerTask;
 	
 	private Handler timeLeftUpdateHandler = new Handler();
 	
-	private static int TIME_SECONDS = 60;
-	
-	static int timeLeft = TIME_SECONDS;
+	static int timeLeft = Const.TIME_STRESS_SECONDS;
 
+	static double stressLevel;
+	
 	static TextView stressLevelTextView;
 	private TextView stressLevelDescTextView;
 	private TextView timeLeftTextView;
@@ -55,7 +56,7 @@ public class StressEstimationFragment extends Fragment {
 		});
 		
 		timeLeftTextView = (TextView) view.findViewById(R.id.stressTimeLeftTextView);
-		timeLeftTextView.setText(String.valueOf(TIME_SECONDS));
+		timeLeftTextView.setText(String.valueOf(timeLeft));
 		
 		stressLevelDescTextView = (TextView) view.findViewById(R.id.stressLevelDescTextView);
 		
@@ -75,6 +76,11 @@ public class StressEstimationFragment extends Fragment {
 			MainActivity.viewPager.setCurrentItem(SectionsPagerAdapter.HOME_FRAGMENT);
 			Toast.makeText(getActivity(), "Please connect to HxM", Toast.LENGTH_SHORT).show();
 		} else {
+			timeUpdateTimer = new Timer();
+			timeUpdateTimerTask = new TimeUpdateTimerTask();
+			timeUpdateTimer.scheduleAtFixedRate(
+					timeUpdateTimerTask, 0,
+					1000);
 			isStopped = false;
 			changeButtonIconStop(button);
 			showStressLevel();
@@ -84,7 +90,14 @@ public class StressEstimationFragment extends Fragment {
 	private void stop(Button button) {
 		isStopped = true;
 		changeButtonIconStart(button);
+		//resetTime();
 		hideStressLevel();
+		timeUpdateTimerTask.cancel();
+		timeUpdateTimer.cancel();
+	}
+
+	private void resetTime() {
+		timeLeft = Const.TIME_STRESS_SECONDS;
 	}
 	
 	private void changeButtonIconStart(Button button) {
@@ -107,14 +120,17 @@ public class StressEstimationFragment extends Fragment {
 		stressLevelTextView.setVisibility(4);
 	}
 	
-	private class TimeLeftUpdateTimerTask extends TimerTask {
+	private class TimeUpdateTimerTask extends TimerTask {
 
 		@Override
 		public void run() {
 			timeLeftUpdateHandler.post(new Runnable() {
 				@Override
 				public void run() {
+					StressEstimationFragment.stressLevelTextView
+					.setText(String.valueOf(new DecimalFormat("#0.00").format(stressLevel*100)));
 					updateTimeLeft();
+					System.out.println("test"+BtConnection.nnCount);
 				}
 			});
 		}
@@ -122,35 +138,13 @@ public class StressEstimationFragment extends Fragment {
 	}
 
 	private void updateTimeLeft() {
-		timeLeftTextView.append(": " + String.valueOf(timeLeft));
+		timeLeftTextView.setText(String.valueOf(timeLeft));
+		if (timeLeft == 0)
+		{
+			timeUpdateTimerTask.cancel();			
+			return;
+		}
 		timeLeft--;
 	}
-	
-//	private void saveData(double stressLevel) throws IOException {
-//
-//		FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-//		try {
-//			fos.write(String.valueOf(stressLevel).getBytes());
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		fos.close();
-//	}
-	
-//	private double getData() {
-//		double stressLevel;
-//		
-//		FileOutputStream fos = openFileOutput(FILENAME, Context.MODE);
-//		try {
-//			fos.write(String.valueOf(stressLevel).getBytes());
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		fos.close();
-//		
-//		return stressLevel; 
-//	}
 
 }
