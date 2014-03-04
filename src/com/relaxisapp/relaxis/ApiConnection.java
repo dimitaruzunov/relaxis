@@ -1,5 +1,7 @@
 package com.relaxisapp.relaxis;
 
+import java.util.Date;
+
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -65,6 +67,32 @@ public class ApiConnection {
 		@Override
 		protected void onPostExecute(User user) {
 			ApiConnection.UserId = user.getUserId();
+		}
+
+	}
+
+	public static class AddBreathingScoreTask extends AsyncTask<Void, Void, String> {
+		@Override
+		protected String doInBackground(Void... params) {
+			try {
+				final String url = "http://relaxisapp.com/api/breathingscores/";
+				RestTemplate restTemplate = new RestTemplate();
+				restTemplate.getMessageConverters().add(
+						new MappingJackson2HttpMessageConverter());
+				String uri = restTemplate.postForLocation(url, new BreathingScore(ApiConnection.UserId, BreathingFragment.score, new Date())).toString();
+				return uri;
+			} catch (Exception e) {
+				Log.e("MainActivity", e.getMessage(), e);
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String uri) {
+			if (uri != null) {
+				Log.i("URI", uri);
+			}
 		}
 
 	}
