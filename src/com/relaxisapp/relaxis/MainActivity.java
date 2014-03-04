@@ -172,6 +172,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		if (resultCode == RESULT_OK) {
 			Toast.makeText(this, "Bluetooth is now enabled", Toast.LENGTH_LONG).show();
 		} else {
+			setPreviousOnButtonClickListener(savedButton);
 			Toast.makeText(this, "User cancelled the bluetooth enable intent", Toast.LENGTH_LONG).show();
 			btConnectionChangeListener.onBtConnectionChange(0, savedButton);
 			savedButton = null;
@@ -186,6 +187,15 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		btConnectionChangeListener.onBtConnectionChange(1, button);
 
 		new BluetoothConnectTask().execute(button);
+	}
+	
+	private void setPreviousOnButtonClickListener(Button button) {
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				HomeFragment.handleConnectButtonClick((Button) view, MainActivity.this);
+			}
+		});
 	}
 
 	private class AsyncTaskResults {
@@ -213,7 +223,6 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 				results.item.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						Log.d("QKTAG", "ifNotEnabled");
 						cancel(true);
 					}
 				});
@@ -281,6 +290,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 		@Override
 		protected void onPostExecute(AsyncTaskResults results) {
+			setPreviousOnButtonClickListener(results.item);
+			
 			switch (results.result) {
 			case CODE_NO_BT:
 				btConnectionChangeListener
@@ -329,13 +340,8 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 		@Override
 		protected void onCancelled(AsyncTaskResults results) {
-			// Set the previous on click listener
-			results.item.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					HomeFragment.handleConnectButtonClick((Button) view, MainActivity.this);
-				}
-			});
+			setPreviousOnButtonClickListener(results.item);
+			
 			btConnectionChangeListener.onBtConnectionChange(0, results.item);
 			Toast.makeText(MainActivity.this, "Connecting cancelled", Toast.LENGTH_LONG).show();
 		}
