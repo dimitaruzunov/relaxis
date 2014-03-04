@@ -1,6 +1,7 @@
 package com.relaxisapp.relaxis;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -8,13 +9,14 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import android.os.AsyncTask;
-import android.text.format.DateFormat;
 import android.util.Log;
 
 public class ApiConnection {
 	public static String FbUserId;
 	public static String FbUserName;
 	public static int UserId;
+	public static ArrayList<BreathingScore> currentUserBreathingScores;
+	public static ArrayList<StressScore> currentUserStressScores;
 	
 	public static class CheckUserTask extends AsyncTask<Void, Void, User> {
 		@Override
@@ -42,6 +44,8 @@ public class ApiConnection {
 		protected void onPostExecute(User user) {
 			if (user != null) {
 				ApiConnection.UserId = user.getUserId();
+				new GetCurrentUserBreathingScoresTask().execute();
+				new GetCurrentUserStressScoresTask().execute();
 			}
 		}
 
@@ -68,7 +72,11 @@ public class ApiConnection {
 
 		@Override
 		protected void onPostExecute(User user) {
-			ApiConnection.UserId = user.getUserId();
+			if (user != null) {
+				ApiConnection.UserId = user.getUserId();
+				new GetCurrentUserBreathingScoresTask().execute();
+				new GetCurrentUserStressScoresTask().execute();
+			}
 		}
 
 	}
@@ -132,6 +140,66 @@ public class ApiConnection {
 		protected void onPostExecute(String uri) {
 			if (uri != null) {
 				Log.i("URI", uri);
+			}
+		}
+
+	}
+
+	public static class GetCurrentUserBreathingScoresTask extends AsyncTask<Void, Void, BreathingScore[]> {
+		@Override
+		protected BreathingScore[] doInBackground(Void... params) {
+			try {
+				final String url = "http://relaxisapp.com/api/users/"+ ApiConnection.UserId +"/breathingscores";
+				RestTemplate restTemplate = new RestTemplate();
+				restTemplate.getMessageConverters().add(
+						new MappingJackson2HttpMessageConverter());
+				
+				BreathingScore[] scores = restTemplate.getForObject(url, BreathingScore[].class);
+				return scores;
+			} catch (Exception e) {
+				Log.e("MainActivity", e.getMessage(), e);
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(BreathingScore[] scores) {
+			if (scores != null) {
+				Log.i("Scores", scores.toString());
+				for (int i = 0; i < scores.length; i++) {
+					currentUserBreathingScores.add(scores[i]);
+				}
+			}
+		}
+
+	}
+
+	public static class GetCurrentUserStressScoresTask extends AsyncTask<Void, Void, StressScore[]> {
+		@Override
+		protected StressScore[] doInBackground(Void... params) {
+			try {
+				final String url = "http://relaxisapp.com/api/users/"+ ApiConnection.UserId +"/stressscores";
+				RestTemplate restTemplate = new RestTemplate();
+				restTemplate.getMessageConverters().add(
+						new MappingJackson2HttpMessageConverter());
+				
+				StressScore[] scores = restTemplate.getForObject(url, StressScore[].class);
+				return scores;
+			} catch (Exception e) {
+				Log.e("MainActivity", e.getMessage(), e);
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(StressScore[] scores) {
+			if (scores != null) {
+				Log.i("Scores", scores.toString());
+				for (int i = 0; i < scores.length; i++) {
+					currentUserStressScores.add(scores[i]);
+				}
 			}
 		}
 
