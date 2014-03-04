@@ -1,7 +1,5 @@
 package com.relaxisapp.relaxis;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,27 +10,20 @@ public class BreathingScore {
 		
 	}
 	
-	public BreathingScore(int userId, double score, Date timestamp) {
+	public BreathingScore(int userId, double score, String timestamp) {
 		this.userId = userId;
-		this.user.setUserId(userId);
 		this.score = score;
 		this.timestamp = timestamp;
 	}
 	
 	private int userId;
-	private User user;
 	private double score;
-	private Date timestamp;
+	private String timestamp;
 
 
     @JsonProperty(value="UserId")
     public int getUserId() {
         return this.userId;
-    }
-
-    @JsonProperty(value="User")
-    public User getUser() {
-        return this.user;
     }
     
     @JsonProperty(value="Score")
@@ -41,7 +32,7 @@ public class BreathingScore {
     }
     
     @JsonProperty(value="Timestamp")
-    public Date getTimestamp() {
+    public String getTimestamp() {
         return this.timestamp;
     }
 
@@ -49,15 +40,11 @@ public class BreathingScore {
         this.userId = userId;
     }
     
-    public void setUser(User user) {
-        this.user = user;
-    }
-    
     public void setScore(double score) {
         this.score = score;
     }
     
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 }

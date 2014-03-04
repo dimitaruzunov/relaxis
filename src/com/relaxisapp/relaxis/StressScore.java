@@ -1,16 +1,24 @@
 package com.relaxisapp.relaxis;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class StressScore {
+
+	public StressScore() {
 		
+	}
+	
+	public StressScore(int userId, double score, String timestamp) {
+		this.userId = userId;
+		this.score = score;
+		this.timestamp = timestamp;
+	}
+	
 	private int userId;
 	private double score;
-	private Date timestamp;
+	private String timestamp;
 	
 
     @JsonProperty(value="UserId")
@@ -24,7 +32,7 @@ public class StressScore {
     }
     
     @JsonProperty(value="Timestamp")
-    public Date getTimestamp() {
+    public String getTimestamp() {
         return this.timestamp;
     }
     
@@ -36,7 +44,7 @@ public class StressScore {
         this.score = score;
     }
     
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 }

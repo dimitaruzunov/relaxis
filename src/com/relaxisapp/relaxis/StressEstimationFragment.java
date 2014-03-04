@@ -141,6 +141,9 @@ public class StressEstimationFragment extends Fragment {
 		timeLeftTextView.setText(String.valueOf(timeLeft));
 		if (timeLeft == 0)
 		{
+			if (ApiConnection.UserId > 0) {
+				new ApiConnection.AddStressScoreTask().execute();
+			}
 			timeUpdateTimerTask.cancel();			
 			return;
 		}

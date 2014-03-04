@@ -144,6 +144,9 @@ public class LoginFragment extends Fragment {
 				toggleViewsVisibility(0);
 			}
 		} else if (state.isClosed()) {
+			ApiConnection.UserId = 0;
+			ApiConnection.FbUserId = "";
+			ApiConnection.FbUserName = "";
 			toggleViewsVisibility(4);
 		} else {
 			// System.out.println(state.toString());
