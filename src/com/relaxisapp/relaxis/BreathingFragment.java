@@ -77,7 +77,7 @@ public class BreathingFragment extends Fragment {
 		layout = (RelativeLayout) view.findViewById(R.id.breathingFragmentLinearLayout);
 		
 		timeLeftTextView = (TextView) view.findViewById(R.id.breathingTimeLeftTextView);
-		timeLeftTextView.setText(String.valueOf(Const.TIME_SECONDS));
+		timeLeftTextView.setText(String.valueOf(Const.TIME_BREATHING_SECONDS));
 		
 		scoreDescTextView = (TextView) view.findViewById(R.id.scoreDescTextView);
 
@@ -170,7 +170,7 @@ public class BreathingFragment extends Fragment {
 
 	private void resetScoreAndTime() {
 		score = 0;
-		timeLeft = Const.TIME_SECONDS;
+		timeLeft = Const.TIME_BREATHING_SECONDS;
 	}
 
 	private void showScore() {

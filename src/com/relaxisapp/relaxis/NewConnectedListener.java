@@ -120,49 +120,55 @@ public class NewConnectedListener extends ConnectListenerImpl {
 							rrIntervals[12] - rrIntervals[13] };
 
 					// Standard Deviation
-//					double mean = 0;
-//					for (int i = 0; i < 6; i++) {
-//						mean += rrDiffs[i];
-//					}
-//					mean /= 6.0d;
-//
-//					double SD = 0;
-//					for (int i = 0; i < 6; i++) {
-//						SD += ((rrDiffs[i] - mean) * (rrDiffs[i] - mean));
-//					}
-//					SD /= 6.0d;
-//					SD = Math.sqrt(SD);
-//
-//					System.out.println("SD: " + SD);
-//
-//					// HRV = mean of nn50 and nn20
-//					int nn50 = 0, nn20 = 0, nnCount = 12;
-//					for (int i = 0; i < 12; i++) {
-//						if (rrDiffs[i] > 20) {
-//							nn20++;
-//						}
-//						if (rrDiffs[i] > 50) {
-//							nn50++;
-//						}
-//					}
-//					double hrv = (nn50 + nn20) * 1.0d / (2 * nnCount);
-//					System.out.println("HRV: " + hrv);
+					// double mean = 0;
+					// for (int i = 0; i < 6; i++) {
+					// mean += rrDiffs[i];
+					// }
+					// mean /= 6.0d;
+					//
+					// double SD = 0;
+					// for (int i = 0; i < 6; i++) {
+					// SD += ((rrDiffs[i] - mean) * (rrDiffs[i] - mean));
+					// }
+					// SD /= 6.0d;
+					// SD = Math.sqrt(SD);
+					//
+					// System.out.println("SD: " + SD);
+					//
+					// // HRV = mean of nn50 and nn20
+					// int nn50 = 0, nn20 = 0, nnCount = 12;
+					// for (int i = 0; i < 12; i++) {
+					// if (rrDiffs[i] > 20) {
+					// nn20++;
+					// }
+					// if (rrDiffs[i] > 50) {
+					// nn50++;
+					// }
+					// }
+					// double hrv = (nn50 + nn20) * 1.0d / (2 * nnCount);
+					// System.out.println("HRV: " + hrv);
 
 					// pNN50
 					BtConnection.nnCount++;
 					if (rrDiffs[0] > 50) {
-						BtConnection.recentNn50[BtConnection.nnCount % 60] = 1;
-					}
-					else {
-						BtConnection.recentNn50[BtConnection.nnCount % 60] = 1;
+						BtConnection.recentNn50[BtConnection.nnCount
+								% Const.SAVED_NN50_COUNT] = 1;
+					} else {
+						BtConnection.recentNn50[BtConnection.nnCount
+								% Const.SAVED_NN50_COUNT] = 0;
 					}
 					double pNN50 = 0;
 					for (int i = 0; i < BtConnection.recentNn50.length; i++) {
 						pNN50 += BtConnection.recentNn50[i];
 					}
-					pNN50 = pNN50 * 1.0 / ((BtConnection.nnCount == 0) ? 1 : ((BtConnection.nnCount < 60) ? BtConnection.nnCount : 60));
+					pNN50 = pNN50
+							* 1.0
+							/ ((BtConnection.nnCount == 0) ? 1
+									: ((BtConnection.nnCount < Const.SAVED_NN50_COUNT) ? BtConnection.nnCount
+											: Const.SAVED_NN50_COUNT));
 
-					int instantHR = (rrIntervals[0] == 0) ? 0 : (60000 / rrIntervals[0]);
+					int instantHR = (rrIntervals[0] == 0) ? 0
+							: (60000 / rrIntervals[0]);
 
 					System.out.println(CustomUtilities
 							.ByteToUnsignedInt(DataArray[9])); // HR
@@ -185,8 +191,7 @@ public class NewConnectedListener extends ConnectListenerImpl {
 					double InstantSpeed = HRSpeedDistPacket
 							.GetInstantSpeed(DataArray);
 
-					text1 = _aNewHandler
-							.obtainMessage(Const.INSTANT_SPEED);
+					text1 = _aNewHandler.obtainMessage(Const.INSTANT_SPEED);
 					b1.putString("InstantSpeed", String.valueOf(InstantSpeed));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
@@ -194,8 +199,7 @@ public class NewConnectedListener extends ConnectListenerImpl {
 
 					// *********** Add R-R interval to the message
 					// ****************
-					text1 = _aNewHandler
-							.obtainMessage(Const.RR_INTERVAL);
+					text1 = _aNewHandler.obtainMessage(Const.RR_INTERVAL);
 					b1.putString("RRInterval", String.valueOf(rrIntervals[0]));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);

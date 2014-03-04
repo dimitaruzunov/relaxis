@@ -26,6 +26,8 @@ public class StressEstimationFragment extends Fragment {
 	
 	static int timeLeft = TIME_SECONDS;
 
+	static double stressLevel;
+	
 	static TextView stressLevelTextView;
 	private TextView stressLevelDescTextView;
 	private TextView timeLeftTextView;
@@ -78,6 +80,8 @@ public class StressEstimationFragment extends Fragment {
 			isStopped = false;
 			changeButtonIconStop(button);
 			showStressLevel();
+			StressEstimationFragment.stressLevelTextView
+			.setText("Current stress level: " + stressLevel);
 		}
 	}
 	
