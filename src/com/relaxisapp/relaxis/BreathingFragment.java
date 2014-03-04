@@ -245,7 +245,6 @@ public class BreathingFragment extends Fragment {
 		@Override
 		public void run() {
 			idealHRUpdateHandler.post(new Runnable() {
-
 				@Override
 				public void run() {
 					updateTimeLeft();
@@ -257,9 +256,8 @@ public class BreathingFragment extends Fragment {
 
 	private static void updateTimeLeft() {
 		timeLeftTextView.setText(String.valueOf(timeLeft));
-		if (timeLeft == 0)
-		{
-			timeUpdateTimerTask.cancel();			
+		if (timeLeft <= 0) {
+			timeUpdateTimerTask.cancel();
 			return;
 		}
 		timeLeft--;
