@@ -263,16 +263,4 @@ public class BreathingFragment extends Fragment {
 		timeLeft--;
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		timeUpdateTimerTask.cancel();
-		timeUpdateTimer.cancel();
-		graphUpdateTimerTask.cancel();
-		graphUpdateTimer.cancel();
-
-		layout.removeView(graphView);
-	}
-
 }

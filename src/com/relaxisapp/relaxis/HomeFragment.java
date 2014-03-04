@@ -22,6 +22,8 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	
 	public static int connectionState = 0;
 	Button connectButton;
+	
+	private Bundle savedState = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,8 +31,41 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 
 		setupViews(view);
 		
+		if (savedInstanceState != null && savedState == null) {
+			savedState = savedInstanceState.getBundle("ConnectButton");
+		}
+        if(savedState != null) {
+        	onBtConnectionChange(savedInstanceState.getInt("ConnectionState"), connectButton);
+        }
+        savedState = null;
+		
 		return view;
 	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
+		Log.d("STATE", "saveInstanceState");
+		
+		outState.putBundle("ConnectButton", savedState != null ? savedState : saveState());
+	}
+	
+	@Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        
+        Log.d("STATE", "destroy");
+        
+        savedState = saveState();
+        connectButton = null;
+    }
+	
+	private Bundle saveState() {
+        Bundle state = new Bundle();
+        state.putInt("ConnectionState", connectionState);
+        return state;
+    }
 
 	private void setupViews(View view) {
 		connectButton = (Button) view.findViewById(R.id.connectButton);
