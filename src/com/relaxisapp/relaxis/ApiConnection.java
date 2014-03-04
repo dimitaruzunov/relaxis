@@ -15,8 +15,8 @@ public class ApiConnection {
 	public static String FbUserId;
 	public static String FbUserName;
 	public static int UserId;
-	public static ArrayList<BreathingScore> currentUserBreathingScores;
-	public static ArrayList<StressScore> currentUserStressScores;
+	public static ArrayList<BreathingScore> currentUserBreathingScores = null;
+	public static ArrayList<StressScore> currentUserStressScores = null;
 	
 	public static class CheckUserTask extends AsyncTask<Void, Void, User> {
 		@Override

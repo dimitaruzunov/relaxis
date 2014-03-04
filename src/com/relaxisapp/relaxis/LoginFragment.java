@@ -3,6 +3,7 @@ package com.relaxisapp.relaxis;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class LoginFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		uiHelper = new UiLifecycleHelper(getActivity(), callback);
 		uiHelper.onCreate(savedInstanceState);
 	}
@@ -50,9 +51,16 @@ public class LoginFragment extends Fragment {
 
 		setupViews(view);
 		
-//		breathingScoreResultsListAdapter = new BreathingScoreResultsListAdapter(
-//				getActivity().getApplicationContext(),
-//				breathingScores);
+		Log.d("API", String.valueOf(ApiConnection.currentUserBreathingScores));
+		
+		if (ApiConnection.currentUserBreathingScores != null) {
+			breathingScoreResultsListAdapter = new BreathingScoreResultsListAdapter(
+					getActivity().getApplicationContext(),
+					ApiConnection.currentUserBreathingScores);
+			
+			breathingScoreResultsListView = (ListView) view.findViewById(R.id.breathingScoreResults);
+			breathingScoreResultsListView.setAdapter(breathingScoreResultsListAdapter);
+		}
 
 		return view;
 	}
