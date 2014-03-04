@@ -163,9 +163,9 @@ public class BreathingFragment extends Fragment {
 		isStopped = true;
 		resetScoreAndTime();
 		hideScore();
+		changeButtonIconStart(button);
 		timeUpdateTimerTask.cancel();
 		timeUpdateTimer.cancel();
-		changeButtonIconStart(button);
 	}
 
 	private void resetScoreAndTime() {
