@@ -132,7 +132,7 @@ public class LoginFragment extends Fragment {
 										.setProfileId(ApiConnection.FbUserId);
 							}
 						}
-						new CheckUserTask().execute();
+						new ApiConnection.CheckUserTask().execute();
 					}
 
 				});
@@ -177,62 +177,5 @@ public class LoginFragment extends Fragment {
 	private void toggleViewsVisibility(int visibility) {
 		userName.setVisibility(visibility);
 		profilePictureView.setVisibility(visibility);
-	}
-
-	private class CheckUserTask extends AsyncTask<Void, Void, User> {
-		@Override
-		protected User doInBackground(Void... params) {
-			try {
-				final String url = "http://relaxisapp.com/api/users/"
-						+ ApiConnection.FbUserId;
-				RestTemplate restTemplate = new RestTemplate();
-				restTemplate.getMessageConverters().add(
-						new MappingJackson2HttpMessageConverter());
-				User user = restTemplate.getForObject(url, User.class);
-				return user;
-			} catch (HttpClientErrorException e) {
-				if (e.getStatusCode().value() == 404) {
-					new CreateUserTask().execute();
-				} else {
-					Log.e("MainActivity", e.getMessage(), e);
-				}
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(User user) {
-			if (user != null) {
-				ApiConnection.UserId = user.getUserId();
-			}
-		}
-
-	}
-
-	private class CreateUserTask extends AsyncTask<Void, Void, User> {
-		@Override
-		protected User doInBackground(Void... params) {
-			try {
-				final String url = "http://relaxisapp.com/api/users/";
-				RestTemplate restTemplate = new RestTemplate();
-				restTemplate.getMessageConverters().add(
-						new MappingJackson2HttpMessageConverter());
-				User user = restTemplate.postForObject(url, new User(
-						ApiConnection.FbUserId, ApiConnection.FbUserName),
-						User.class);
-				return user;
-			} catch (Exception e) {
-				Log.e("MainActivity", e.getMessage(), e);
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(User user) {
-			ApiConnection.UserId = user.getUserId();
-		}
-
 	}
 }
