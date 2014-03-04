@@ -3,7 +3,6 @@ package com.relaxisapp.relaxis;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,10 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 			savedState = savedInstanceState.getBundle("ConnectButton");
 		}
         if(savedState != null) {
-        	onBtConnectionChange(savedInstanceState.getInt("ConnectionState"), connectButton);
+        	int connectionState = savedState.getInt("ConnectionState");
+        	if (connectionState != 1) {
+        		onBtConnectionChange(savedState.getInt("ConnectionState"), connectButton);
+        	}
         }
         savedState = null;
 		
@@ -46,16 +48,12 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		
-		Log.d("STATE", "saveInstanceState");
-		
 		outState.putBundle("ConnectButton", savedState != null ? savedState : saveState());
 	}
 	
 	@Override
     public void onDestroyView() {
         super.onDestroyView();
-        
-        Log.d("STATE", "destroy");
         
         savedState = saveState();
         connectButton = null;
@@ -64,6 +62,7 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	private Bundle saveState() {
         Bundle state = new Bundle();
         state.putInt("ConnectionState", connectionState);
+        
         return state;
     }
 
@@ -137,8 +136,6 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	@Override
 	public void onBtConnectionChange(int connectionState, Button button) {
 		HomeFragment.connectionState = connectionState;
-		
-		Log.d("QKTAG", String.valueOf(connectionState));
 		
 		switch (connectionState) {
 		case 0:

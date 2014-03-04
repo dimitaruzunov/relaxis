@@ -9,7 +9,6 @@ import org.springframework.web.client.RestTemplate;
 import zephyr.android.HxMBT.BTClient;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
