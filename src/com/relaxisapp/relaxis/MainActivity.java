@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import zephyr.android.HxMBT.BTClient;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -38,6 +39,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	private SectionsPagerAdapter sectionsPagerAdapter;
 	static ViewPager viewPager;
 	private OnBtConnectionChangeListener btConnectionChangeListener;
+	private Button savedButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -171,12 +173,17 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		if (resultCode == RESULT_OK) {
 			Toast.makeText(this, "Bluetooth is now enabled", Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(this, "User cancelled the bluetooth connect intent", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "User cancelled the bluetooth enable intent", Toast.LENGTH_LONG).show();
+			btConnectionChangeListener.onBtConnectionChange(0, savedButton);
+			savedButton = null;
 		}
 	}
 
 	void executeConnect(Button button) {
-		btConnectionChangeListener = (OnBtConnectionChangeListener) sectionsPagerAdapter.getFragment(SectionsPagerAdapter.HOME_FRAGMENT);
+		if (btConnectionChangeListener == null) {
+			btConnectionChangeListener = (OnBtConnectionChangeListener)
+					sectionsPagerAdapter.getFragment(SectionsPagerAdapter.HOME_FRAGMENT);
+		}
 		btConnectionChangeListener.onBtConnectionChange(1, button);
 
 		new BluetoothConnectTask().execute(button);
@@ -200,16 +207,17 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 			// Setting the results to be returned
 			AsyncTaskResults results = new AsyncTaskResults();
 			results.item = buttons[0];
-
+			
 			// do the work unless user cancel
 			while (!isCancelled()) {
 				// Setting up an event listener listening for cancel intent
-				// results.item.setOnClickListener(new View.OnClickListener() {
-				// @Override
-				// public void onClick(View view) {
-				// cancel(true);
-				// }
-				// });
+				results.item.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						Log.d("QKTAG", "ifNotEnabled");
+						cancel(true);
+					}
+				});
 
 				// Getting the Bluetooth adapter
 				BtConnection.adapter = BluetoothAdapter.getDefaultAdapter();
@@ -222,10 +230,9 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 				// Enable bluetooth if not enabled
 				if (!BtConnection.adapter.isEnabled()) {
-					Intent enableBtIntent = new Intent(
-							BluetoothAdapter.ACTION_REQUEST_ENABLE);
-					startActivityForResult(enableBtIntent,
-							Const.REQUEST_ENABLE_BT);
+					savedButton = results.item;
+					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+					startActivityForResult(enableBtIntent, Const.REQUEST_ENABLE_BT);
 				}
 
 				// TODO try to write this better
@@ -323,9 +330,15 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 		@Override
 		protected void onCancelled(AsyncTaskResults results) {
+			// Set the previous on click listener
+			results.item.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					HomeFragment.handleConnectButtonClick((Button) view, MainActivity.this);
+				}
+			});
 			btConnectionChangeListener.onBtConnectionChange(0, results.item);
-			Toast.makeText(MainActivity.this, "Connecting cancelled",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(MainActivity.this, "Connecting cancelled", Toast.LENGTH_LONG).show();
 		}
 
 	}
@@ -493,7 +506,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 		@Override
 		protected User doInBackground(Void... params) {
 			try {
-				final String url = "http://relaxisapp.com.91-215-216-74.hera.icnhost.net/api/users/1";
+				final String url = "http://relaxisapp.com/api/users/1";
 				RestTemplate restTemplate = new RestTemplate();
 				restTemplate.getMessageConverters().add(
 						new MappingJackson2HttpMessageConverter());

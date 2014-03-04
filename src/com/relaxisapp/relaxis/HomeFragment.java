@@ -1,7 +1,9 @@
 package com.relaxisapp.relaxis;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +37,7 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 		connectButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				handleConnectButtonClick((Button) view);
+				handleConnectButtonClick((Button) view, getActivity());
 			}
 		});
 
@@ -72,12 +74,12 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 		});
 	}
 	
-	void handleConnectButtonClick(Button button) {
+	static void handleConnectButtonClick(Button button, Context activity) {
 		if (connectionState == 0) {
-			((MainActivity) getActivity()).executeConnect(button);
+			((MainActivity) activity).executeConnect(button);
 		}
 		else if (connectionState == 2) {
-			((MainActivity) getActivity()).executeDisconnect(button);
+			((MainActivity) activity).executeDisconnect(button);
 		}
 	}
 
@@ -100,6 +102,8 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	@Override
 	public void onBtConnectionChange(int connectionState, Button button) {
 		HomeFragment.connectionState = connectionState;
+		
+		Log.d("QKTAG", String.valueOf(connectionState));
 		
 		switch (connectionState) {
 		case 0:
