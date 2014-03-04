@@ -25,6 +25,6 @@ public class Const {
 	static final int POINT_BARRIER = 15;
 
 	static final int TIME_BREATHING_SECONDS = 60;
-	static final int TIME_STRESS_SECONDS = 20;//180;
+	static final int TIME_STRESS_SECONDS = 180;
 
 }
