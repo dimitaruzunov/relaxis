@@ -53,7 +53,8 @@
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:visibility="invisible"
             android:drawableLeft="@drawable/ic_stress"
-            android:drawablePadding="@dimen/activity_horizontal_margin" />
+            android:drawablePadding="@dimen/activity_horizontal_margin"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
         
     </LinearLayout>
 

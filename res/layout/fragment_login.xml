@@ -34,13 +34,49 @@
         android:layout_toRightOf="@+id/profilePic"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:visibility="invisible" />
+    
+    <View
+   		android:id="@+id/loginDivider"
+       	android:layout_below="@+id/profilePic"
+       	style="@style/Divider" />
+    
+    <TextView
+        android:id="@+id/breathingScoreListDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginDivider"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:visibility="invisible"
+        android:text="@string/breathing_score_list_desc"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView
         android:id="@+id/breathingScoreResults"
-        style="@style/NavigationDrawerListView"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/userName"
-        android:choiceMode="singleChoice" />
+        android:layout_width="match_parent"
+        android:layout_height="93dp"
+        android:layout_below="@+id/breathingScoreListDesc"
+        android:visibility="invisible"
+        android:choiceMode="singleChoice"
+        style="@style/ScoreListView" />
+    
+    <TextView
+        android:id="@+id/stressScoreListDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/breathingScoreResults"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:visibility="invisible"
+        android:text="@string/stress_score_list_desc"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <ListView
+        android:id="@+id/stressScoreResults"
+        android:layout_width="match_parent"
+        android:layout_height="93dp"
+        android:layout_below="@+id/stressScoreListDesc"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:visibility="invisible"
+        android:choiceMode="singleChoice"
+        style="@style/ScoreListView" />
 
 </RelativeLayout>

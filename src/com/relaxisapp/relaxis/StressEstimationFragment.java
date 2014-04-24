@@ -26,6 +26,7 @@ public class StressEstimationFragment extends Fragment {
 	static int timeLeft = Const.TIME_STRESS_SECONDS;
 
 	static double stressLevel;
+	static Boolean updateScore = false;
 	
 	static TextView stressLevelTextView;
 	private TextView stressLevelDescTextView;
@@ -76,6 +77,10 @@ public class StressEstimationFragment extends Fragment {
 			MainActivity.viewPager.setCurrentItem(SectionsPagerAdapter.HOME_FRAGMENT);
 			Toast.makeText(getActivity(), "Please connect to HxM", Toast.LENGTH_SHORT).show();
 		} else {
+			if (timeLeft == 0) {
+				timeLeft = Const.TIME_STRESS_SECONDS;
+			}
+			updateScore = true;
 			timeUpdateTimer = new Timer();
 			timeUpdateTimerTask = new TimeUpdateTimerTask();
 			timeUpdateTimer.scheduleAtFixedRate(
@@ -89,15 +94,11 @@ public class StressEstimationFragment extends Fragment {
 	
 	private void stop(Button button) {
 		isStopped = true;
+		updateScore = false;
 		changeButtonIconStart(button);
-		//resetTime();
 		hideStressLevel();
 		timeUpdateTimerTask.cancel();
 		timeUpdateTimer.cancel();
-	}
-
-	private void resetTime() {
-		timeLeft = Const.TIME_STRESS_SECONDS;
 	}
 	
 	private void changeButtonIconStart(Button button) {
@@ -111,8 +112,8 @@ public class StressEstimationFragment extends Fragment {
 	}
 	
 	private void showStressLevel() {
-		stressLevelDescTextView.setVisibility(1);
-		stressLevelTextView.setVisibility(1);
+		stressLevelDescTextView.setVisibility(0);
+		stressLevelTextView.setVisibility(0);
 	}
 	
 	private void hideStressLevel() {
@@ -143,8 +144,10 @@ public class StressEstimationFragment extends Fragment {
 		{
 			if (ApiConnection.UserId > 0) {
 				new ApiConnection.AddStressScoreTask().execute();
+				Toast.makeText(getActivity(), "Stress level saved: " +
+				StressEstimationFragment.stressLevel * 10, Toast.LENGTH_SHORT).show();
 			}
-			timeUpdateTimerTask.cancel();			
+			startStressEstimationButton.callOnClick();		
 			return;
 		}
 		timeLeft--;

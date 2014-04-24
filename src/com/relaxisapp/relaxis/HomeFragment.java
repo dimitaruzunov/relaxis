@@ -1,6 +1,7 @@
 package com.relaxisapp.relaxis;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 	
 	public static int connectionState = 0;
 	Button connectButton;
+	Button musicButton;
 	
 	private Bundle savedState = null;
 
@@ -74,6 +76,14 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 				handleConnectButtonClick((Button) view, getActivity());
 			}
 		});
+		
+		musicButton = (Button) view.findViewById(R.id.musicButton);
+		musicButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				handleMusicButtonClick((Button) view, getActivity());
+			}
+		});
 
 		heartRateTextView = (TextView) view.findViewById(R.id.heartRateTextView);
 		heartRateTextView.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +125,12 @@ public class HomeFragment extends Fragment implements OnBtConnectionChangeListen
 		else if (connectionState == 2) {
 			((MainActivity) activity).executeDisconnect(button);
 		}
+	}
+	
+	void handleMusicButtonClick(Button button, Context activity) {
+		    Intent intent=Intent.makeMainSelectorActivity(Intent.ACTION_MAIN,
+		    Intent.CATEGORY_APP_MUSIC);
+		    startActivity(intent);
 	}
 
 	void handleHeartRateTextViewClick(TextView textView) {

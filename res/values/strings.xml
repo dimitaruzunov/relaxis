@@ -10,12 +10,12 @@
     <string name="instantSpeed">Instant Speed</string>
     <string name="rRInterval">R-R Interval</string>
     <string name="instantHeartRate">Instant Heart Rate</string>
-    <string name="stress_level_desc">Your stress level is:</string>
+    <string name="stress_level_desc">Your relaxation level is:</string>
     <string name="score">Score</string>
     <string name="score_desc">Your score is:</string>
     <string name="time_left_desc">Time left:</string>
     <string name="breathing">Breathing</string>
-    <string name="stress">Stress</string>
+    <string name="stress">Relaxation</string>
     <string name="open_drawer_message">Open navigation menu</string>
     <string name="close_drawer_message">Close navigation menu</string>
     <string name="list_item_icon_desc">Icon</string>
@@ -24,5 +24,8 @@
     <string name="share_score_dialog_message">Share your score with Facebook</string>
     <string name="share">Share</string>
     <string name="cancel">Cancel</string>
+    <string name="breathing_score_list_desc">Your breathing scores:</string>
+    <string name="stress_score_list_desc">Your relaxation scores:</string>
+    <string name="music">Play music</string>
 
 </resources>

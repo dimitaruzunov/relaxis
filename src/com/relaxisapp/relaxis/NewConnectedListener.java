@@ -8,8 +8,6 @@ import zephyr.android.HxMBT.*;
 public class NewConnectedListener extends ConnectListenerImpl {
 	private Handler _OldHandler;
 	private Handler _aNewHandler;
-	private int GP_MSG_ID = 0x20;
-	private int GP_HANDLER_ID = 0x20;
 	private int HR_SPD_DIST_PACKET = 0x26;
 
 	private HRSpeedDistPacketInfo HRSpeedDistPacket = new HRSpeedDistPacketInfo();

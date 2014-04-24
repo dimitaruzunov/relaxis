@@ -61,7 +61,7 @@ public class BreathingFragment extends Fragment {
 	static TextView scoreTextView;
 
 	private boolean isStopped = true;
-	private Button startBreathingButton;
+	private static Button startBreathingButton;
 	private TextView scoreDescTextView;
 
 	@Override
@@ -161,7 +161,6 @@ public class BreathingFragment extends Fragment {
 	private void stop(Button button) {
 		updateScore = false;
 		isStopped = true;
-		resetScoreAndTime();
 		hideScore();
 		changeButtonIconStart(button);
 		timeUpdateTimerTask.cancel();
@@ -174,8 +173,8 @@ public class BreathingFragment extends Fragment {
 	}
 
 	private void showScore() {
-		scoreDescTextView.setVisibility(1);
-		scoreTextView.setVisibility(1);
+		scoreDescTextView.setVisibility(0);
+		scoreTextView.setVisibility(0);
 	}
 
 	private void hideScore() {
@@ -240,7 +239,7 @@ public class BreathingFragment extends Fragment {
 				(timerCounter % 2 == 0) ? idealMinHR : idealMaxHR), true, 2);
 	}
 
-	static class TimeUpdateTimerTask extends TimerTask {
+	class TimeUpdateTimerTask extends TimerTask {
 
 		@Override
 		public void run() {
@@ -254,14 +253,15 @@ public class BreathingFragment extends Fragment {
 
 	}
 
-	private static void updateTimeLeft() {
+	private void updateTimeLeft() {
 		timeLeftTextView.setText(String.valueOf(timeLeft));
 		if (timeLeft <= 0) {
-			updateScore = false;
 			if (ApiConnection.UserId > 0) {
 				new ApiConnection.AddBreathingScoreTask().execute();
+				Toast.makeText(getActivity(), "Breathing score saved: " +
+						BreathingFragment.score, Toast.LENGTH_SHORT).show();
 			}
-			timeUpdateTimerTask.cancel();
+			startBreathingButton.callOnClick();
 			return;
 		}
 		timeLeft--;

@@ -68,6 +68,14 @@
             android:id="@+id/divider4"
             android:layout_below="@+id/instantSpeedTextView"
             style="@style/Divider" />
+
+        <Button
+            android:id="@+id/musicButton"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/divider4"
+            android:text="@string/music"
+            android:drawableLeft="@drawable/ic_action_play"
+            style="@style/LargeButton" />
 		
     </RelativeLayout>
 

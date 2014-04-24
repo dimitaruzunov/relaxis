@@ -10,24 +10,24 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class BreathingScoreResultsListAdapter extends BaseAdapter {
+public class StressScoreResultsListAdapter extends BaseAdapter {
 
 	private Context context;
-	private ArrayList<BreathingScore> breathingScores;
+	private ArrayList<StressScore> stressScores;
 	
-	public BreathingScoreResultsListAdapter(Context context, ArrayList<BreathingScore> breathingScores) {
+	public StressScoreResultsListAdapter(Context context, ArrayList<StressScore> stressScores) {
 		this.context = context;
-		this.breathingScores = breathingScores;
+		this.stressScores = stressScores;
 	}
 	
 	@Override
 	public int getCount() {
-		return breathingScores.size();
+		return stressScores.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return breathingScores.get(position);
+		return stressScores.get(position);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class BreathingScoreResultsListAdapter extends BaseAdapter {
         }
 		
 		TextView scoreResultTextView = (TextView) convertView.findViewById(R.id.scoreResultTextView);
-		scoreResultTextView.setText(String.valueOf(breathingScores.get(position).getScore()));
+		scoreResultTextView.setText(String.valueOf(stressScores.get(position).getScore()));
 		
 		return convertView;
 	}

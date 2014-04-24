@@ -37,7 +37,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 	private ListView drawerListView;
 	private SectionsPagerAdapter sectionsPagerAdapter;
 	static ViewPager viewPager;
-	private OnBtConnectionChangeListener btConnectionChangeListener;
+	private OnBtConnectionChangeListener btConnectionChangeListener = null;
 	private Button savedButton;
 
 	@Override
@@ -490,7 +490,7 @@ public class MainActivity extends FragmentActivity implements ListView.OnItemCli
 
 				break;
 			case Const.PNN50:
-				if (StressEstimationFragment.timeLeft > 0) {
+				if (StressEstimationFragment.timeLeft > 0 && StressEstimationFragment.updateScore) {
 					String pNN50 = msg.getData().getString("pNN50");
 
 					if (pNN50 != null) {

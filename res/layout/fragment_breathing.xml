@@ -50,6 +50,7 @@
             android:layout_below="@+id/breathingDivider1"
             android:layout_toRightOf="@+id/startBreathingButton"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:visibility="invisible"
             android:text="@string/score_desc"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 	    
@@ -59,6 +60,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_below="@+id/breathingDivider1"
 	        android:layout_toRightOf="@+id/scoreDescTextView"
+	        android:visibility="invisible"
 	        android:textAppearance="?android:attr/textAppearanceLarge" />
 	    
 	    <View

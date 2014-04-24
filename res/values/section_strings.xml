@@ -2,6 +2,6 @@
 <resources>
     <string name="home_title">Home</string>
     <string name="breathing_app_title">Breathing</string>
-    <string name="stress_app_title">Stress</string>
+    <string name="stress_app_title">Relaxation</string>
     <string name="login_title">Login</string>
 </resources>

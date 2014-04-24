@@ -35,6 +35,12 @@ public class LoginFragment extends Fragment {
 	
 	private BreathingScoreResultsListAdapter breathingScoreResultsListAdapter;
 	private ListView breathingScoreResultsListView;
+	
+	private StressScoreResultsListAdapter stressScoreResultsListAdapter;
+	private ListView stressScoreResultsListView;
+	
+	private TextView breathingScoreListDesc;
+	private TextView stressScoreListDesc;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,8 +64,15 @@ public class LoginFragment extends Fragment {
 					getActivity().getApplicationContext(),
 					ApiConnection.currentUserBreathingScores);
 			
-			breathingScoreResultsListView = (ListView) view.findViewById(R.id.breathingScoreResults);
 			breathingScoreResultsListView.setAdapter(breathingScoreResultsListAdapter);
+		}
+		
+		if (ApiConnection.currentUserStressScores != null) {
+			stressScoreResultsListAdapter = new StressScoreResultsListAdapter(
+					getActivity().getApplicationContext(),
+					ApiConnection.currentUserStressScores);
+			
+			stressScoreResultsListView.setAdapter(stressScoreResultsListAdapter);
 		}
 
 		return view;
@@ -74,6 +87,12 @@ public class LoginFragment extends Fragment {
 		profilePictureView.setCropped(true);
 
 		userName = (TextView) view.findViewById(R.id.userName);
+		
+		stressScoreResultsListView = (ListView) view.findViewById(R.id.stressScoreResults);
+		breathingScoreResultsListView = (ListView) view.findViewById(R.id.breathingScoreResults);
+		
+		breathingScoreListDesc = (TextView) view.findViewById(R.id.breathingScoreListDesc);
+		stressScoreListDesc = (TextView) view.findViewById(R.id.stressScoreListDesc);
 	}
 
 	@Override
@@ -190,5 +209,9 @@ public class LoginFragment extends Fragment {
 	private void toggleViewsVisibility(int visibility) {
 		userName.setVisibility(visibility);
 		profilePictureView.setVisibility(visibility);
+		breathingScoreResultsListView.setVisibility(visibility);
+		stressScoreResultsListView.setVisibility(visibility);
+		breathingScoreListDesc.setVisibility(visibility);
+		stressScoreListDesc.setVisibility(visibility);
 	}
 }
